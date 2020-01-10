@@ -1,4 +1,4 @@
-# Extension of Splide for playing Videos
+# Extension of Splide for playing videos
 This is an extension of the [Splide](https://github.com/Splidejs/splide) slider library for playing videos of YouTube and Vimeo. You must get Splide before using it.
 
 * [Demo](https://splidejs.com/)
@@ -23,7 +23,7 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
     
 ### CDN or Hosting Files
 1. Visit [jsDelivr](https://www.jsdelivr.com/package/npm/@splidejs/splide-extension-video) and get the links of the latest files or download files from the dist library.
-1. Import these files on your site:
+1. Import minified stylesheet and JavaScript files on your site:
     ```html
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.0.2/dist/css/splide-extension-video.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.0.2/dist/js/splide-extension-video.min.js">
@@ -43,4 +43,4 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
 
 ## License
 Splide is released under the MIT license.  
-© 2019 Naotoshi Fujita
+© 2020 Naotoshi Fujita
