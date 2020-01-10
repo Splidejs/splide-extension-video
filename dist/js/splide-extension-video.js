@@ -2735,14 +2735,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @type {string}
  */
-const WRAPPER_CLASS = 'splide__video';
+var WRAPPER_CLASS = 'splide__video';
 /**
  * The play button class name.
  *
  * @type {string}
  */
 
-const PLAY_BUTTON_CLASS = 'splide__video__play';
+var PLAY_BUTTON_CLASS = 'splide__video__play';
 /**
  * The sub component for creating UI elements.
  *
@@ -2751,19 +2751,19 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
  * @return {Object}
  */
 
-/* harmony default export */ var js_elements = (slide => {
+/* harmony default export */ var js_elements = (function (slide) {
   return {
     /**
      * Initialization.
      */
-    init() {
+    init: function init() {
       this.create();
     },
 
     /**
      * Create some elements.
      */
-    create() {
+    create: function create() {
       this.wrapper = document.createElement('div');
       this.iframe = document.createElement('div');
       this.playButton = document.createElement('div');
@@ -2781,7 +2781,7 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
      *
      * @param {boolean} show - Set true to show the button.
      */
-    togglePlayButton(show) {
+    togglePlayButton: function togglePlayButton(show) {
       this.playButton.style.display = show ? 'flex' : 'none';
     },
 
@@ -2790,14 +2790,14 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
      *
      * @param {boolean} show - Set true to show the wrapper.
      */
-    toggleWrapper(show) {
+    toggleWrapper: function toggleWrapper(show) {
       this.wrapper.style.display = show ? 'block' : 'none';
     },
 
     /**
      * Hide the play button and show the wrapper element.
      */
-    hide() {
+    hide: function hide() {
       this.togglePlayButton(false);
       this.toggleWrapper(true);
     },
@@ -2805,11 +2805,10 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
     /**
      * Show the play button and hide the wrapper element.
      */
-    show() {
+    show: function show() {
       this.togglePlayButton(true);
       this.toggleWrapper(false);
     }
-
   };
 });
 // CONCATENATED MODULE: ./src/js/providers/base/base-player.js
@@ -2824,7 +2823,9 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
  * The base class of the video player.
  */
 
-class base_player_BasePlayer {
+var base_player_BasePlayer =
+/*#__PURE__*/
+function () {
   /**
    * BasePlayer constructor.
    *
@@ -2832,7 +2833,7 @@ class base_player_BasePlayer {
    * @param {Object} Components - An object containing components.
    * @param {Object} Slide      - A target Slide object.
    */
-  constructor(Splide, Components, Slide) {
+  function BasePlayer(Splide, Components, Slide) {
     this.Splide = Splide;
     this.Components = Components;
     this.Slide = Slide;
@@ -2851,7 +2852,9 @@ class base_player_BasePlayer {
    */
 
 
-  init() {
+  var _proto = BasePlayer.prototype;
+
+  _proto.init = function init() {
     this.elements = js_elements(this.slide);
     this.elements.init();
     this.slide.classList.add(this.Splide.classes.slide + '--has-video');
@@ -2867,13 +2870,15 @@ class base_player_BasePlayer {
   /**
    * Listen some events.
    */
+  ;
 
+  _proto.bind = function bind() {
+    var _this = this;
 
-  bind() {
     this.slide.addEventListener('click', this.play.bind(this));
-    this.Splide.on('move', this.pause.bind(this)).on('moved', () => {
-      if (this.isActive() && this.isAutoplay()) {
-        this.play();
+    this.Splide.on('move', this.pause.bind(this)).on('moved', function () {
+      if (_this.isActive() && _this.isAutoplay()) {
+        _this.play();
       }
     });
   }
@@ -2883,17 +2888,17 @@ class base_player_BasePlayer {
    *
    * @return {null}
    */
+  ;
 
-
-  createPlayer() {
+  _proto.createPlayer = function createPlayer() {
     return null;
   }
   /**
    * Play video.
    */
+  ;
 
-
-  play() {
+  _proto.play = function play() {
     // Hide immediately for UX.
     this.elements.hide();
 
@@ -2906,9 +2911,9 @@ class base_player_BasePlayer {
   /**
    * Pause video.
    */
+  ;
 
-
-  pause() {
+  _proto.pause = function pause() {
     if (this.player) {
       if (!this.isAutoplay()) {
         this.elements.show();
@@ -2920,25 +2925,25 @@ class base_player_BasePlayer {
   /**
    * Play video. Override this if necessary.
    */
+  ;
 
-
-  playVideo() {
+  _proto.playVideo = function playVideo() {
     this.player.play();
   }
   /**
    * Pause video. Override this if necessary.
    */
+  ;
 
-
-  pauseVideo() {
+  _proto.pauseVideo = function pauseVideo() {
     this.player.pause();
   }
   /**
    * Check if the slide is active or not.
    */
+  ;
 
-
-  isActive() {
+  _proto.isActive = function isActive() {
     return this.Slide.isActive();
   }
   /**
@@ -2946,9 +2951,9 @@ class base_player_BasePlayer {
    *
    * @return {boolean}
    */
+  ;
 
-
-  isAutoplay() {
+  _proto.isAutoplay = function isAutoplay() {
     return this.Splide.options.video.autoplay;
   }
   /**
@@ -2956,14 +2961,19 @@ class base_player_BasePlayer {
    *
    * @return {string|number}
    */
+  ;
 
-
-  findVideoId() {
+  _proto.findVideoId = function findVideoId() {
     return '';
-  }
+  };
 
-}
+  return BasePlayer;
+}();
+
+
 // CONCATENATED MODULE: ./src/js/providers/youtube/player.js
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
 /**
  * The class for controlling YouTube video.
  *
@@ -2975,15 +2985,25 @@ class base_player_BasePlayer {
  * The class for controlling YouTube video.
  */
 
-class player_Player extends base_player_BasePlayer {
+var player_Player =
+/*#__PURE__*/
+function (_BasePlayer) {
+  _inheritsLoose(Player, _BasePlayer);
+
+  function Player() {
+    return _BasePlayer.apply(this, arguments) || this;
+  }
+
+  var _proto = Player.prototype;
+
   /**
    * Create a player.
    * This must be overridden in a child class.
    *
    * @return {object|null}
    */
-  createPlayer() {
-    const options = this.Splide.options.video;
+  _proto.createPlayer = function createPlayer() {
+    var options = this.Splide.options.video;
     return new YT.Player(this.elements.iframe, {
       videoId: this.videoId,
       playerVars: {
@@ -3004,9 +3024,9 @@ class player_Player extends base_player_BasePlayer {
    *
    * @param {Object} e - An event object.
    */
+  ;
 
-
-  onPlayerReady(e) {
+  _proto.onPlayerReady = function onPlayerReady(e) {
     if (this.Splide.options.video.mute) {
       e.target.mute();
     }
@@ -3014,17 +3034,17 @@ class player_Player extends base_player_BasePlayer {
   /**
    * Play video.
    */
+  ;
 
-
-  playVideo() {
+  _proto.playVideo = function playVideo() {
     this.player.playVideo();
   }
   /**
    * Pause video.
    */
+  ;
 
-
-  pauseVideo() {
+  _proto.pauseVideo = function pauseVideo() {
     this.player.pauseVideo();
   }
   /**
@@ -3032,16 +3052,19 @@ class player_Player extends base_player_BasePlayer {
    *
    * @return {string} - Video ID.
    */
+  ;
 
-
-  findVideoId() {
-    const url = this.slide.getAttribute('data-splide-youtube');
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-    const match = url.match(regExp);
+  _proto.findVideoId = function findVideoId() {
+    var url = this.slide.getAttribute('data-splide-youtube');
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
     return match && match[7].length === 11 ? match[7] : '';
-  }
+  };
 
-}
+  return Player;
+}(base_player_BasePlayer);
+
+
 // CONCATENATED MODULE: ./src/js/providers/youtube/index.js
 /**
  * The sub component for embedding a YouTube video.
@@ -3059,12 +3082,12 @@ class player_Player extends base_player_BasePlayer {
  * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var providers_youtube = ((Splide, Components) => {
+/* harmony default export */ var providers_youtube = (function (Splide, Components) {
   return {
     /**
      * Initialization.
      */
-    init() {
+    init: function init() {
       this.loadAPI();
       this.bindAPICallback();
       this.oldCallback = null;
@@ -3073,11 +3096,11 @@ class player_Player extends base_player_BasePlayer {
     /**
      * Load the YouTube iframe API.
      */
-    loadAPI() {
+    loadAPI: function loadAPI() {
       if (typeof Vimeo === 'undefined') {
-        const tag = document.createElement('script');
+        var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/player_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
+        var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
     },
@@ -3085,7 +3108,7 @@ class player_Player extends base_player_BasePlayer {
     /**
      * Listen onYouTubeIframeAPIReady event.
      */
-    bindAPICallback() {
+    bindAPICallback: function bindAPICallback() {
       // Avoid unexpected collision against other libraries.
       if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
         this.oldCallback = window.onYouTubeIframeAPIReady;
@@ -3097,26 +3120,27 @@ class player_Player extends base_player_BasePlayer {
     /**
      * Called when the API is ready.
      */
-    onYouTubeIframeAPIReady() {
+    onYouTubeIframeAPIReady: function onYouTubeIframeAPIReady() {
       if (this.oldCallback) {
         this.oldCallback();
       }
 
-      Components.Slides.getSlides(false, true).forEach(Slide => {
-        const youtube = Slide.slide.getAttribute('data-splide-youtube');
+      Components.Slides.getSlides(false, true).forEach(function (Slide) {
+        var youtube = Slide.slide.getAttribute('data-splide-youtube');
 
         if (youtube) {
           new player_Player(Splide, Components, Slide);
         }
       });
     }
-
   };
 });
 // EXTERNAL MODULE: ./node_modules/@vimeo/player/dist/player.es.js
 var player_es = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/player.js
+function player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
 /**
  * The class for controlling Vimeo video.
  *
@@ -3129,23 +3153,33 @@ var player_es = __webpack_require__(1);
  * The class for controlling Vimeo video.
  */
 
-class vimeo_player_Player extends base_player_BasePlayer {
+var vimeo_player_Player =
+/*#__PURE__*/
+function (_BasePlayer) {
+  player_inheritsLoose(Player, _BasePlayer);
+
+  function Player() {
+    return _BasePlayer.apply(this, arguments) || this;
+  }
+
+  var _proto = Player.prototype;
+
   /**
    * Create a player.
    * This must be overridden in a child class.
    *
    * @return {object|null}
    */
-  createPlayer() {
-    const options = this.Splide.options.video;
-    const player = new player_es["a" /* default */](this.elements.iframe, {
+  _proto.createPlayer = function createPlayer() {
+    var options = this.Splide.options.video;
+    var player = new player_es["a" /* default */](this.elements.iframe, {
       id: this.videoId,
       controls: !options.hideControls,
       loop: options.loop
     });
 
     if (options.mute) {
-      player.setMuted(true).then(() => {
+      player.setMuted(true).then(function () {
         player.play();
       });
     } else {
@@ -3159,16 +3193,19 @@ class vimeo_player_Player extends base_player_BasePlayer {
    *
    * @return {string} - Video ID.
    */
+  ;
 
-
-  findVideoId() {
-    const url = this.slide.getAttribute('data-splide-vimeo');
-    const regExp = /vimeo.com\/(\d+)/;
-    const match = url.match(regExp);
+  _proto.findVideoId = function findVideoId() {
+    var url = this.slide.getAttribute('data-splide-vimeo');
+    var regExp = /vimeo.com\/(\d+)/;
+    var match = url.match(regExp);
     return match && match[1] ? match[1] : '';
-  }
+  };
 
-}
+  return Player;
+}(base_player_BasePlayer);
+
+
 // CONCATENATED MODULE: ./src/js/providers/vimeo/index.js
 /**
  * The sub component for embedding a YouTube video.
@@ -3186,21 +3223,20 @@ class vimeo_player_Player extends base_player_BasePlayer {
  * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var providers_vimeo = ((Splide, Components) => {
+/* harmony default export */ var providers_vimeo = (function (Splide, Components) {
   return {
     /**
      * Initialization.
      */
-    init() {
-      Components.Slides.getSlides(false, true).forEach(Slide => {
-        const vimeo = Slide.slide.getAttribute('data-splide-vimeo');
+    init: function init() {
+      Components.Slides.getSlides(false, true).forEach(function (Slide) {
+        var vimeo = Slide.slide.getAttribute('data-splide-vimeo');
 
         if (vimeo) {
           new vimeo_player_Player(Splide, Components, Slide);
         }
       });
     }
-
   };
 });
 // CONCATENATED MODULE: ./src/js/constants/defaults.js
@@ -3210,7 +3246,7 @@ class vimeo_player_Player extends base_player_BasePlayer {
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
  */
-const DEFAULTS = {
+var DEFAULTS = {
   /**
    * Whether to play the video automatically.
    *
@@ -3248,6 +3284,8 @@ const DEFAULTS = {
   mute: false
 };
 // CONCATENATED MODULE: ./src/js/splide-extension-video.js
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 /**
  * The extension component for embedding videos to slides.
  *
@@ -3266,26 +3304,23 @@ const DEFAULTS = {
  * @return {Object} - Extension object.
  */
 
-/* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = ((Splide, Components) => {
+/* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = (function (Splide, Components) {
   return {
     /**
      * Called when this extension is mounted.
      * Initialize all sub components.
      */
-    mount() {
+    mount: function mount() {
       if (typeof Splide.options.video !== 'object') {
         Splide.options.video = {};
       }
 
-      Splide.options.video = { ...DEFAULTS,
-        ...Splide.options.video
-      };
-      const providers = [providers_youtube, providers_vimeo];
-      providers.forEach(provider => {
+      Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
+      var providers = [providers_youtube, providers_vimeo];
+      providers.forEach(function (provider) {
         provider(Splide, Components).init();
       });
     }
-
   };
 });
 

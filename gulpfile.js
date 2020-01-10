@@ -16,6 +16,10 @@ const webpackStream = require( 'webpack-stream' );
  * Webpack config paths.
  */
 const js = {
+	global: {
+		path: './build/global/config',
+		dest: './dist/js',
+	},
 	module: {
 		path: './build/module/config',
 		dest: './dist/js',

@@ -1,9 +1,9 @@
+const uglify  = require( 'uglifyjs-webpack-plugin' );
+
 module.exports = {
-	entry: './src/js/splide-extension-video.js',
+	entry: './build/global/global.js',
 	output: {
-		filename     : 'splide-extension-video.js',
-		library      : 'Splide',
-		libraryTarget: 'umd',
+		filename: 'splide-extension-video.min.js',
 	},
 	module: {
 		rules: [
@@ -15,7 +15,7 @@ module.exports = {
 		],
 	},
 	optimization: {
-		minimize: false,
+		minimizer: [ new uglify() ],
 	},
 	mode: 'production',
 };
