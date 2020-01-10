@@ -1,5 +1,5 @@
 /**
- * Set Video extension to the global object.
+ * Set the Video extension to the global object.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
