@@ -1,0 +1,51 @@
+{
+  "name": "@splidejs/splide-extension-video",
+  "version": "0.0.1",
+  "description": "The extension of Splide for embedding videos.",
+  "author": "Naotoshi Fujita",
+  "license": "MIT",
+  "main": "dist/js/splide-extension-video.js",
+  "keywords": [
+    "splide",
+    "slider",
+    "carousel",
+    "slideshow",
+    "lightweight",
+    "touch",
+    "responsive",
+    "video",
+    "movie",
+    "youtube",
+    "vimeo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Splidejs/splide-extension-video.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Splidejs/splide-extension-video/issues"
+  },
+  "dependencies": {
+    "@vimeo/player": "^2.10.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "autoprefixer": "^9.7.3",
+    "babel-loader": "^8.0.6",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-rollup": "^2.16.2",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-glob": "^1.1.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.5",
+    "webpack-stream": "^5.2.1"
+  },
+  "scripts": {
+    "build:js": "gulp build:js",
+    "build:sass": "gulp build:sass"
+  }
+}
