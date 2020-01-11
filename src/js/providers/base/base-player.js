@@ -6,6 +6,9 @@
  */
 
 import Elements from '../../elements';
+import State from '../../utils/state';
+
+import { NOT_INITIALIZED, IDLE, LOADING, PLAYING, PLAY_REQUEST_ABORTED } from "../../constants/states";
 
 
 /**
@@ -27,7 +30,7 @@ export default class BasePlayer {
 
 		this.player    = null;
 		this.elements  = null;
-		this.isPlaying = false;
+		this.state     = State( NOT_INITIALIZED );
 
 		this.videoId = this.findVideoId();
 
@@ -74,9 +77,11 @@ export default class BasePlayer {
 	 * Create a player.
 	 * This must be overridden in a child class.
 	 *
-	 * @return {null}
+	 * @param {function} readyCallback
+	 *
+	 * @return {null} - Always null.
 	 */
-	createPlayer() {
+	createPlayer( readyCallback = null ) {
 		return null;
   }
 
@@ -84,33 +89,37 @@ export default class BasePlayer {
 	 * Play video.
 	 */
 	play() {
-		if ( this.isPlaying ) {
+		if ( this.state.is( PLAYING ) || ! this.isActive() ) {
 			return;
 		}
 
 		// Hide immediately for UX.
 		this.elements.hide();
 
-		if ( ! this.player ) {
-			this.player = this.createPlayer();
+		if ( this.state.is( NOT_INITIALIZED ) ) {
+			this.player = this.createPlayer( () => {
+				this.state.set( IDLE );
+				this.play();
+			} );
 		} else {
 			this.playVideo();
+			this.state.set( LOADING );
 		}
-
-		this.isPlaying = true;
 	}
 
 	/**
 	 * Pause video.
 	 */
 	pause() {
-		if ( this.player && this.isPlaying ) {
-			if ( ! this.isAutoplay() ) {
-				this.elements.show();
-			}
+		if ( ! this.isAutoplay() ) {
+			this.elements.show();
+		}
 
+		if ( this.state.is( LOADING ) ) {
+			this.state.set( PLAY_REQUEST_ABORTED );
+		} else if ( this.state.is( PLAYING ) ) {
 			this.pauseVideo();
-			this.isPlaying = false;
+			this.state.set( IDLE )
 		}
 	}
 
@@ -157,7 +166,13 @@ export default class BasePlayer {
 	 * Called when the player is playing a video.
 	 */
 	onPlay() {
-		this.Splide.emit( 'video:play', this );
+		if ( ! this.isActive() ) {
+			this.state.set( PLAYING );
+			this.pause();
+		} else {
+			this.Splide.emit( 'video:play', this );
+			this.state.set( PLAYING );
+		}
 	}
 
 	/**
@@ -165,6 +180,7 @@ export default class BasePlayer {
 	 */
 	onPause() {
 		this.Splide.emit( 'video:pause', this );
+		this.state.set( IDLE );
 	}
 
 	/**
@@ -172,5 +188,6 @@ export default class BasePlayer {
 	 */
 	onEnd() {
 		this.Splide.emit( 'video:end', this );
+		this.state.set( IDLE );
 	}
 }

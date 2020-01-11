@@ -7,6 +7,7 @@
 
 import BasePlayer from '../base/base-player';
 
+
 /**
  * The class for controlling YouTube video.
  */
@@ -15,12 +16,14 @@ export default class Player extends BasePlayer {
 	 * Create a player.
 	 * This must be overridden in a child class.
 	 *
-	 * @return {object|null}
+	 * @param {function} readyCallback - Callback function triggered when the player gets ready.
+	 *
+	 * @return {object|null} - A created player object.
 	 */
-	createPlayer() {
+	createPlayer( readyCallback = null ) {
 		const options = this.Splide.options.video;
 
-		return new YT.Player( this.elements.iframe, {
+		const player = new YT.Player( this.elements.iframe, {
 			videoId: this.videoId,
 			playerVars: {
 				fs            : options.disableFullScreen,
@@ -28,13 +31,21 @@ export default class Player extends BasePlayer {
 				iv_load_policy: 3,
 				loop          : options.loop,
 				rel           : 0,
-				autoplay      : true,
+				autoplay      : true, // For UX.
 			},
 			events: {
-				'onReady'      : this.onPlayerReady.bind( this ),
+				'onReady': e => {
+					this.onPlayerReady( e );
+
+					if ( readyCallback ) {
+						readyCallback();
+					}
+				},
 				'onStateChange': this.onPlayerStateChange.bind( this ),
 			}
 		} );
+
+		return player;
 	}
 
 	/**
@@ -56,12 +67,18 @@ export default class Player extends BasePlayer {
 	onPlayerStateChange( e ) {
 		const { PLAYING, PAUSED, ENDED } = YT.PlayerState;
 
-		if ( e.data === PLAYING ) {
-			this.onPlay();
-		} else if( e.data === PAUSED ) {
-			this.onPause();
-		} else if ( e.data === ENDED ) {
-			this.onEnd();
+		switch ( true ) {
+			case e.data === PLAYING:
+				this.onPlay();
+				break;
+
+			case e.data === PAUSED:
+				this.onPause();
+				break;
+
+			case e.data === ENDED:
+				this.onEnd();
+				break;
 		}
 	}
 
