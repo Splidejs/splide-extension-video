@@ -3276,22 +3276,25 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
  */
 
 /* harmony default export */ var providers_youtube = (function (Splide, Components) {
+  /**
+   * Store the old callback.
+   *
+   * @type {function}
+   */
+  var oldCallback;
   return {
     /**
      * Initialization.
      */
     init: function init() {
-      this.loadAPI();
       this.bindAPICallback();
-      this.oldCallback = null;
+      this.loadAPI();
     },
 
     /**
      * Load the YouTube iframe API.
      */
     loadAPI: function loadAPI() {
-      var _this = this;
-
       var _window = window,
           YT = _window.YT;
 
@@ -3304,10 +3307,6 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
         if (YT && YT.loaded) {
           // API has been already loaded and the callback has been fired.
           this.onReady();
-        } else {
-          Splide.on('video:youtubeAPIReady', function () {
-            _this.onReady();
-          });
         }
       }
     },
@@ -3335,7 +3334,7 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
     bindAPICallback: function bindAPICallback() {
       // Avoid unexpected collision against other libraries.
       if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
-        this.oldCallback = window.onYouTubeIframeAPIReady;
+        oldCallback = window.onYouTubeIframeAPIReady;
       }
 
       window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind(this);
@@ -3345,12 +3344,11 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
      * Called when the API is ready.
      */
     onYouTubeIframeAPIReady: function onYouTubeIframeAPIReady() {
-      if (this.oldCallback) {
-        this.oldCallback();
+      if (oldCallback) {
+        oldCallback();
       }
 
       this.onReady();
-      Splide.emit('video:youtubeAPIReady');
     },
 
     /**
