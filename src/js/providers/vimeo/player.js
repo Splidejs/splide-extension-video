@@ -39,7 +39,6 @@ export default class Player extends BasePlayer {
 		}
 
 		if ( readyCallback ) {
-			// Fire callback on the next tick to keep the order of "return -> callback".
 			player.ready().then( readyCallback );
 		}
 

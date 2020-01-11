@@ -39,4 +39,3 @@ export const PLAY_REQUEST_ABORTED = 4;
  * @type {number}
  */
 export const PLAYING = 5;
-

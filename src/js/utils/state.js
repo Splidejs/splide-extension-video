@@ -26,8 +26,6 @@ export default initialState => {
 		 */
 		set( state ) {
 			curr = state;
-			console.log( state );
-
 		},
 
 		/**
