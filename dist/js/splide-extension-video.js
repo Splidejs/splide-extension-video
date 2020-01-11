@@ -2811,6 +2811,90 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
     }
   };
 });
+// CONCATENATED MODULE: ./src/js/utils/state.js
+/**
+ * The function providing a super simple state system.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The function providing a super simple state system.
+ *
+ * @param {string|number} initialState - Provide the initial state value.
+ */
+/* harmony default export */ var state = (function (initialState) {
+  /**
+   * Store the current state.
+   *
+   * @type {string|number}
+   */
+  var curr = initialState;
+  return {
+    /**
+     * Change state.
+     *
+     * @param {string|number} state - A new state.
+     */
+    set: function set(state) {
+      curr = state;
+    },
+
+    /**
+     * Verify if the current state is given one or not.
+     *
+     * @param {string|number} state - A state name to be verified.
+     *
+     * @return {boolean} - True if the current state is the given one.
+     */
+    is: function is(state) {
+      return state === curr;
+    }
+  };
+});
+// CONCATENATED MODULE: ./src/js/constants/states.js
+/**
+ * Export state constants.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The player is not initialized.
+ *
+ * @type {number}
+ */
+var NOT_INITIALIZED = 1;
+/**
+ * Ready to play a video.
+ *
+ * @type {number}
+ */
+
+var IDLE = 2;
+/**
+ * Loading a video.
+ *
+ * @type {number}
+ */
+
+var LOADING = 3;
+/**
+ * Play request has been sent to the player, but it is aborted.
+ *
+ * @type {number}
+ */
+
+var PLAY_REQUEST_ABORTED = 4;
+/**
+ * Playing a video.
+ *
+ * @type {number}
+ */
+
+var PLAYING = 5;
 // CONCATENATED MODULE: ./src/js/providers/base/base-player.js
 /**
  * The base class of the video player.
@@ -2819,13 +2903,8 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
-/**
- * The status class name added to the root element while the video is playing.
- *
- * @type {string}
- */
 
-var PLAYING_STATUS_CLASS_NAME = 'is-playing';
+
 /**
  * The base class of the video player.
  */
@@ -2847,7 +2926,7 @@ function () {
     this.slide = Slide.slide;
     this.player = null;
     this.elements = null;
-    this.isPlaying = true;
+    this.state = state(NOT_INITIALIZED);
     this.videoId = this.findVideoId();
 
     if (this.videoId) {
@@ -2866,6 +2945,7 @@ function () {
     this.elements = js_elements(this.slide);
     this.elements.init();
     this.slide.classList.add(this.Splide.classes.slide + '--has-video');
+    this.Splide.root.classList.add(this.Splide.classes.root + '--has-video');
 
     if (this.isAutoplay()) {
       if (this.isActive()) {
@@ -2896,11 +2976,17 @@ function () {
    * Create a player.
    * This must be overridden in a child class.
    *
-   * @return {null}
+   * @param {function} readyCallback
+   *
+   * @return {null} - Always null.
    */
   ;
 
-  _proto.createPlayer = function createPlayer() {
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
     return null;
   }
   /**
@@ -2909,21 +2995,25 @@ function () {
   ;
 
   _proto.play = function play() {
-    if (this.isPlaying) {
+    var _this2 = this;
+
+    if (this.state.is(PLAYING) || !this.isActive()) {
       return;
     } // Hide immediately for UX.
 
 
     this.elements.hide();
 
-    if (!this.player) {
-      this.player = this.createPlayer();
+    if (this.state.is(NOT_INITIALIZED)) {
+      this.player = this.createPlayer(function () {
+        _this2.state.set(IDLE);
+
+        _this2.play();
+      });
     } else {
       this.playVideo();
+      this.state.set(LOADING);
     }
-
-    this.Slide.emit('video:play', this);
-    this.isPlaying = true;
   }
   /**
    * Pause video.
@@ -2931,14 +3021,15 @@ function () {
   ;
 
   _proto.pause = function pause() {
-    if (this.player && this.isPlaying) {
-      if (!this.isAutoplay()) {
-        this.elements.show();
-      }
+    if (!this.isAutoplay()) {
+      this.elements.show();
+    }
 
+    if (this.state.is(LOADING)) {
+      this.state.set(PLAY_REQUEST_ABORTED);
+    } else if (this.state.is(PLAYING)) {
       this.pauseVideo();
-      this.Slide.emit('video:pause', this);
-      this.isPlaying = false;
+      this.state.set(IDLE);
     }
   }
   /**
@@ -2984,6 +3075,38 @@ function () {
 
   _proto.findVideoId = function findVideoId() {
     return '';
+  }
+  /**
+   * Called when the player is playing a video.
+   */
+  ;
+
+  _proto.onPlay = function onPlay() {
+    if (!this.isActive()) {
+      this.state.set(PLAYING);
+      this.pause();
+    } else {
+      this.Splide.emit('video:play', this);
+      this.state.set(PLAYING);
+    }
+  }
+  /**
+   * Called when the player is paused a video.
+   */
+  ;
+
+  _proto.onPause = function onPause() {
+    this.Splide.emit('video:pause', this);
+    this.state.set(IDLE);
+  }
+  /**
+   * Called when the video is ended.
+   */
+  ;
+
+  _proto.onEnd = function onEnd() {
+    this.Splide.emit('video:end', this);
+    this.state.set(IDLE);
   };
 
   return BasePlayer;
@@ -3019,11 +3142,19 @@ function (_BasePlayer) {
    * Create a player.
    * This must be overridden in a child class.
    *
-   * @return {object|null}
+   * @param {function} readyCallback - Callback function triggered when the player gets ready.
+   *
+   * @return {object|null} - A created player object.
    */
-  _proto.createPlayer = function createPlayer() {
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    var _this = this;
+
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
     var options = this.Splide.options.video;
-    return new YT.Player(this.elements.iframe, {
+    var player = new YT.Player(this.elements.iframe, {
       videoId: this.videoId,
       playerVars: {
         fs: options.disableFullScreen,
@@ -3031,12 +3162,21 @@ function (_BasePlayer) {
         iv_load_policy: 3,
         loop: options.loop,
         rel: 0,
-        autoplay: true
+        autoplay: true // For UX.
+
       },
       events: {
-        'onReady': this.onPlayerReady.bind(this)
+        'onReady': function onReady(e) {
+          _this.onPlayerReady(e);
+
+          if (readyCallback) {
+            readyCallback();
+          }
+        },
+        'onStateChange': this.onPlayerStateChange.bind(this)
       }
     });
+    return player;
   }
   /**
    * Called when the YouTube player is ready.
@@ -3048,6 +3188,33 @@ function (_BasePlayer) {
   _proto.onPlayerReady = function onPlayerReady(e) {
     if (this.Splide.options.video.mute) {
       e.target.mute();
+    }
+  }
+  /**
+   * Called when the YouTube player state is changed.
+   *
+   * @param {Object} e - An event object.
+   */
+  ;
+
+  _proto.onPlayerStateChange = function onPlayerStateChange(e) {
+    var _YT$PlayerState = YT.PlayerState,
+        PLAYING = _YT$PlayerState.PLAYING,
+        PAUSED = _YT$PlayerState.PAUSED,
+        ENDED = _YT$PlayerState.ENDED;
+
+    switch (true) {
+      case e.data === PLAYING:
+        this.onPlay();
+        break;
+
+      case e.data === PAUSED:
+        this.onPause();
+        break;
+
+      case e.data === ENDED:
+        this.onEnd();
+        break;
     }
   }
   /**
@@ -3214,6 +3381,7 @@ function player_inheritsLoose(subClass, superClass) { subClass.prototype = Objec
  */
 
 
+
 /**
  * The class for controlling Vimeo video.
  */
@@ -3233,22 +3401,31 @@ function (_BasePlayer) {
    * Create a player.
    * This must be overridden in a child class.
    *
-   * @return {object|null}
+   * @param {function} readyCallback - Callback function triggered when the player gets ready.
+   *
+   * @return {object|null} - A created player object.
    */
-  _proto.createPlayer = function createPlayer() {
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
     var options = this.Splide.options.video;
     var player = new player_es["a" /* default */](this.elements.iframe, {
       id: this.videoId,
       controls: !options.hideControls,
       loop: options.loop
     });
+    player.on('play', this.onPlay.bind(this));
+    player.on('pause', this.onPause.bind(this));
+    player.on('end', this.onEnd.bind(this));
 
     if (options.mute) {
-      player.setMuted(true).then(function () {
-        player.play();
-      });
-    } else {
-      player.play();
+      player.setMuted(true);
+    }
+
+    if (readyCallback) {
+      player.ready().then(readyCallback);
     }
 
     return player;
@@ -3265,6 +3442,21 @@ function (_BasePlayer) {
     var regExp = /vimeo.com\/(\d+)/;
     var match = url.match(regExp);
     return match && match[1] ? match[1] : '';
+  }
+  /**
+   * Called when the player is playing a video.
+   */
+  ;
+
+  _proto.onPlay = function onPlay() {
+    if (this.state.is(PLAY_REQUEST_ABORTED) && !this.isActive()) {
+      this.player.destroy();
+      this.elements.show();
+      this.state.set(NOT_INITIALIZED);
+    } else {
+      this.Splide.emit('video:play', this);
+      this.state.set(PLAYING);
+    }
   };
 
   return Player;
@@ -3361,15 +3553,27 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 /**
+ * The status class name added to the root element while the video is playing.
+ *
+ * @type {string}
+ */
+
+var PLAYING_STATUS_CLASS_NAME = 'is-playing';
+/**
  * The extension component for embedding videos to slides.
  *
- * @param {Splide}  Splide     - A Splide instance.
- * @param {Object}  Components - An object containing components.
+ * @param {Splide} Splide     - A Splide instance.
+ * @param {Object} Components - An object containing components.
  *
  * @return {Object} - Extension object.
  */
 
 /* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = (function (Splide, Components) {
+  /**
+   * Playing slide index.
+   *
+   * @type {number}
+   */
   var playingIndex = -1;
   var Video = {
     /**
@@ -3395,13 +3599,13 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
   function bind() {
     Splide.on('video:play', function (Player) {
-      playingIndex = Player.Slide.realIndex;
-      Splide.root.classList.add('is-playing');
+      playingIndex = Player.Slide.index;
+      Splide.root.classList.add(PLAYING_STATUS_CLASS_NAME);
     });
-    Splide.on('video:paused', function (Player) {
-      if (Player.Slide.realIndex === playingIndex) {
+    Splide.on('video:pause video:end', function (Player) {
+      if (Player.Slide.index === playingIndex) {
         playingIndex = -1;
-        Splide.root.classList.remove('is-playing');
+        Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);
       }
     });
   }
