@@ -3074,6 +3074,13 @@ function (_BasePlayer) {
  */
 
 /**
+ * URL to the YouTube API script.
+ *
+ * @type {string}
+ */
+
+var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
+/**
  * The sub component for embedding a YouTube video.
  *
  * @param {Splide}  Splide     - A Splide instance.
@@ -3097,12 +3104,43 @@ function (_BasePlayer) {
      * Load the YouTube iframe API.
      */
     loadAPI: function loadAPI() {
-      if (typeof Vimeo === 'undefined') {
+      var _this = this;
+
+      var _window = window,
+          YT = _window.YT;
+
+      if (this.shouldLoadAPI()) {
         var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/player_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
+        tag.src = YOUTUBE_API_SRC;
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        if (YT && YT.loaded) {
+          // API has been already loaded and the callback has been fired.
+          this.onReady();
+        } else {
+          Splide.on('video:youtubeAPIReady', function () {
+            _this.onReady();
+          });
+        }
       }
+    },
+
+    /**
+     * Check whether the API should be loaded or not.
+     *
+     * @return {boolean} - True if it should be or false if not.
+     */
+    shouldLoadAPI: function shouldLoadAPI() {
+      var scripts = document.getElementsByTagName('script');
+
+      for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].getAttribute('src') === YOUTUBE_API_SRC) {
+          return false;
+        }
+      }
+
+      return true;
     },
 
     /**
@@ -3125,6 +3163,14 @@ function (_BasePlayer) {
         this.oldCallback();
       }
 
+      Splide.emit('video:youtubeAPIReady');
+      this.onReady();
+    },
+
+    /**
+     * Called when the YouTube API is ready.
+     */
+    onReady: function onReady() {
       Components.Slides.getSlides(false, true).forEach(function (Slide) {
         var youtube = Slide.slide.getAttribute('data-splide-youtube');
 

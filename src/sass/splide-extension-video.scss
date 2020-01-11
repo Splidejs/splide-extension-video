@@ -26,6 +26,11 @@ $play-button-color: black;
     height: 100%;
     background: black;
 
+    // for vimeo
+    div {
+      height: 100%;
+    }
+
     iframe {
       width: 100%;
       height: 100%;

@@ -1,6 +1,6 @@
 {
   "name": "@splidejs/splide-extension-video",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The extension of Splide for embedding videos.",
   "author": "Naotoshi Fujita",
   "license": "MIT",
