@@ -24,15 +24,20 @@ const YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
  * @return {Object} - Sub component object.
  */
 export default ( Splide, Components ) => {
+	/**
+	 * Store the old callback.
+	 *
+	 * @type {function}
+	 */
+	let oldCallback;
+
 	return {
 		/**
 		 * Initialization.
 		 */
 		init() {
-			this.loadAPI();
 			this.bindAPICallback();
-
-			this.oldCallback = null;
+			this.loadAPI();
 		},
 
 		/**
@@ -50,8 +55,6 @@ export default ( Splide, Components ) => {
 				if ( YT && YT.loaded ) {
 					// API has been already loaded and the callback has been fired.
 					this.onReady();
-				} else {
-					Splide.on( 'video:youtubeAPIReady', () => { this.onReady() } );
 				}
 			}
 		},
@@ -79,7 +82,7 @@ export default ( Splide, Components ) => {
 		bindAPICallback() {
 			// Avoid unexpected collision against other libraries.
 			if ( typeof window.onYouTubeIframeAPIReady !== 'undefined' ) {
-				this.oldCallback = window.onYouTubeIframeAPIReady;
+				oldCallback = window.onYouTubeIframeAPIReady;
 			}
 
 			window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind( this );
@@ -89,12 +92,11 @@ export default ( Splide, Components ) => {
 		 * Called when the API is ready.
 		 */
 		onYouTubeIframeAPIReady() {
-			if ( this.oldCallback ) {
-				this.oldCallback();
+			if ( oldCallback ) {
+				oldCallback();
 			}
 
 			this.onReady();
-			Splide.emit( 'video:youtubeAPIReady' );
 		},
 
 		/**
