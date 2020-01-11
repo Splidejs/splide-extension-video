@@ -31,7 +31,8 @@ export default class Player extends BasePlayer {
 				autoplay      : true,
 			},
 			events: {
-				'onReady': this.onPlayerReady.bind( this ),
+				'onReady'      : this.onPlayerReady.bind( this ),
+				'onStateChange': this.onPlayerStateChange.bind( this ),
 			}
 		} );
 	}
@@ -44,6 +45,23 @@ export default class Player extends BasePlayer {
 	onPlayerReady( e ) {
 		if ( this.Splide.options.video.mute ) {
 			e.target.mute();
+		}
+	}
+
+	/**
+	 * Called when the YouTube player state is changed.
+	 *
+	 * @param {Object} e - An event object.
+	 */
+	onPlayerStateChange( e ) {
+		const { PLAYING, PAUSED, ENDED } = YT.PlayerState;
+
+		if ( e.data === PLAYING ) {
+			this.onPlay();
+		} else if( e.data === PAUSED ) {
+			this.onPause();
+		} else if ( e.data === ENDED ) {
+			this.onEnd();
 		}
 	}
 

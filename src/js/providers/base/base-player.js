@@ -7,6 +7,7 @@
 
 import Elements from '../../elements';
 
+
 /**
  * The base class of the video player.
  */
@@ -24,8 +25,9 @@ export default class BasePlayer {
 		this.Slide      = Slide;
 		this.slide      = Slide.slide;
 
-		this.player   = null;
-		this.elements = null;
+		this.player    = null;
+		this.elements  = null;
+		this.isPlaying = false;
 
 		this.videoId = this.findVideoId();
 
@@ -41,7 +43,8 @@ export default class BasePlayer {
 	init() {
 	  this.elements = Elements( this.slide );
 	  this.elements.init();
-	  this.slide.classList.add( this.Splide.classes.slide + '--has-video' );
+		this.slide.classList.add( this.Splide.classes.slide + '--has-video' );
+		this.Splide.root.classList.add( this.Splide.classes.root + '--has-video' );
 
 	  if ( this.isAutoplay() ) {
 			if ( this.isActive() ) {
@@ -58,13 +61,13 @@ export default class BasePlayer {
 	bind() {
 	  this.slide.addEventListener( 'click', this.play.bind( this ) );
 
-	  this.Splide
-		  .on( 'move', this.pause.bind( this ) )
-	    .on( 'moved', () => {
-			  if ( this.isActive() && this.isAutoplay() ) {
-				  this.play();
-			  }
-		  } );
+		this.Splide.on( 'move', () => {
+			this.pause();
+
+			if ( this.isActive() && this.isAutoplay() ) {
+				this.play();
+			}
+		} );
   }
 
 	/**
@@ -81,6 +84,10 @@ export default class BasePlayer {
 	 * Play video.
 	 */
 	play() {
+		if ( this.isPlaying ) {
+			return;
+		}
+
 		// Hide immediately for UX.
 		this.elements.hide();
 
@@ -89,18 +96,21 @@ export default class BasePlayer {
 		} else {
 			this.playVideo();
 		}
+
+		this.isPlaying = true;
 	}
 
 	/**
 	 * Pause video.
 	 */
 	pause() {
-		if ( this.player ) {
+		if ( this.player && this.isPlaying ) {
 			if ( ! this.isAutoplay() ) {
 				this.elements.show();
 			}
 
 			this.pauseVideo();
+			this.isPlaying = false;
 		}
 	}
 
@@ -141,5 +151,26 @@ export default class BasePlayer {
 	 */
 	findVideoId() {
 		return '';
+	}
+
+	/**
+	 * Called when the player is playing a video.
+	 */
+	onPlay() {
+		this.Splide.emit( 'video:play', this );
+	}
+
+	/**
+	 * Called when the player is paused a video.
+	 */
+	onPause() {
+		this.Splide.emit( 'video:pause', this );
+	}
+
+	/**
+	 * Called when the video is ended.
+	 */
+	onEnd() {
+		this.Splide.emit( 'video:end', this );
 	}
 }

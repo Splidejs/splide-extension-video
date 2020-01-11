@@ -2820,6 +2820,13 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
  */
 
 /**
+ * The status class name added to the root element while the video is playing.
+ *
+ * @type {string}
+ */
+
+var PLAYING_STATUS_CLASS_NAME = 'is-playing';
+/**
  * The base class of the video player.
  */
 
@@ -2840,6 +2847,7 @@ function () {
     this.slide = Slide.slide;
     this.player = null;
     this.elements = null;
+    this.isPlaying = true;
     this.videoId = this.findVideoId();
 
     if (this.videoId) {
@@ -2876,7 +2884,9 @@ function () {
     var _this = this;
 
     this.slide.addEventListener('click', this.play.bind(this));
-    this.Splide.on('move', this.pause.bind(this)).on('moved', function () {
+    this.Splide.on('move', function () {
+      _this.pause();
+
       if (_this.isActive() && _this.isAutoplay()) {
         _this.play();
       }
@@ -2899,7 +2909,11 @@ function () {
   ;
 
   _proto.play = function play() {
-    // Hide immediately for UX.
+    if (this.isPlaying) {
+      return;
+    } // Hide immediately for UX.
+
+
     this.elements.hide();
 
     if (!this.player) {
@@ -2907,6 +2921,9 @@ function () {
     } else {
       this.playVideo();
     }
+
+    this.Slide.emit('video:play', this);
+    this.isPlaying = true;
   }
   /**
    * Pause video.
@@ -2914,12 +2931,14 @@ function () {
   ;
 
   _proto.pause = function pause() {
-    if (this.player) {
+    if (this.player && this.isPlaying) {
       if (!this.isAutoplay()) {
         this.elements.show();
       }
 
       this.pauseVideo();
+      this.Slide.emit('video:pause', this);
+      this.isPlaying = false;
     }
   }
   /**
@@ -3163,8 +3182,8 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
         this.oldCallback();
       }
 
-      Splide.emit('video:youtubeAPIReady');
       this.onReady();
+      Splide.emit('video:youtubeAPIReady');
     },
 
     /**
@@ -3351,7 +3370,8 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  */
 
 /* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = (function (Splide, Components) {
-  return {
+  var playingIndex = -1;
+  var Video = {
     /**
      * Called when this extension is mounted.
      * Initialize all sub components.
@@ -3366,8 +3386,27 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       providers.forEach(function (provider) {
         provider(Splide, Components).init();
       });
+      bind();
     }
   };
+  /**
+   * Listen some events.
+   */
+
+  function bind() {
+    Splide.on('video:play', function (Player) {
+      playingIndex = Player.Slide.realIndex;
+      Splide.root.classList.add('is-playing');
+    });
+    Splide.on('video:paused', function (Player) {
+      if (Player.Slide.realIndex === playingIndex) {
+        playingIndex = -1;
+        Splide.root.classList.remove('is-playing');
+      }
+    });
+  }
+
+  return Video;
 });
 
 /***/ })
