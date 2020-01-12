@@ -33,7 +33,7 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
     new Splide( '#splide' ).mount( splide.Extensions );
     ```
     
-### Available Options
+## Available Options
 * **autoplay**: Whether to play the video automatically.
 * **hideControls**: Hide the video control UI.
 * **disableFullScreen**: Hide full screen button(Only for YouTube).
