@@ -3162,6 +3162,7 @@ function (_BasePlayer) {
     player.addEventListener('play', this.onPlay.bind(this));
     player.addEventListener('pause', this.onPause.bind(this));
     player.addEventListener('ended', this.onEnd.bind(this));
+    player.volume = Math.max(Math.min(options.volume, 1), 0);
     player.muted = options.mute;
 
     if (readyCallback) {
@@ -3293,9 +3294,14 @@ function (_BasePlayer) {
   ;
 
   _proto.onPlayerReady = function onPlayerReady(e) {
-    if (this.Splide.options.video.mute) {
-      e.target.mute();
+    var player = e.target;
+    var options = this.Splide.options.video;
+
+    if (options.mute) {
+      player.mute();
     }
+
+    player.setVolume(Math.max(Math.min(options.volume * 100, 100), 0));
   }
   /**
    * Called when the YouTube player state is changed.
@@ -3524,10 +3530,8 @@ function (_BasePlayer) {
     player.on('play', this.onPlay.bind(this));
     player.on('pause', this.onPause.bind(this));
     player.on('end', this.onEnd.bind(this));
-
-    if (options.mute) {
-      player.setMuted(true);
-    }
+    player.setVolume(Math.max(Math.min(options.volume, 1), 0));
+    player.setMuted(options.mute);
 
     if (readyCallback) {
       player.ready().then(readyCallback);
@@ -3643,7 +3647,14 @@ var DEFAULTS = {
    *
    * @type {boolean}
    */
-  mute: false
+  mute: false,
+
+  /**
+   * Default volume(0.0-1.0).
+   *
+   * @type {number}
+   */
+  volume: 0.2
 };
 // CONCATENATED MODULE: ./src/js/splide-extension-video.js
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }

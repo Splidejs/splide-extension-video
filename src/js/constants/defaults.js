@@ -41,4 +41,11 @@ export const DEFAULTS = {
 	 * @type {boolean}
 	 */
 	mute: false,
+
+	/**
+	 * Default volume(0.0-1.0).
+	 *
+	 * @type {number}
+	 */
+	volume: 0.2,
 };

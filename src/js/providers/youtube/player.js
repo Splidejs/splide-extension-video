@@ -46,6 +46,7 @@ export default class Player extends BasePlayer {
 			}
 		} );
 
+
 		return player;
 	}
 
@@ -55,9 +56,14 @@ export default class Player extends BasePlayer {
 	 * @param {Object} e - An event object.
 	 */
 	onPlayerReady( e ) {
-		if ( this.Splide.options.video.mute ) {
-			e.target.mute();
+		const player  = e.target;
+		const options = this.Splide.options.video;
+
+		if ( options.mute ) {
+			player.mute();
 		}
+
+		player.setVolume( Math.max( Math.min( options.volume * 100, 100 ), 0 ) );
 	}
 
 	/**
