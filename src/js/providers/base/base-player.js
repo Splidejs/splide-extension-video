@@ -46,7 +46,7 @@ export default class BasePlayer {
 	init() {
 	  this.elements = Elements( this.Splide, this.Slide );
 	  this.elements.init();
-		this.Splide.root.classList.add( this.Splide.classes.root + '--has-video' );
+		this.Splide.root.classList.add( this.Splide.classes.root.split( ' ' )[0] + '--has-video' );
 
 		if ( ! this.Splide.State.is( this.Splide.STATES.CREATED ) ) {
 			this.setup();

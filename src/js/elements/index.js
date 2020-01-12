@@ -43,8 +43,9 @@ export default ( Splide, Slide ) => {
 		 * Create some elements.
 		 */
 		create() {
-			const parent = Slide.container ? Slide.container : Slide.slide;
-			parent.classList.add( Splide.classes[ Slide.container ? 'container' : 'slide' ] + '--has-video' );
+			const parent    = Slide.container ? Slide.container : Slide.slide;
+			const className = `${ Splide.classes[ Slide.container ? 'container' : 'slide' ].split( ' ' )[0] }--has-video`;
+			parent.classList.add( className );
 
 			this.wrapper    = document.createElement( 'div' );
 			this.iframe     = document.createElement( 'div' );

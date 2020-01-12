@@ -2768,7 +2768,8 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
      */
     create: function create() {
       var parent = Slide.container ? Slide.container : Slide.slide;
-      parent.classList.add(Splide.classes[Slide.container ? 'container' : 'slide'] + '--has-video');
+      var className = Splide.classes[Slide.container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
+      parent.classList.add(className);
       this.wrapper = document.createElement('div');
       this.iframe = document.createElement('div');
       this.playButton = document.createElement('div');
@@ -2947,7 +2948,7 @@ function () {
   _proto.init = function init() {
     this.elements = js_elements(this.Splide, this.Slide);
     this.elements.init();
-    this.Splide.root.classList.add(this.Splide.classes.root + '--has-video');
+    this.Splide.root.classList.add(this.Splide.classes.root.split(' ')[0] + '--has-video');
 
     if (!this.Splide.State.is(this.Splide.STATES.CREATED)) {
       this.setup();
