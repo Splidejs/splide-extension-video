@@ -30,10 +30,10 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
     Note that version numbers above are incorrect.
 1. Mount the extension to the Splide.
     ```javascript
-    new Splide( '#splide' ).mount( splide.Extensions );
+    new Splide( '#splide' ).mount( window.splide.Extensions );
     ```
     
-### Available Options
+## Available Options
 * **autoplay**: Whether to play the video automatically.
 * **hideControls**: Hide the video control UI.
 * **disableFullScreen**: Hide full screen button(Only for YouTube).
