@@ -8,5 +8,5 @@
 import Video from '../../src/js/splide-extension-video';
 
 window.splide = window.splide || {};
-window.splide.Extensions = window.splide.extensions || {};
+window.splide.Extensions = window.splide.Extensions || {};
 window.splide.Extensions.Video = Video;

@@ -48,13 +48,25 @@ export default class BasePlayer {
 	  this.elements.init();
 		this.Splide.root.classList.add( this.Splide.classes.root + '--has-video' );
 
-	  if ( this.isAutoplay() ) {
-			if ( this.isActive() ) {
-				this.play();
-			}
+		if ( ! this.Splide.State.is( this.Splide.STATES.CREATED ) ) {
+			this.setup();
 		} else {
-			this.elements.togglePlayButton( true );
+			this.Splide.on( 'mounted', this.setup.bind( this ) );
 		}
+  }
+
+	/**
+	 * Setup.
+	 * This must be called after MOUNTED state.
+	 */
+	setup() {
+		if ( this.isAutoplay() ) {
+		  if ( this.isActive() ) {
+			  this.play();
+		  }
+	  } else {
+		  this.elements.togglePlayButton( true );
+	  }
   }
 
 	/**

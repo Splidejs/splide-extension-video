@@ -2949,6 +2949,19 @@ function () {
     this.elements.init();
     this.Splide.root.classList.add(this.Splide.classes.root + '--has-video');
 
+    if (!this.Splide.State.is(this.Splide.STATES.CREATED)) {
+      this.setup();
+    } else {
+      this.Splide.on('mounted', this.setup.bind(this));
+    }
+  }
+  /**
+   * Setup.
+   * This must be called after MOUNTED state.
+   */
+  ;
+
+  _proto.setup = function setup() {
     if (this.isAutoplay()) {
       if (this.isActive()) {
         this.play();
@@ -3209,7 +3222,7 @@ function (_BasePlayer) {
     /**
      * Initialization.
      */
-    init: function init() {
+    mount: function mount() {
       Components.Slides.getSlides(false, true).forEach(function (Slide) {
         var video = Slide.slide.getAttribute('data-splide-html-video');
 
@@ -3399,7 +3412,7 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
     /**
      * Initialization.
      */
-    init: function init() {
+    mount: function mount() {
       this.bindAPICallback();
       this.loadAPI();
     },
@@ -3594,7 +3607,7 @@ function (_BasePlayer) {
     /**
      * Initialization.
      */
-    init: function init() {
+    mount: function mount() {
       Components.Slides.getSlides(false, true).forEach(function (Slide) {
         var vimeo = Slide.slide.getAttribute('data-splide-vimeo');
 
@@ -3705,7 +3718,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
       Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
       var providers = [html_video, providers_youtube, providers_vimeo];
       providers.forEach(function (provider) {
-        provider(Splide, Components).init();
+        provider(Splide, Components).mount();
       });
       bind();
     }

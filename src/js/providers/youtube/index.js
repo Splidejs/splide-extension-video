@@ -35,7 +35,7 @@ export default ( Splide, Components ) => {
 		/**
 		 * Initialization.
 		 */
-		init() {
+		mount() {
 			this.bindAPICallback();
 			this.loadAPI();
 		},

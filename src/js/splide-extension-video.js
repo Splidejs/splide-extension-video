@@ -49,7 +49,7 @@ export default ( Splide, Components ) => {
 
 			const providers = [ HtmlVideo, YouTube, Vimeo ];
 			providers.forEach( provider => {
-				provider( Splide, Components ).init();
+				provider( Splide, Components ).mount();
 			} );
 
 			bind();

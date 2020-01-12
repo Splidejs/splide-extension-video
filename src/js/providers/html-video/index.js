@@ -20,7 +20,7 @@ export default ( Splide, Components ) => {
 		/**
 		 * Initialization.
 		 */
-		init() {
+		mount() {
 			Components.Slides.getSlides( false, true ).forEach( Slide => {
 				const video = Slide.slide.getAttribute( 'data-splide-html-video' );
 
