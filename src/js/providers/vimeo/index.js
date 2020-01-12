@@ -1,5 +1,5 @@
 /**
- * The sub component for embedding a YouTube video.
+ * The sub component for embedding a Vimeo video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
@@ -8,7 +8,7 @@
 import Player from './player';
 
 /**
- * The sub component for embedding a YouTube video.
+ * The sub component for embedding a Vimeo video.
  *
  * @param {Splide}  Splide     - A Splide instance.
  * @param {Object}  Components - An object containing components.
