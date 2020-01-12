@@ -1,5 +1,5 @@
 /**
- * The sub component for embedding a raw video.
+ * The sub component for embedding a HTML video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
@@ -8,7 +8,7 @@
 import Player from './player';
 
 /**
- * The sub component for embedding a raw video.
+ * The sub component for embedding a HTML video.
  *
  * @param {Splide} Splide     - A Splide instance.
  * @param {Object} Components - An object containing components.
@@ -22,7 +22,7 @@ export default ( Splide, Components ) => {
 		 */
 		init() {
 			Components.Slides.getSlides( false, true ).forEach( Slide => {
-				const video = Slide.slide.getAttribute( 'data-splide-video' );
+				const video = Slide.slide.getAttribute( 'data-splide-html-video' );
 
 				if ( video ) {
 					new Player( Splide, Components, Slide );

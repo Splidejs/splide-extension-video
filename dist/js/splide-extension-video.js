@@ -3115,18 +3115,18 @@ function () {
 }();
 
 
-// CONCATENATED MODULE: ./src/js/providers/video/player.js
+// CONCATENATED MODULE: ./src/js/providers/html-video/player.js
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 /**
- * The class for controlling a raw video.
+ * The class for controlling a HTML video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
 /**
- * The class for controlling a raw video.
+ * The class for controlling a HTML video.
  */
 
 var player_Player =
@@ -3180,23 +3180,23 @@ function (_BasePlayer) {
   ;
 
   _proto.findVideoId = function findVideoId() {
-    return this.slide.getAttribute('data-splide-video');
+    return this.slide.getAttribute('data-splide-html-video');
   };
 
   return Player;
 }(base_player_BasePlayer);
 
 
-// CONCATENATED MODULE: ./src/js/providers/video/index.js
+// CONCATENATED MODULE: ./src/js/providers/html-video/index.js
 /**
- * The sub component for embedding a raw video.
+ * The sub component for embedding a HTML video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
 /**
- * The sub component for embedding a raw video.
+ * The sub component for embedding a HTML video.
  *
  * @param {Splide} Splide     - A Splide instance.
  * @param {Object} Components - An object containing components.
@@ -3204,14 +3204,14 @@ function (_BasePlayer) {
  * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var providers_video = (function (Splide, Components) {
+/* harmony default export */ var html_video = (function (Splide, Components) {
   return {
     /**
      * Initialization.
      */
     init: function init() {
       Components.Slides.getSlides(false, true).forEach(function (Slide) {
-        var video = Slide.slide.getAttribute('data-splide-video');
+        var video = Slide.slide.getAttribute('data-splide-html-video');
 
         if (video) {
           new player_Player(Splide, Components, Slide);
@@ -3703,7 +3703,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
       }
 
       Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
-      var providers = [providers_video, providers_youtube, providers_vimeo];
+      var providers = [html_video, providers_youtube, providers_vimeo];
       providers.forEach(function (provider) {
         provider(Splide, Components).init();
       });

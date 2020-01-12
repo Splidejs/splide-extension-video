@@ -5,7 +5,7 @@
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
-import RawVideo from './providers/video';
+import HtmlVideo from './providers/html-video';
 import YouTube from './providers/youtube';
 import Vimeo from './providers/vimeo';
 
@@ -47,7 +47,7 @@ export default ( Splide, Components ) => {
 
 			Splide.options.video = { ...DEFAULTS, ...Splide.options.video };
 
-			const providers = [ RawVideo, YouTube, Vimeo ];
+			const providers = [ HtmlVideo, YouTube, Vimeo ];
 			providers.forEach( provider => {
 				provider( Splide, Components ).init();
 			} );

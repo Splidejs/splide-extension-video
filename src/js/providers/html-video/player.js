@@ -1,5 +1,5 @@
 /**
- * The class for controlling a raw video.
+ * The class for controlling a HTML video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
@@ -8,7 +8,7 @@
 import BasePlayer from '../base/base-player';
 
 /**
- * The class for controlling a raw video.
+ * The class for controlling a HTML video.
  */
 export default class Player extends BasePlayer {
 	/**
@@ -51,6 +51,6 @@ export default class Player extends BasePlayer {
 	 * @return {string} - Video ID(path or URL).
 	 */
 	findVideoId(){
-		return this.slide.getAttribute( 'data-splide-video' );
+		return this.slide.getAttribute( 'data-splide-html-video' );
 	}
 }
