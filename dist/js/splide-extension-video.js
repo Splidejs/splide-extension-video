@@ -3161,6 +3161,7 @@ function (_BasePlayer) {
         controls: options.hideControls,
         iv_load_policy: 3,
         loop: options.loop,
+        playlist: options.loop ? this.videoId : '',
         rel: 0,
         autoplay: true // For UX.
 
