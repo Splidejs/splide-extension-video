@@ -1,5 +1,5 @@
 # Splide extension for playing videos
-This is an extension of the [Splide](https://github.com/Splidejs/splide) slider library for playing videos of YouTube and Vimeo. You must get Splide before using it.
+This is an extension of the [Splide](https://github.com/Splidejs/splide) slider library for playing videos of HTML video, YouTube and Vimeo. You must get Splide before using it.
 
 * [Demo and documents](https://splidejs.com/video/)
 
@@ -32,13 +32,34 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
     ```javascript
     new Splide( '#splide' ).mount( window.splide.Extensions );
     ```
-    
+
+### HTML
+Assign videos to slides by data attributes:
+```html
+<div class="splide">
+    <div class="splide__track">
+        <ul class="splide__list">
+            <li class="splide__slide" data-splide-html-video="path or url to the source file">
+                <img src="thumbnail01.jpg">
+            </li>
+            <li class="splide__slide" data-splide-youtube="https://www.youtube.com/watch?v=cdz__ojQOuU">
+                <img src="thumbnail02.jpg">
+            </li>
+            <li class="splide__slide" data-splide-vimeo="https://vimeo.com/215334213">
+                <img src="thumbnail03.jpg">
+            </li>
+        </ul>
+    </div>
+</div>
+```
+
 ## Available Options
 * **autoplay**: Whether to play the video automatically.
 * **hideControls**: Hide the video control UI.
 * **disableFullScreen**: Hide full screen button(Only for YouTube).
 * **loop**: Loop the video.
 * **mute**: Mute the video.
+* **volume**: Volume(0.0-1.0).
 
 ## License
 Splide is released under the MIT license.  
