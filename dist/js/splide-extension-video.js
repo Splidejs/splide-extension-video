@@ -2746,34 +2746,37 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
 /**
  * The sub component for creating UI elements.
  *
- * @param {Element} slide - Target slide element.
+ * @param {Splide} Splide - A Splide instance.
+ * @param {Object} Slide  - Target Slide object.
  *
  * @return {Object}
  */
 
-/* harmony default export */ var js_elements = (function (slide) {
+/* harmony default export */ var js_elements = (function (Splide, Slide) {
   return {
     /**
      * Initialization.
      */
     init: function init() {
       this.create();
+      this.toggleWrapper(false);
+      this.togglePlayButton(false);
     },
 
     /**
      * Create some elements.
      */
     create: function create() {
+      var parent = Slide.container ? Slide.container : Slide.slide;
+      parent.classList.add(Splide.classes[Slide.container ? 'container' : 'slide'] + '--has-video');
       this.wrapper = document.createElement('div');
       this.iframe = document.createElement('div');
       this.playButton = document.createElement('div');
       this.wrapper.classList.add(WRAPPER_CLASS);
       this.playButton.classList.add(PLAY_BUTTON_CLASS);
       this.wrapper.appendChild(this.iframe);
-      slide.appendChild(this.wrapper);
-      slide.appendChild(this.playButton);
-      this.toggleWrapper(false);
-      this.togglePlayButton(false);
+      parent.appendChild(this.wrapper);
+      parent.appendChild(this.playButton);
     },
 
     /**
@@ -2942,9 +2945,8 @@ function () {
   var _proto = BasePlayer.prototype;
 
   _proto.init = function init() {
-    this.elements = js_elements(this.slide);
+    this.elements = js_elements(this.Splide, this.Slide);
     this.elements.init();
-    this.slide.classList.add(this.Splide.classes.slide + '--has-video');
     this.Splide.root.classList.add(this.Splide.classes.root + '--has-video');
 
     if (this.isAutoplay()) {

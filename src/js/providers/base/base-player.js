@@ -44,9 +44,8 @@ export default class BasePlayer {
 	 * Initialization.
 	 */
 	init() {
-	  this.elements = Elements( this.slide );
+	  this.elements = Elements( this.Splide, this.Slide );
 	  this.elements.init();
-		this.slide.classList.add( this.Splide.classes.slide + '--has-video' );
 		this.Splide.root.classList.add( this.Splide.classes.root + '--has-video' );
 
 	  if ( this.isAutoplay() ) {

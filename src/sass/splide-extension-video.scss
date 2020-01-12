@@ -16,6 +16,21 @@ $play-button-color: black;
         }
       }
     }
+
+    &__container {
+      &--has-video {
+        cursor: pointer;
+        position: relative;
+
+        &:hover {
+          #{$root}__video {
+            &__play {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
   }
 
   &__video {

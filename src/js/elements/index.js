@@ -23,23 +23,29 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
 /**
  * The sub component for creating UI elements.
  *
- * @param {Element} slide - Target slide element.
+ * @param {Splide} Splide - A Splide instance.
+ * @param {Object} Slide  - Target Slide object.
  *
  * @return {Object}
  */
-export default ( slide ) => {
+export default ( Splide, Slide ) => {
 	return {
 		/**
 		 * Initialization.
 		 */
 		init() {
 			this.create();
+			this.toggleWrapper( false );
+			this.togglePlayButton( false );
 		},
 
 		/**
 		 * Create some elements.
 		 */
 		create() {
+			const parent = Slide.container ? Slide.container : Slide.slide;
+			parent.classList.add( Splide.classes[ Slide.container ? 'container' : 'slide' ] + '--has-video' );
+
 			this.wrapper    = document.createElement( 'div' );
 			this.iframe     = document.createElement( 'div' );
 			this.playButton = document.createElement( 'div' );
@@ -48,11 +54,8 @@ export default ( slide ) => {
 			this.playButton.classList.add( PLAY_BUTTON_CLASS );
 			this.wrapper.appendChild( this.iframe );
 
-			slide.appendChild( this.wrapper );
-			slide.appendChild( this.playButton );
-
-			this.toggleWrapper( false );
-			this.togglePlayButton( false );
+			parent.appendChild( this.wrapper );
+			parent.appendChild( this.playButton );
 		},
 
 		/**
