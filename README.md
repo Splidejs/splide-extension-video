@@ -1,7 +1,7 @@
 # Video - Splide Extension
 This is an extension of the [Splide](https://github.com/Splidejs/splide) slider library for playing videos of HTML video, YouTube and Vimeo. You must get Splide before using it.
 
-* [Demo and documents](https://splidejs.com/video/)
+* [Demo and Document](https://splidejs.com/video/)
 
 ## Installation
 ### NPM(Recommended)
