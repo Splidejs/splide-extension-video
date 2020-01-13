@@ -8,7 +8,15 @@
 import Elements from '../../elements';
 import State from '../../utils/state';
 
-import { NOT_INITIALIZED, IDLE, LOADING, PLAYING, PLAY_REQUEST_ABORTED } from "../../constants/states";
+import {
+	NOT_INITIALIZED,
+	IDLE,
+	LOADING,
+	PLAYING,
+	PLAY_REQUEST_ABORTED,
+	CREATING_PLAYER,
+	PENDING_PLAY
+} from "../../constants/states";
 
 
 /**
@@ -60,12 +68,23 @@ export default class BasePlayer {
 	 * This must be called after MOUNTED state.
 	 */
 	setup() {
-		if ( this.isAutoplay() ) {
-		  if ( this.isActive() ) {
-			  this.play();
+		if ( ! this.isAutoplay() ) {
+			this.elements.togglePlayButton( true );
+		}
+
+	  if ( this.isActive() ) {
+		  if ( this.state.is( NOT_INITIALIZED ) ) {
+			  this.state.set( CREATING_PLAYER );
+
+			  this.player = this.createPlayer( () => {
+				  const isPendingPlay = this.state.is( PENDING_PLAY );
+				  this.state.set( IDLE );
+
+				  if ( isPendingPlay || this.isAutoplay() ) {
+					  this.play();
+				  }
+			  } );
 		  }
-	  } else {
-		  this.elements.togglePlayButton( true );
 	  }
   }
 
@@ -78,8 +97,14 @@ export default class BasePlayer {
 		this.Splide.on( 'move', () => {
 			this.pause();
 
-			if ( this.isActive() && this.isAutoplay() ) {
-				this.play();
+			if ( this.isActive() ) {
+				if ( this.state.is( NOT_INITIALIZED ) ) {
+					this.setup();
+				} else {
+					if ( this.isAutoplay() ) {
+						this.play();
+					}
+				}
 			}
 		} );
   }
@@ -104,18 +129,15 @@ export default class BasePlayer {
 			return;
 		}
 
+		if ( this.state.is( CREATING_PLAYER ) ) {
+			this.state.set( PENDING_PLAY );
+			return;
+		}
+
 		// Hide immediately for UX.
 		this.elements.hide();
-
-		if ( this.state.is( NOT_INITIALIZED ) ) {
-			this.player = this.createPlayer( () => {
-				this.state.set( IDLE );
-				this.play();
-			} );
-		} else {
-			this.playVideo();
-			this.state.set( LOADING );
-		}
+		this.playVideo();
+		this.state.set( LOADING );
 	}
 
 	/**

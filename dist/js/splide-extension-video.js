@@ -2872,33 +2872,47 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
  */
 var NOT_INITIALIZED = 1;
 /**
+ * The player is being created.
+ *
+ * @type {number}
+ */
+
+var CREATING_PLAYER = 2;
+/**
+ * Playing video is requested while creating a player.
+ *
+ * @type {number}
+ */
+
+var PENDING_PLAY = 3;
+/**
  * Ready to play a video.
  *
  * @type {number}
  */
 
-var IDLE = 2;
+var IDLE = 4;
 /**
  * Loading a video.
  *
  * @type {number}
  */
 
-var LOADING = 3;
+var LOADING = 5;
 /**
  * Play request has been sent to the player, but it is aborted.
  *
  * @type {number}
  */
 
-var PLAY_REQUEST_ABORTED = 4;
+var PLAY_REQUEST_ABORTED = 6;
 /**
  * Playing a video.
  *
  * @type {number}
  */
 
-var PLAYING = 5;
+var PLAYING = 7;
 // CONCATENATED MODULE: ./src/js/providers/base/base-player.js
 /**
  * The base class of the video player.
@@ -2963,12 +2977,25 @@ function () {
   ;
 
   _proto.setup = function setup() {
-    if (this.isAutoplay()) {
-      if (this.isActive()) {
-        this.play();
-      }
-    } else {
+    var _this = this;
+
+    if (!this.isAutoplay()) {
       this.elements.togglePlayButton(true);
+    }
+
+    if (this.isActive()) {
+      if (this.state.is(NOT_INITIALIZED)) {
+        this.state.set(CREATING_PLAYER);
+        this.player = this.createPlayer(function () {
+          var isPendingPlay = _this.state.is(PENDING_PLAY);
+
+          _this.state.set(IDLE);
+
+          if (isPendingPlay || _this.isAutoplay()) {
+            _this.play();
+          }
+        });
+      }
     }
   }
   /**
@@ -2977,14 +3004,20 @@ function () {
   ;
 
   _proto.bind = function bind() {
-    var _this = this;
+    var _this2 = this;
 
     this.slide.addEventListener('click', this.play.bind(this));
     this.Splide.on('move', function () {
-      _this.pause();
+      _this2.pause();
 
-      if (_this.isActive() && _this.isAutoplay()) {
-        _this.play();
+      if (_this2.isActive()) {
+        if (_this2.state.is(NOT_INITIALIZED)) {
+          _this2.setup();
+        } else {
+          if (_this2.isAutoplay()) {
+            _this2.play();
+          }
+        }
       }
     });
   }
@@ -3011,25 +3044,19 @@ function () {
   ;
 
   _proto.play = function play() {
-    var _this2 = this;
-
     if (this.state.is(PLAYING) || !this.isActive()) {
+      return;
+    }
+
+    if (this.state.is(CREATING_PLAYER)) {
+      this.state.set(PENDING_PLAY);
       return;
     } // Hide immediately for UX.
 
 
     this.elements.hide();
-
-    if (this.state.is(NOT_INITIALIZED)) {
-      this.player = this.createPlayer(function () {
-        _this2.state.set(IDLE);
-
-        _this2.play();
-      });
-    } else {
-      this.playVideo();
-      this.state.set(LOADING);
-    }
+    this.playVideo();
+    this.state.set(LOADING);
   }
   /**
    * Pause video.
@@ -3284,7 +3311,7 @@ function (_BasePlayer) {
         loop: options.loop,
         playlist: options.loop ? this.videoId : '',
         rel: 0,
-        autoplay: true // For UX.
+        autoplay: false // For UX.
 
       },
       events: {
