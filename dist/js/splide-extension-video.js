@@ -2772,7 +2772,7 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
       parent.classList.add(className);
       this.wrapper = document.createElement('div');
       this.iframe = document.createElement('div');
-      this.playButton = document.createElement('div');
+      this.playButton = document.createElement('button');
       this.wrapper.classList.add(WRAPPER_CLASS);
       this.playButton.classList.add(PLAY_BUTTON_CLASS);
       this.wrapper.appendChild(this.iframe);
