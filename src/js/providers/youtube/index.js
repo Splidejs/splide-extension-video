@@ -103,7 +103,7 @@ export default ( Splide, Components ) => {
 		 * Called when the YouTube API is ready.
 		 */
 		onReady() {
-			Components.Slides.getSlides( false, true ).forEach( Slide => {
+			Components.Elements.getSlides( false ).forEach( Slide => {
 				const youtube = Slide.slide.getAttribute( 'data-splide-youtube' );
 
 				if ( youtube ) {

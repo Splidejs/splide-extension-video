@@ -3251,7 +3251,7 @@ function (_BasePlayer) {
      * Initialization.
      */
     mount: function mount() {
-      Components.Slides.getSlides(false, true).forEach(function (Slide) {
+      Components.Elements.getSlides(false).forEach(function (Slide) {
         var video = Slide.slide.getAttribute('data-splide-html-video');
 
         if (video) {
@@ -3509,7 +3509,7 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
      * Called when the YouTube API is ready.
      */
     onReady: function onReady() {
-      Components.Slides.getSlides(false, true).forEach(function (Slide) {
+      Components.Elements.getSlides(false).forEach(function (Slide) {
         var youtube = Slide.slide.getAttribute('data-splide-youtube');
 
         if (youtube) {
@@ -3636,7 +3636,7 @@ function (_BasePlayer) {
      * Initialization.
      */
     mount: function mount() {
-      Components.Slides.getSlides(false, true).forEach(function (Slide) {
+      Components.Elements.getSlides(false).forEach(function (Slide) {
         var vimeo = Slide.slide.getAttribute('data-splide-vimeo');
 
         if (vimeo) {
