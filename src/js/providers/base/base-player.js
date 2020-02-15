@@ -92,21 +92,21 @@ export default class BasePlayer {
 	 * Listen some events.
 	 */
 	bind() {
-	  this.slide.addEventListener( 'click', this.play.bind( this ) );
+	  this.Splide
+		  .on( 'click', this.play.bind( this ), this.slide )
+		  .on( 'move', () => {
+				this.pause();
 
-		this.Splide.on( 'move', () => {
-			this.pause();
-
-			if ( this.isActive() ) {
-				if ( this.state.is( NOT_INITIALIZED ) ) {
-					this.setup();
-				} else {
-					if ( this.isAutoplay() ) {
-						this.play();
+				if ( this.isActive() ) {
+					if ( this.state.is( NOT_INITIALIZED ) ) {
+						this.setup();
+					} else {
+						if ( this.isAutoplay() ) {
+							this.play();
+						}
 					}
 				}
-			}
-		} );
+			} );
   }
 
 	/**
@@ -222,5 +222,15 @@ export default class BasePlayer {
 	onEnd() {
 		this.Splide.emit( 'video:end', this );
 		this.state.set( IDLE );
+	}
+
+	/**
+	 * Destroy the player.
+	 */
+	destroy() {
+		if ( this.player ) {
+			this.player.destroy();
+			this.player = null;
+		}
 	}
 }

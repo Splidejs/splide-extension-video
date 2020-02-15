@@ -25,9 +25,18 @@ export default ( Splide, Components ) => {
 				const vimeo = Slide.slide.getAttribute( 'data-splide-vimeo' );
 
 				if ( vimeo ) {
-					new Player( Splide, Components, Slide );
+					this.player = new Player( Splide, Components, Slide );
 				}
 			} );
+		},
+
+		/**
+		 * Destroy.
+		 */
+		destroy() {
+			if ( this.player ) {
+				this.player.destroy();
+			}
 		},
 	};
 }

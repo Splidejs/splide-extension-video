@@ -35,6 +35,13 @@ export default ( Splide, Components ) => {
 	 */
 	let playingIndex = -1;
 
+	/**
+	 * Store provider components.
+	 * 
+	 * @type {Object[]}
+	 */
+	let Providers = [];
+
 	const Video = {
 		/**
 		 * Called when this extension is mounted.
@@ -49,11 +56,20 @@ export default ( Splide, Components ) => {
 
 			const providers = [ HtmlVideo, YouTube, Vimeo ];
 			providers.forEach( provider => {
-				provider( Splide, Components ).mount();
+				const Provider = provider( Splide, Components );
+				Providers.push( Provider );
+				Provider.mount();
 			} );
 
 			bind();
 		},
+
+		/**
+		 * Destroy.
+		 */
+		destroy() {
+			Providers.forEach( Provider => Provider.destroy() );
+		}
 	};
 
 	/**

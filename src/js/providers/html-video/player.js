@@ -53,4 +53,18 @@ export default class Player extends BasePlayer {
 	findVideoId(){
 		return this.slide.getAttribute( 'data-splide-html-video' );
 	}
+
+	/**
+	 * Destroy.
+	 */
+	destroy() {
+		if ( this.player ) {
+			this.player.pause();
+			this.player.removeAttribute('src');
+			this.player.load();
+
+			this.elements.iframe.removeChild( this.player );
+			this.player = null;
+		}
+	}
 }

@@ -107,9 +107,18 @@ export default ( Splide, Components ) => {
 				const youtube = Slide.slide.getAttribute( 'data-splide-youtube' );
 
 				if ( youtube ) {
-					new Player( Splide, Components, Slide );
+					this.player = new Player( Splide, Components, Slide );
 				}
 			} );
-		}
+		},
+
+		/**
+		 * Destroy.
+		 */
+		destroy() {
+			if ( this.player ) {
+				this.player.destroy();
+			}
+		},
 	};
 }

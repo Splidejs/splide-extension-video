@@ -25,9 +25,18 @@ export default ( Splide, Components ) => {
 				const video = Slide.slide.getAttribute( 'data-splide-html-video' );
 
 				if ( video ) {
-					new Player( Splide, Components, Slide );
+					this.player = new Player( Splide, Components, Slide );
 				}
 			} );
+		},
+
+		/**
+		 * Destroy.
+		 */
+		destroy() {
+			if ( this.player ) {
+				this.player.destroy();
+			}
 		},
 	};
 }

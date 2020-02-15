@@ -3006,8 +3006,7 @@ function () {
   _proto.bind = function bind() {
     var _this2 = this;
 
-    this.slide.addEventListener('click', this.play.bind(this));
-    this.Splide.on('move', function () {
+    this.Splide.on('click', this.play.bind(this), this.slide).on('move', function () {
       _this2.pause();
 
       if (_this2.isActive()) {
@@ -3150,6 +3149,17 @@ function () {
   _proto.onEnd = function onEnd() {
     this.Splide.emit('video:end', this);
     this.state.set(IDLE);
+  }
+  /**
+   * Destroy the player.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    if (this.player) {
+      this.player.destroy();
+      this.player = null;
+    }
   };
 
   return BasePlayer;
@@ -3222,6 +3232,20 @@ function (_BasePlayer) {
 
   _proto.findVideoId = function findVideoId() {
     return this.slide.getAttribute('data-splide-html-video');
+  }
+  /**
+   * Destroy.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    if (this.player) {
+      this.player.pause();
+      this.player.removeAttribute('src');
+      this.player.load();
+      this.elements.iframe.removeChild(this.player);
+      this.player = null;
+    }
   };
 
   return Player;
@@ -3251,13 +3275,24 @@ function (_BasePlayer) {
      * Initialization.
      */
     mount: function mount() {
+      var _this = this;
+
       Components.Elements.getSlides(false).forEach(function (Slide) {
         var video = Slide.slide.getAttribute('data-splide-html-video');
 
         if (video) {
-          new player_Player(Splide, Components, Slide);
+          _this.player = new player_Player(Splide, Components, Slide);
         }
       });
+    },
+
+    /**
+     * Destroy.
+     */
+    destroy: function destroy() {
+      if (this.player) {
+        this.player.destroy();
+      }
     }
   };
 });
@@ -3509,13 +3544,24 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
      * Called when the YouTube API is ready.
      */
     onReady: function onReady() {
+      var _this = this;
+
       Components.Elements.getSlides(false).forEach(function (Slide) {
         var youtube = Slide.slide.getAttribute('data-splide-youtube');
 
         if (youtube) {
-          new youtube_player_Player(Splide, Components, Slide);
+          _this.player = new youtube_player_Player(Splide, Components, Slide);
         }
       });
+    },
+
+    /**
+     * Destroy.
+     */
+    destroy: function destroy() {
+      if (this.player) {
+        this.player.destroy();
+      }
     }
   };
 });
@@ -3636,13 +3682,24 @@ function (_BasePlayer) {
      * Initialization.
      */
     mount: function mount() {
+      var _this = this;
+
       Components.Elements.getSlides(false).forEach(function (Slide) {
         var vimeo = Slide.slide.getAttribute('data-splide-vimeo');
 
         if (vimeo) {
-          new vimeo_player_Player(Splide, Components, Slide);
+          _this.player = new vimeo_player_Player(Splide, Components, Slide);
         }
       });
+    },
+
+    /**
+     * Destroy.
+     */
+    destroy: function destroy() {
+      if (this.player) {
+        this.player.destroy();
+      }
     }
   };
 });
@@ -3733,6 +3790,13 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
    * @type {number}
    */
   var playingIndex = -1;
+  /**
+   * Store provider components.
+   * 
+   * @type {Object[]}
+   */
+
+  var Providers = [];
   var Video = {
     /**
      * Called when this extension is mounted.
@@ -3746,9 +3810,20 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
       Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
       var providers = [html_video, providers_youtube, providers_vimeo];
       providers.forEach(function (provider) {
-        provider(Splide, Components).mount();
+        var Provider = provider(Splide, Components);
+        Providers.push(Provider);
+        Provider.mount();
       });
       bind();
+    },
+
+    /**
+     * Destroy.
+     */
+    destroy: function destroy() {
+      Providers.forEach(function (Provider) {
+        return Provider.destroy();
+      });
     }
   };
   /**
