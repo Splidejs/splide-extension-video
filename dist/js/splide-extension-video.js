@@ -2720,6 +2720,7 @@ process.umask = function() { return 0; };
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./src/js/elements/index.js
@@ -2927,9 +2928,7 @@ var PLAYING = 7;
  * The base class of the video player.
  */
 
-var base_player_BasePlayer =
-/*#__PURE__*/
-function () {
+var base_player_BasePlayer = /*#__PURE__*/function () {
   /**
    * BasePlayer constructor.
    *
@@ -3167,6 +3166,16 @@ function () {
 
 
 // CONCATENATED MODULE: ./src/js/providers/html-video/player.js
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 /**
@@ -3180,10 +3189,10 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
  * The class for controlling a HTML video.
  */
 
-var player_Player =
-/*#__PURE__*/
-function (_BasePlayer) {
+var player_Player = /*#__PURE__*/function (_BasePlayer) {
   _inheritsLoose(Player, _BasePlayer);
+
+  var _super = _createSuper(Player);
 
   function Player() {
     return _BasePlayer.apply(this, arguments) || this;
@@ -3297,6 +3306,16 @@ function (_BasePlayer) {
   };
 });
 // CONCATENATED MODULE: ./src/js/providers/youtube/player.js
+function player_createSuper(Derived) { return function () { var Super = player_getPrototypeOf(Derived), result; if (player_isNativeReflectConstruct()) { var NewTarget = player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return player_possibleConstructorReturn(this, result); }; }
+
+function player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return player_assertThisInitialized(self); }
+
+function player_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function player_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function player_getPrototypeOf(o) { player_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return player_getPrototypeOf(o); }
+
 function player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 /**
@@ -3310,10 +3329,10 @@ function player_inheritsLoose(subClass, superClass) { subClass.prototype = Objec
  * The class for controlling YouTube video.
  */
 
-var youtube_player_Player =
-/*#__PURE__*/
-function (_BasePlayer) {
+var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
   player_inheritsLoose(Player, _BasePlayer);
+
+  var _super = player_createSuper(Player);
 
   function Player() {
     return _BasePlayer.apply(this, arguments) || this;
@@ -3569,6 +3588,16 @@ var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
 var player_es = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/player.js
+function vimeo_player_createSuper(Derived) { return function () { var Super = vimeo_player_getPrototypeOf(Derived), result; if (vimeo_player_isNativeReflectConstruct()) { var NewTarget = vimeo_player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return vimeo_player_possibleConstructorReturn(this, result); }; }
+
+function vimeo_player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return vimeo_player_assertThisInitialized(self); }
+
+function vimeo_player_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function vimeo_player_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function vimeo_player_getPrototypeOf(o) { vimeo_player_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return vimeo_player_getPrototypeOf(o); }
+
 function vimeo_player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 /**
@@ -3584,10 +3613,10 @@ function vimeo_player_inheritsLoose(subClass, superClass) { subClass.prototype =
  * The class for controlling Vimeo video.
  */
 
-var vimeo_player_Player =
-/*#__PURE__*/
-function (_BasePlayer) {
+var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
   vimeo_player_inheritsLoose(Player, _BasePlayer);
+
+  var _super = vimeo_player_createSuper(Player);
 
   function Player() {
     return _BasePlayer.apply(this, arguments) || this;
