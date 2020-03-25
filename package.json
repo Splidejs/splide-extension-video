@@ -29,20 +29,20 @@
     "@vimeo/player": "^2.10.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.0",
-    "@babel/preset-env": "^7.8.0",
-    "autoprefixer": "^9.7.3",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "autoprefixer": "^9.7.5",
+    "babel-loader": "^8.1.0",
     "cssnano": "^4.1.10",
     "gulp": "^4.0.2",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^2.0.0",
-    "gulp-rollup": "^2.16.2",
+    "gulp-rollup": "^2.17.0",
     "gulp-sass": "^4.0.2",
     "gulp-sass-glob": "^1.1.0",
-    "serialize-javascript": "^2.1.2",
+    "serialize-javascript": "^3.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.5",
+    "webpack": "^4.42.1",
     "webpack-stream": "^5.2.1"
   },
   "scripts": {
