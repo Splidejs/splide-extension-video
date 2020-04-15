@@ -20,6 +20,10 @@ const js = {
 		path: './build/global/config',
 		dest: './dist/js',
 	},
+	minified: {
+		path: './build/global/config-min',
+		dest: './dist/js',
+	},
 	module: {
 		path: './build/module/config',
 		dest: './dist/js',

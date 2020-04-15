@@ -1,10 +1,11 @@
 {
   "name": "@splidejs/splide-extension-video",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The extension of Splide for embedding videos.",
   "author": "Naotoshi Fujita",
   "license": "MIT",
   "main": "dist/js/splide-extension-video.js",
+  "module": "dist/js/splide-extension-video.esm.js",
   "keywords": [
     "splide",
     "slider",
