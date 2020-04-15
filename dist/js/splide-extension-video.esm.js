@@ -3812,7 +3812,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
  * @return {Object} - Extension object.
  */
 
-/* harmony default export */ var splide_extension_video = (function (Splide, Components) {
+/* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = (function (Splide, Components) {
   /**
    * Playing slide index.
    *
@@ -3874,17 +3874,6 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
 
   return Video;
 });
-// CONCATENATED MODULE: ./build/global/global.js
-/**
- * Set the Video extension to the global object.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-window.splide = window.splide || {};
-window.splide.Extensions = window.splide.Extensions || {};
-window.splide.Extensions.Video = splide_extension_video;
 
 /***/ })
 /******/ ]);
