@@ -43,9 +43,10 @@ export default ( Splide, Slide ) => {
 		 * Create some elements.
 		 */
 		create() {
-			const parent    = Slide.container ? Slide.container : Slide.slide;
-			const className = `${ Splide.classes[ Slide.container ? 'container' : 'slide' ].split( ' ' )[0] }--has-video`;
-			parent.classList.add( className );
+			this.parent = Slide.container ? Slide.container : Slide.slide;
+
+			this.className = `${ Splide.classes[ Slide.container ? 'container' : 'slide' ].split( ' ' )[0] }--has-video`;
+			this.parent.classList.add( this.className );
 
 			this.wrapper    = document.createElement( 'div' );
 			this.iframe     = document.createElement( 'div' );
@@ -55,8 +56,17 @@ export default ( Splide, Slide ) => {
 			this.playButton.classList.add( PLAY_BUTTON_CLASS );
 			this.wrapper.appendChild( this.iframe );
 
-			parent.appendChild( this.wrapper );
-			parent.appendChild( this.playButton );
+			this.parent.appendChild( this.wrapper );
+			this.parent.appendChild( this.playButton );
+		},
+
+		/**
+		 * Destroy elements.
+		 */
+		destroy() {
+			this.parent.classList.remove( this.className );
+			this.remove( this.wrapper );
+			this.remove( this.playButton );
 		},
 
 		/**
@@ -92,5 +102,18 @@ export default ( Splide, Slide ) => {
 			this.togglePlayButton( true );
 			this.toggleWrapper( false );
 		},
+
+		/**
+		 * Remove the given element.
+		 *
+		 * @param {Element} elm - An element being removed.
+		 */
+		remove( elm ) {
+			const parent = elm.parentElement;
+
+			if ( parent ) {
+				parent.removeChild( elm );
+			}
+		}
 	};
 }

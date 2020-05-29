@@ -60,11 +60,13 @@ export default class Player extends BasePlayer {
 	destroy() {
 		if ( this.player ) {
 			this.player.pause();
-			this.player.removeAttribute('src');
+			this.player.removeAttribute( 'src' );
 			this.player.load();
 
 			this.elements.iframe.removeChild( this.player );
 			this.player = null;
 		}
+
+		this.elements.destroy();
 	}
 }

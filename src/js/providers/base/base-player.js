@@ -52,9 +52,10 @@ export default class BasePlayer {
 	 * Initialization.
 	 */
 	init() {
-	  this.elements = Elements( this.Splide, this.Slide );
+	  this.elements = new Elements( this.Splide, this.Slide );
 	  this.elements.init();
-		this.Splide.root.classList.add( this.Splide.classes.root.split( ' ' )[0] + '--has-video' );
+
+	  this.toggleRootClass( true );
 
 		if ( ! this.Splide.State.is( this.Splide.STATES.CREATED ) ) {
 			this.setup();
@@ -93,7 +94,7 @@ export default class BasePlayer {
 	 */
 	bind() {
 	  this.Splide
-		  .on( 'click', this.play.bind( this ), this.slide )
+		  .on( 'click', this.onClick.bind( this ) )
 		  .on( 'move', () => {
 				this.pause();
 
@@ -196,6 +197,25 @@ export default class BasePlayer {
 	}
 
 	/**
+	 * Toggle the root class.
+	 *
+	 * @param {boolean} add - Whether to add a class or not.
+	 */
+	toggleRootClass( add ) {
+		this.Splide.root.classList[ add ? 'add' : 'remove' ]( this.Splide.classes.root.split( ' ' )[0] + '--has-video' );
+	}
+
+	/**
+	 * Called whe nthe sl
+	 * @param Slide
+	 */
+	onClick( Slide ) {
+		if ( Slide.slide === this.slide ) {
+			this.play();
+		}
+	}
+
+	/**
 	 * Called when the player is playing a video.
 	 */
 	onPlay() {
@@ -232,5 +252,8 @@ export default class BasePlayer {
 			this.player.destroy();
 			this.player = null;
 		}
+
+		this.toggleRootClass( false );
+		this.elements.destroy();
 	}
 }

@@ -87,6 +87,10 @@ export default ( Splide, Components ) => {
 				Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
 			}
 		} );
+
+		Splide.on( 'destroy', () => {
+			Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
+		} );
 	}
 
 	return Video;

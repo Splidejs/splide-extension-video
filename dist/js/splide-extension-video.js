@@ -2758,17 +2758,26 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
      * Create some elements.
      */
     create: function create() {
-      var parent = Slide.container ? Slide.container : Slide.slide;
-      var className = Splide.classes[Slide.container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
-      parent.classList.add(className);
+      this.parent = Slide.container ? Slide.container : Slide.slide;
+      this.className = Splide.classes[Slide.container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
+      this.parent.classList.add(this.className);
       this.wrapper = document.createElement('div');
       this.iframe = document.createElement('div');
       this.playButton = document.createElement('button');
       this.wrapper.classList.add(WRAPPER_CLASS);
       this.playButton.classList.add(PLAY_BUTTON_CLASS);
       this.wrapper.appendChild(this.iframe);
-      parent.appendChild(this.wrapper);
-      parent.appendChild(this.playButton);
+      this.parent.appendChild(this.wrapper);
+      this.parent.appendChild(this.playButton);
+    },
+
+    /**
+     * Destroy elements.
+     */
+    destroy: function destroy() {
+      this.parent.classList.remove(this.className);
+      this.remove(this.wrapper);
+      this.remove(this.playButton);
     },
 
     /**
@@ -2803,6 +2812,19 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
     show: function show() {
       this.togglePlayButton(true);
       this.toggleWrapper(false);
+    },
+
+    /**
+     * Remove the given element.
+     *
+     * @param {Element} elm - An element being removed.
+     */
+    remove: function remove(elm) {
+      var parent = elm.parentElement;
+
+      if (parent) {
+        parent.removeChild(elm);
+      }
     }
   };
 });
@@ -2949,9 +2971,9 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   var _proto = BasePlayer.prototype;
 
   _proto.init = function init() {
-    this.elements = js_elements(this.Splide, this.Slide);
+    this.elements = new js_elements(this.Splide, this.Slide);
     this.elements.init();
-    this.Splide.root.classList.add(this.Splide.classes.root.split(' ')[0] + '--has-video');
+    this.toggleRootClass(true);
 
     if (!this.Splide.State.is(this.Splide.STATES.CREATED)) {
       this.setup();
@@ -2995,7 +3017,7 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   _proto.bind = function bind() {
     var _this2 = this;
 
-    this.Splide.on('click', this.play.bind(this), this.slide).on('move', function () {
+    this.Splide.on('click', this.onClick.bind(this)).on('move', function () {
       _this2.pause();
 
       if (_this2.isActive()) {
@@ -3108,6 +3130,27 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
     return '';
   }
   /**
+   * Toggle the root class.
+   *
+   * @param {boolean} add - Whether to add a class or not.
+   */
+  ;
+
+  _proto.toggleRootClass = function toggleRootClass(add) {
+    this.Splide.root.classList[add ? 'add' : 'remove'](this.Splide.classes.root.split(' ')[0] + '--has-video');
+  }
+  /**
+   * Called whe nthe sl
+   * @param Slide
+   */
+  ;
+
+  _proto.onClick = function onClick(Slide) {
+    if (Slide.slide === this.slide) {
+      this.play();
+    }
+  }
+  /**
    * Called when the player is playing a video.
    */
   ;
@@ -3149,6 +3192,9 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
       this.player.destroy();
       this.player = null;
     }
+
+    this.toggleRootClass(false);
+    this.elements.destroy();
   };
 
   return BasePlayer;
@@ -3245,6 +3291,8 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
       this.elements.iframe.removeChild(this.player);
       this.player = null;
     }
+
+    this.elements.destroy();
   };
 
   return Player;
@@ -3859,6 +3907,9 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
         playingIndex = -1;
         Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);
       }
+    });
+    Splide.on('destroy', function () {
+      Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);
     });
   }
 
