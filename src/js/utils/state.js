@@ -31,12 +31,18 @@ export default initialState => {
 		/**
 		 * Verify if the current state is given one or not.
 		 *
-		 * @param {string|number} state - A state name to be verified.
+		 * @param {string|number} states - A state name(s) to be verified.
 		 *
 		 * @return {boolean} - True if the current state is the given one.
 		 */
-		is( state ) {
-			return state === curr;
+		is( ...states ) {
+			for ( let i = 0; i < states.length; i++ ) {
+				if( states[ i ] === curr ) {
+					return true;
+				}
+			}
+
+			return false;
 		},
 	}
 }

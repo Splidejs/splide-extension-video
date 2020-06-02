@@ -5,6 +5,7 @@
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
+
 /**
  * The class name of the wrapper element that will be containing video iframe.
  *
@@ -23,18 +24,23 @@ const PLAY_BUTTON_CLASS = 'splide__video__play';
 /**
  * The sub component for creating UI elements.
  *
- * @param {Splide} Splide - A Splide instance.
- * @param {Object} Slide  - Target Slide object.
+ * @param {Splide}  Splide - A Splide instance.
+ * @param {Element} slide  - A target slide element.
  *
  * @return {Object}
  */
-export default ( Splide, Slide ) => {
-	return {
+export default ( Splide, slide ) => {
+	/**
+	 * Elements sub component.
+	 *
+	 * @type {Object}
+	 */
+	const Elements = {
 		/**
 		 * Initialization.
 		 */
 		init() {
-			this.create();
+			this.initElements();
 			this.toggleWrapper( false );
 			this.togglePlayButton( false );
 		},
@@ -42,15 +48,17 @@ export default ( Splide, Slide ) => {
 		/**
 		 * Create some elements.
 		 */
-		create() {
-			this.parent = Slide.container ? Slide.container : Slide.slide;
+		initElements() {
+			const container = findContainer( slide );
 
-			this.className = `${ Splide.classes[ Slide.container ? 'container' : 'slide' ].split( ' ' )[0] }--has-video`;
+			this.parent = container || slide;
+
+			this.className = `${ Splide.classes[ container ? 'container' : 'slide' ].split( ' ' )[0] }--has-video`;
 			this.parent.classList.add( this.className );
 
-			this.wrapper    = document.createElement( 'div' );
-			this.iframe     = document.createElement( 'div' );
-			this.playButton = document.createElement( 'button' );
+			this.wrapper    = create( 'div' );
+			this.iframe     = create( 'div' );
+			this.playButton = create( 'button' );
 
 			this.wrapper.classList.add( WRAPPER_CLASS );
 			this.playButton.classList.add( PLAY_BUTTON_CLASS );
@@ -65,8 +73,8 @@ export default ( Splide, Slide ) => {
 		 */
 		destroy() {
 			this.parent.classList.remove( this.className );
-			this.remove( this.wrapper );
-			this.remove( this.playButton );
+			remove( this.wrapper );
+			remove( this.playButton );
 		},
 
 		/**
@@ -102,18 +110,56 @@ export default ( Splide, Slide ) => {
 			this.togglePlayButton( true );
 			this.toggleWrapper( false );
 		},
-
-		/**
-		 * Remove the given element.
-		 *
-		 * @param {Element} elm - An element being removed.
-		 */
-		remove( elm ) {
-			const parent = elm.parentElement;
-
-			if ( parent ) {
-				parent.removeChild( elm );
-			}
-		}
 	};
+
+	/**
+	 * Find a container element.
+	 *
+	 * @param {Element} slide - A slide element.
+	 *
+	 * @return {Element} - A container element if found. Null otherwise.
+	 */
+	function findContainer( slide ) {
+		return findChild( slide, Splide.classes['container'].split( ' ' )[0] || '' );
+	}
+
+	/**
+	 * Find a child which has the given class name.
+	 *
+	 * @param {Element} parent    - A parent element.
+	 * @param {string}  className - A class name.
+	 *
+	 * @return {Element|null} - A found child element if available or null if not.
+	 */
+	function findChild( parent, className ) {
+		return Object.keys( parent.children ).map( key => parent.children[ key ] ).filter( child => {
+			return child.classList.contains( className );
+		} )[0] || null;
+	}
+
+	/**
+	 * Create a new element.
+	 *
+	 * @param {string} tag - A tag name for the element.
+	 *
+	 * @return {Element} - A created element.
+	 */
+	function create( tag ) {
+		return document.createElement( tag );
+	}
+
+	/**
+	 * Remove the given element.
+	 *
+	 * @param {Element} elm - An element being removed.
+	 */
+	function remove( elm ) {
+		const parent = elm.parentElement;
+
+		if ( parent ) {
+			parent.removeChild( elm );
+		}
+	}
+
+	return Elements;
 }

@@ -5,38 +5,21 @@
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
+import BaseProvider from '../base/base-provider';
 import Player from './player';
 
 /**
  * The sub component for embedding a HTML video.
- *
- * @param {Splide} Splide     - A Splide instance.
- * @param {Object} Components - An object containing components.
- *
- * @return {Object} - Sub component object.
  */
-export default ( Splide, Components ) => {
-	return {
-		/**
-		 * Initialization.
-		 */
-		mount() {
-			Components.Elements.getSlides( false ).forEach( Slide => {
-				const video = Slide.slide.getAttribute( 'data-splide-html-video' );
-
-				if ( video ) {
-					this.player = new Player( Splide, Components, Slide );
-				}
-			} );
-		},
-
-		/**
-		 * Destroy.
-		 */
-		destroy() {
-			if ( this.player ) {
-				this.player.destroy();
-			}
-		},
-	};
+export default class HTMLVideo extends BaseProvider {
+	/**
+	 * HTMLVideo constructor.
+	 *
+	 * @param {Splide} Splide     - A Splide instance.
+	 * @param {Object} Components - An object containing components.
+	 */
+	constructor( Splide, Components ) {
+		super( Splide, Components );
+		this.createPlayers( Player, 'data-splide-html-video' );
+	}
 }

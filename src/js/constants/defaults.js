@@ -14,6 +14,13 @@ export const DEFAULTS = {
 	autoplay: false,
 
 	/**
+	 * Disable the overlay UI.
+	 *
+	 * @type {boolean}
+	 */
+	disableOverlayUI: false,
+
+	/**
 	 * Hide the video control UI.
 	 *
 	 * @type {boolean}

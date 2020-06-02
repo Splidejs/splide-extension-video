@@ -26,19 +26,18 @@ export default class BasePlayer {
 	/**
 	 * BasePlayer constructor.
 	 *
-	 * @param {Splide} Splide     - A Splide instance.
-	 * @param {Object} Components - An object containing components.
-	 * @param {Object} Slide      - A target Slide object.
+	 * @param {Splide}  Splide     - A Splide instance.
+	 * @param {Object}  Components - An object containing components.
+	 * @param {Element} slide      - A target slide element.
 	 */
-	constructor( Splide, Components, Slide ) {
+	constructor( Splide, Components, slide ) {
 		this.Splide     = Splide;
 		this.Components = Components;
-		this.Slide      = Slide;
-		this.slide      = Slide.slide;
+		this.slide      = slide;
 
 		this.player    = null;
 		this.elements  = null;
-		this.state     = State( NOT_INITIALIZED );
+		this.state     = new State( NOT_INITIALIZED );
 
 		this.videoId = this.findVideoId();
 
@@ -52,15 +51,14 @@ export default class BasePlayer {
 	 * Initialization.
 	 */
 	init() {
-	  this.elements = new Elements( this.Splide, this.Slide );
+	  this.elements = new Elements( this.Splide, this.slide );
 	  this.elements.init();
 
 	  this.toggleRootClass( true );
+		this.elements.togglePlayButton( ! this.Splide.options.video.disableOverlayUI );
 
-		if ( ! this.Splide.State.is( this.Splide.STATES.CREATED ) ) {
-			this.setup();
-		} else {
-			this.Splide.on( 'mounted', this.setup.bind( this ) );
+		if ( this.isAutoplay() && this.isActive() ) {
+			this.play();
 		}
   }
 
@@ -69,45 +67,41 @@ export default class BasePlayer {
 	 * This must be called after MOUNTED state.
 	 */
 	setup() {
-		if ( ! this.isAutoplay() ) {
-			this.elements.togglePlayButton( true );
-		}
+		this.state.set( CREATING_PLAYER );
 
-	  if ( this.isActive() ) {
-		  if ( this.state.is( NOT_INITIALIZED ) ) {
-			  this.state.set( CREATING_PLAYER );
+		this.player = this.createPlayer( () => {
+			const isPendingPlay = this.state.is( PENDING_PLAY );
+			this.state.set( IDLE );
 
-			  this.player = this.createPlayer( () => {
-				  const isPendingPlay = this.state.is( PENDING_PLAY );
-				  this.state.set( IDLE );
-
-				  if ( isPendingPlay || this.isAutoplay() ) {
-					  this.play();
-				  }
-			  } );
-		  }
-	  }
+			if ( isPendingPlay ) {
+				this.play();
+			}
+		} );
   }
 
 	/**
-	 * Listen some events.
+	 * Listen to some events.
 	 */
 	bind() {
 	  this.Splide
-		  .on( 'click', this.onClick.bind( this ) )
-		  .on( 'move', () => {
-				this.pause();
+		  .on( 'active', Slide => {
+		  	if ( this.isAutoplay() ) {
+		  		if ( Slide.slide === this.slide ) {
+		  			this.play();
+				  } else {
+		  			this.pause();
+				  }
+			  }
+		  } )
+		  .on( 'move', () => { this.pause() } )
+			.on( 'video:click', Player => {
+		    if ( Player.slide !== this.slide ) {
+		      this.pause();
+			  }
+		  } );
 
-				if ( this.isActive() ) {
-					if ( this.state.is( NOT_INITIALIZED ) ) {
-						this.setup();
-					} else {
-						if ( this.isAutoplay() ) {
-							this.play();
-						}
-					}
-				}
-			} );
+	  // Listen to a native click events for grid slides.
+	  this.slide.addEventListener( 'click', this.onClick.bind( this ) );
   }
 
 	/**
@@ -123,37 +117,59 @@ export default class BasePlayer {
   }
 
 	/**
-	 * Play video.
+	 * Play the video.
 	 */
 	play() {
-		if ( this.state.is( PLAYING ) || ! this.isActive() ) {
+		if ( this.state.is( NOT_INITIALIZED ) ) {
+			this.setup();
+		}
+
+		if ( this.state.is( PLAYING, PENDING_PLAY ) ) {
 			return;
 		}
 
+		// Hide immediately for UX.
+		setTimeout( () => { this.elements.hide() } );
+
+		// Pending play because the player is being created now.
 		if ( this.state.is( CREATING_PLAYER ) ) {
 			this.state.set( PENDING_PLAY );
 			return;
 		}
 
-		// Hide immediately for UX.
-		this.elements.hide();
+		// Play request is canceled but requested again.
+		if ( this.state.is( PLAY_REQUEST_ABORTED ) ) {
+			this.state.set( LOADING );
+			return;
+		}
+
 		this.playVideo();
 		this.state.set( LOADING );
 	}
 
 	/**
-	 * Pause video.
+	 * Pause the video.
 	 */
 	pause() {
-		if ( ! this.isAutoplay() ) {
+		if ( ! this.Splide.options.video.disableOverlayUI ) {
 			this.elements.show();
 		}
 
+		// Cancel the "pending play" status.
+		if ( this.state.is( PENDING_PLAY ) ) {
+			this.state.set( CREATING_PLAYER );
+			return;
+		}
+
+		// The video is paused while being loaded.
 		if ( this.state.is( LOADING ) ) {
 			this.state.set( PLAY_REQUEST_ABORTED );
-		} else if ( this.state.is( PLAYING ) ) {
+			return;
+		}
+
+		if ( this.state.is( PLAYING ) ) {
+			this.state.set( IDLE );
 			this.pauseVideo();
-			this.state.set( IDLE )
 		}
 	}
 
@@ -175,7 +191,7 @@ export default class BasePlayer {
 	 * Check if the slide is active or not.
 	 */
 	isActive() {
-		return this.Slide.isActive();
+		return this.slide.classList.contains( 'is-active' );
 	}
 
 	/**
@@ -206,20 +222,18 @@ export default class BasePlayer {
 	}
 
 	/**
-	 * Called whe nthe sl
-	 * @param Slide
+	 * Called when a slide is clicked.
 	 */
-	onClick( Slide ) {
-		if ( Slide.slide === this.slide ) {
-			this.play();
-		}
+	onClick() {
+		this.Splide.emit( 'video:click', this );
+		this.play();
 	}
 
 	/**
 	 * Called when the player is playing a video.
 	 */
 	onPlay() {
-		if ( ! this.isActive() ) {
+		if ( this.state.is( PLAY_REQUEST_ABORTED ) ) {
 			this.state.set( PLAYING );
 			this.pause();
 		} else {
@@ -255,5 +269,7 @@ export default class BasePlayer {
 
 		this.toggleRootClass( false );
 		this.elements.destroy();
+
+		this.slide.removeEventListener( 'click', this.onClick.bind( this ) );
 	}
 }

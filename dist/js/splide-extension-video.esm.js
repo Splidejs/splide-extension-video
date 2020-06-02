@@ -2723,6 +2723,103 @@ process.umask = function() { return 0; };
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
+// CONCATENATED MODULE: ./src/js/utils/index.js
+/**
+ * Utility export functions.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * Iterate an object like Array.forEach.
+ *
+ * @param {Object}   obj      - An object.
+ * @param {function} callback - A export function handling each value. Arguments are value, property and index.
+ */
+function each(obj, callback) {
+  Object.keys(obj).some(function (key, index) {
+    return callback(obj[key], key, index);
+  });
+}
+// CONCATENATED MODULE: ./src/js/providers/base/base-provider.js
+/**
+ * The base class for the provider.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The sub component for the provider.
+ */
+
+var base_provider_BaseProvider = /*#__PURE__*/function () {
+  /**
+   * BaseProvider constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function BaseProvider(Splide, Components) {
+    this.Splide = Splide;
+    this.Components = Components;
+    this.players = [];
+  }
+  /**
+   * Create all players.
+   *
+   * @param {Player} Player        - A Player class.
+   * @param {string} attributeName - attribute name for a video URL.
+   */
+
+
+  var _proto = BaseProvider.prototype;
+
+  _proto.createPlayers = function createPlayers(Player, attributeName) {
+    var _this = this;
+
+    this.Components.Elements.getSlides(true).forEach(function (Slide) {
+      if (_this.Components.Grid) {
+        each(Slide.slide.querySelectorAll("." + _this.Components.Grid.colClass), function (slide) {
+          _this.createPlayer(slide, Player, attributeName);
+        });
+      }
+
+      _this.createPlayer(Slide.slide, Player, attributeName);
+    });
+  }
+  /**
+   * Create a player.
+   *
+   * @param {Element} slide         - A slide element.
+   * @param {Player}  Player        - A Player class.
+   * @param {string}  attributeName - attribute name for a video URL.
+   */
+  ;
+
+  _proto.createPlayer = function createPlayer(slide, Player, attributeName) {
+    var data = slide.getAttribute(attributeName);
+
+    if (data) {
+      this.players.push(new Player(this.Splide, this.Components, slide));
+    }
+  }
+  /**
+   * Destroy.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    this.players.forEach(function (player) {
+      player.destroy();
+    });
+  };
+
+  return BaseProvider;
+}();
+
+
 // CONCATENATED MODULE: ./src/js/elements/index.js
 /**
  * The sub component for creating UI elements.
@@ -2747,19 +2844,24 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
 /**
  * The sub component for creating UI elements.
  *
- * @param {Splide} Splide - A Splide instance.
- * @param {Object} Slide  - Target Slide object.
+ * @param {Splide}  Splide - A Splide instance.
+ * @param {Element} slide  - A target slide element.
  *
  * @return {Object}
  */
 
-/* harmony default export */ var js_elements = (function (Splide, Slide) {
-  return {
+/* harmony default export */ var js_elements = (function (Splide, slide) {
+  /**
+   * Elements sub component.
+   *
+   * @type {Object}
+   */
+  var Elements = {
     /**
      * Initialization.
      */
     init: function init() {
-      this.create();
+      this.initElements();
       this.toggleWrapper(false);
       this.togglePlayButton(false);
     },
@@ -2767,13 +2869,14 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
     /**
      * Create some elements.
      */
-    create: function create() {
-      this.parent = Slide.container ? Slide.container : Slide.slide;
-      this.className = Splide.classes[Slide.container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
+    initElements: function initElements() {
+      var container = findContainer(slide);
+      this.parent = container || slide;
+      this.className = Splide.classes[container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
       this.parent.classList.add(this.className);
-      this.wrapper = document.createElement('div');
-      this.iframe = document.createElement('div');
-      this.playButton = document.createElement('button');
+      this.wrapper = create('div');
+      this.iframe = create('div');
+      this.playButton = create('button');
       this.wrapper.classList.add(WRAPPER_CLASS);
       this.playButton.classList.add(PLAY_BUTTON_CLASS);
       this.wrapper.appendChild(this.iframe);
@@ -2786,8 +2889,8 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
      */
     destroy: function destroy() {
       this.parent.classList.remove(this.className);
-      this.remove(this.wrapper);
-      this.remove(this.playButton);
+      remove(this.wrapper);
+      remove(this.playButton);
     },
 
     /**
@@ -2822,21 +2925,64 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
     show: function show() {
       this.togglePlayButton(true);
       this.toggleWrapper(false);
-    },
-
-    /**
-     * Remove the given element.
-     *
-     * @param {Element} elm - An element being removed.
-     */
-    remove: function remove(elm) {
-      var parent = elm.parentElement;
-
-      if (parent) {
-        parent.removeChild(elm);
-      }
     }
   };
+  /**
+   * Find a container element.
+   *
+   * @param {Element} slide - A slide element.
+   *
+   * @return {Element} - A container element if found. Null otherwise.
+   */
+
+  function findContainer(slide) {
+    return findChild(slide, Splide.classes['container'].split(' ')[0] || '');
+  }
+  /**
+   * Find a child which has the given class name.
+   *
+   * @param {Element} parent    - A parent element.
+   * @param {string}  className - A class name.
+   *
+   * @return {Element|null} - A found child element if available or null if not.
+   */
+
+
+  function findChild(parent, className) {
+    return Object.keys(parent.children).map(function (key) {
+      return parent.children[key];
+    }).filter(function (child) {
+      return child.classList.contains(className);
+    })[0] || null;
+  }
+  /**
+   * Create a new element.
+   *
+   * @param {string} tag - A tag name for the element.
+   *
+   * @return {Element} - A created element.
+   */
+
+
+  function create(tag) {
+    return document.createElement(tag);
+  }
+  /**
+   * Remove the given element.
+   *
+   * @param {Element} elm - An element being removed.
+   */
+
+
+  function remove(elm) {
+    var parent = elm.parentElement;
+
+    if (parent) {
+      parent.removeChild(elm);
+    }
+  }
+
+  return Elements;
 });
 // CONCATENATED MODULE: ./src/js/utils/state.js
 /**
@@ -2871,12 +3017,18 @@ var PLAY_BUTTON_CLASS = 'splide__video__play';
     /**
      * Verify if the current state is given one or not.
      *
-     * @param {string|number} state - A state name to be verified.
+     * @param {string|number} states - A state name(s) to be verified.
      *
      * @return {boolean} - True if the current state is the given one.
      */
-    is: function is(state) {
-      return state === curr;
+    is: function is() {
+      for (var i = 0; i < arguments.length; i++) {
+        if ((i < 0 || arguments.length <= i ? undefined : arguments[i]) === curr) {
+          return true;
+        }
+      }
+
+      return false;
     }
   };
 });
@@ -2954,18 +3106,17 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   /**
    * BasePlayer constructor.
    *
-   * @param {Splide} Splide     - A Splide instance.
-   * @param {Object} Components - An object containing components.
-   * @param {Object} Slide      - A target Slide object.
+   * @param {Splide}  Splide     - A Splide instance.
+   * @param {Object}  Components - An object containing components.
+   * @param {Element} slide      - A target slide element.
    */
-  function BasePlayer(Splide, Components, Slide) {
+  function BasePlayer(Splide, Components, slide) {
     this.Splide = Splide;
     this.Components = Components;
-    this.Slide = Slide;
-    this.slide = Slide.slide;
+    this.slide = slide;
     this.player = null;
     this.elements = null;
-    this.state = state(NOT_INITIALIZED);
+    this.state = new state(NOT_INITIALIZED);
     this.videoId = this.findVideoId();
 
     if (this.videoId) {
@@ -2981,14 +3132,13 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   var _proto = BasePlayer.prototype;
 
   _proto.init = function init() {
-    this.elements = new js_elements(this.Splide, this.Slide);
+    this.elements = new js_elements(this.Splide, this.slide);
     this.elements.init();
     this.toggleRootClass(true);
+    this.elements.togglePlayButton(!this.Splide.options.video.disableOverlayUI);
 
-    if (!this.Splide.State.is(this.Splide.STATES.CREATED)) {
-      this.setup();
-    } else {
-      this.Splide.on('mounted', this.setup.bind(this));
+    if (this.isAutoplay() && this.isActive()) {
+      this.play();
     }
   }
   /**
@@ -3000,46 +3150,42 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   _proto.setup = function setup() {
     var _this = this;
 
-    if (!this.isAutoplay()) {
-      this.elements.togglePlayButton(true);
-    }
+    this.state.set(CREATING_PLAYER);
+    this.player = this.createPlayer(function () {
+      var isPendingPlay = _this.state.is(PENDING_PLAY);
 
-    if (this.isActive()) {
-      if (this.state.is(NOT_INITIALIZED)) {
-        this.state.set(CREATING_PLAYER);
-        this.player = this.createPlayer(function () {
-          var isPendingPlay = _this.state.is(PENDING_PLAY);
+      _this.state.set(IDLE);
 
-          _this.state.set(IDLE);
-
-          if (isPendingPlay || _this.isAutoplay()) {
-            _this.play();
-          }
-        });
+      if (isPendingPlay) {
+        _this.play();
       }
-    }
+    });
   }
   /**
-   * Listen some events.
+   * Listen to some events.
    */
   ;
 
   _proto.bind = function bind() {
     var _this2 = this;
 
-    this.Splide.on('click', this.onClick.bind(this)).on('move', function () {
-      _this2.pause();
-
-      if (_this2.isActive()) {
-        if (_this2.state.is(NOT_INITIALIZED)) {
-          _this2.setup();
+    this.Splide.on('active', function (Slide) {
+      if (_this2.isAutoplay()) {
+        if (Slide.slide === _this2.slide) {
+          _this2.play();
         } else {
-          if (_this2.isAutoplay()) {
-            _this2.play();
-          }
+          _this2.pause();
         }
       }
-    });
+    }).on('move', function () {
+      _this2.pause();
+    }).on('video:click', function (Player) {
+      if (Player.slide !== _this2.slide) {
+        _this2.pause();
+      }
+    }); // Listen to a native click events for grid slides.
+
+    this.slide.addEventListener('click', this.onClick.bind(this));
   }
   /**
    * Create a player.
@@ -3059,40 +3205,65 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
     return null;
   }
   /**
-   * Play video.
+   * Play the video.
    */
   ;
 
   _proto.play = function play() {
-    if (this.state.is(PLAYING) || !this.isActive()) {
-      return;
+    var _this3 = this;
+
+    if (this.state.is(NOT_INITIALIZED)) {
+      this.setup();
     }
 
-    if (this.state.is(CREATING_PLAYER)) {
-      this.state.set(PENDING_PLAY);
+    if (this.state.is(PLAYING, PENDING_PLAY)) {
       return;
     } // Hide immediately for UX.
 
 
-    this.elements.hide();
+    setTimeout(function () {
+      _this3.elements.hide();
+    }); // Pending play because the player is being created now.
+
+    if (this.state.is(CREATING_PLAYER)) {
+      this.state.set(PENDING_PLAY);
+      return;
+    } // Play request is canceled but requested again.
+
+
+    if (this.state.is(PLAY_REQUEST_ABORTED)) {
+      this.state.set(LOADING);
+      return;
+    }
+
     this.playVideo();
     this.state.set(LOADING);
   }
   /**
-   * Pause video.
+   * Pause the video.
    */
   ;
 
   _proto.pause = function pause() {
-    if (!this.isAutoplay()) {
+    if (!this.Splide.options.video.disableOverlayUI) {
       this.elements.show();
-    }
+    } // Cancel the "pending play" status.
+
+
+    if (this.state.is(PENDING_PLAY)) {
+      this.state.set(CREATING_PLAYER);
+      return;
+    } // The video is paused while being loaded.
+
 
     if (this.state.is(LOADING)) {
       this.state.set(PLAY_REQUEST_ABORTED);
-    } else if (this.state.is(PLAYING)) {
-      this.pauseVideo();
+      return;
+    }
+
+    if (this.state.is(PLAYING)) {
       this.state.set(IDLE);
+      this.pauseVideo();
     }
   }
   /**
@@ -3117,7 +3288,7 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   ;
 
   _proto.isActive = function isActive() {
-    return this.Slide.isActive();
+    return this.slide.classList.contains('is-active');
   }
   /**
    * Check whether a video should be played automatically.
@@ -3150,15 +3321,13 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
     this.Splide.root.classList[add ? 'add' : 'remove'](this.Splide.classes.root.split(' ')[0] + '--has-video');
   }
   /**
-   * Called whe nthe sl
-   * @param Slide
+   * Called when a slide is clicked.
    */
   ;
 
-  _proto.onClick = function onClick(Slide) {
-    if (Slide.slide === this.slide) {
-      this.play();
-    }
+  _proto.onClick = function onClick() {
+    this.Splide.emit('video:click', this);
+    this.play();
   }
   /**
    * Called when the player is playing a video.
@@ -3166,7 +3335,7 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   ;
 
   _proto.onPlay = function onPlay() {
-    if (!this.isActive()) {
+    if (this.state.is(PLAY_REQUEST_ABORTED)) {
       this.state.set(PLAYING);
       this.pause();
     } else {
@@ -3205,6 +3374,7 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
 
     this.toggleRootClass(false);
     this.elements.destroy();
+    this.slide.removeEventListener('click', this.onClick.bind(this));
   };
 
   return BasePlayer;
@@ -3310,6 +3480,18 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
 
 
 // CONCATENATED MODULE: ./src/js/providers/html-video/index.js
+function html_video_createSuper(Derived) { return function () { var Super = html_video_getPrototypeOf(Derived), result; if (html_video_isNativeReflectConstruct()) { var NewTarget = html_video_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return html_video_possibleConstructorReturn(this, result); }; }
+
+function html_video_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return html_video_assertThisInitialized(self); }
+
+function html_video_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function html_video_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function html_video_getPrototypeOf(o) { html_video_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return html_video_getPrototypeOf(o); }
+
+function html_video_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
 /**
  * The sub component for embedding a HTML video.
  *
@@ -3317,42 +3499,36 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
+
 /**
  * The sub component for embedding a HTML video.
- *
- * @param {Splide} Splide     - A Splide instance.
- * @param {Object} Components - An object containing components.
- *
- * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var html_video = (function (Splide, Components) {
-  return {
-    /**
-     * Initialization.
-     */
-    mount: function mount() {
-      var _this = this;
+var html_video_HTMLVideo = /*#__PURE__*/function (_BaseProvider) {
+  html_video_inheritsLoose(HTMLVideo, _BaseProvider);
 
-      Components.Elements.getSlides(false).forEach(function (Slide) {
-        var video = Slide.slide.getAttribute('data-splide-html-video');
+  var _super = html_video_createSuper(HTMLVideo);
 
-        if (video) {
-          _this.player = new player_Player(Splide, Components, Slide);
-        }
-      });
-    },
+  /**
+   * HTMLVideo constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function HTMLVideo(Splide, Components) {
+    var _this;
 
-    /**
-     * Destroy.
-     */
-    destroy: function destroy() {
-      if (this.player) {
-        this.player.destroy();
-      }
-    }
-  };
-});
+    _this = _BaseProvider.call(this, Splide, Components) || this;
+
+    _this.createPlayers(player_Player, 'data-splide-html-video');
+
+    return _this;
+  }
+
+  return HTMLVideo;
+}(base_provider_BaseProvider);
+
+
 // CONCATENATED MODULE: ./src/js/providers/youtube/player.js
 function player_createSuper(Derived) { return function () { var Super = player_getPrototypeOf(Derived), result; if (player_isNativeReflectConstruct()) { var NewTarget = player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return player_possibleConstructorReturn(this, result); }; }
 
@@ -3413,8 +3589,7 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
         loop: options.loop,
         playlist: options.loop ? this.videoId : '',
         rel: 0,
-        autoplay: false // For UX.
-
+        autoplay: false
       },
       events: {
         'onReady': function onReady(e) {
@@ -3508,12 +3683,25 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
 
 
 // CONCATENATED MODULE: ./src/js/providers/youtube/index.js
+function youtube_createSuper(Derived) { return function () { var Super = youtube_getPrototypeOf(Derived), result; if (youtube_isNativeReflectConstruct()) { var NewTarget = youtube_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return youtube_possibleConstructorReturn(this, result); }; }
+
+function youtube_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return youtube_assertThisInitialized(self); }
+
+function youtube_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function youtube_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function youtube_getPrototypeOf(o) { youtube_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return youtube_getPrototypeOf(o); }
+
+function youtube_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
 /**
  * The sub component for embedding a YouTube video.
  *
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
  */
+
 
 /**
  * URL to the YouTube API script.
@@ -3524,114 +3712,111 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
 var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
 /**
  * The sub component for embedding a YouTube video.
- *
- * @param {Splide}  Splide     - A Splide instance.
- * @param {Object}  Components - An object containing components.
- *
- * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var providers_youtube = (function (Splide, Components) {
+var youtube_YouTube = /*#__PURE__*/function (_BaseProvider) {
+  youtube_inheritsLoose(YouTube, _BaseProvider);
+
+  var _super = youtube_createSuper(YouTube);
+
   /**
-   * Store the old callback.
+   * YouTube constructor.
    *
-   * @type {function}
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
    */
-  var oldCallback;
-  return {
-    /**
-     * Initialization.
-     */
-    mount: function mount() {
-      this.bindAPICallback();
-      this.loadAPI();
-    },
+  function YouTube(Splide, Components) {
+    var _this;
 
-    /**
-     * Load the YouTube iframe API.
-     */
-    loadAPI: function loadAPI() {
-      var _window = window,
-          YT = _window.YT;
+    _this = _BaseProvider.call(this, Splide, Components) || this;
 
-      if (this.shouldLoadAPI()) {
-        var tag = document.createElement('script');
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        tag.src = YOUTUBE_API_SRC;
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      } else {
-        if (YT && YT.loaded) {
-          // API has been already loaded and the callback has been fired.
-          this.onReady();
-        }
-      }
-    },
+    _this.bindAPICallback();
 
-    /**
-     * Check whether the API should be loaded or not.
-     *
-     * @return {boolean} - True if it should be or false if not.
-     */
-    shouldLoadAPI: function shouldLoadAPI() {
-      var scripts = document.getElementsByTagName('script');
+    _this.loadAPI();
 
-      for (var i = 0; i < scripts.length; i++) {
-        if (scripts[i].getAttribute('src') === YOUTUBE_API_SRC) {
-          return false;
-        }
-      }
+    _this.players = [];
+    _this.oldCallback = undefined;
+    return _this;
+  }
+  /**
+   * Load the YouTube iframe API.
+   */
 
-      return true;
-    },
 
-    /**
-     * Listen onYouTubeIframeAPIReady event.
-     */
-    bindAPICallback: function bindAPICallback() {
-      // Avoid unexpected collision against other libraries.
-      if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
-        oldCallback = window.onYouTubeIframeAPIReady;
-      }
+  var _proto = YouTube.prototype;
 
-      window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind(this);
-    },
+  _proto.loadAPI = function loadAPI() {
+    var _window = window,
+        YT = _window.YT;
 
-    /**
-     * Called when the API is ready.
-     */
-    onYouTubeIframeAPIReady: function onYouTubeIframeAPIReady() {
-      if (oldCallback) {
-        oldCallback();
-      }
-
-      this.onReady();
-    },
-
-    /**
-     * Called when the YouTube API is ready.
-     */
-    onReady: function onReady() {
-      var _this = this;
-
-      Components.Elements.getSlides(false).forEach(function (Slide) {
-        var youtube = Slide.slide.getAttribute('data-splide-youtube');
-
-        if (youtube) {
-          _this.player = new youtube_player_Player(Splide, Components, Slide);
-        }
-      });
-    },
-
-    /**
-     * Destroy.
-     */
-    destroy: function destroy() {
-      if (this.player) {
-        this.player.destroy();
+    if (this.shouldLoadAPI()) {
+      var tag = document.createElement('script');
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      tag.src = YOUTUBE_API_SRC;
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    } else {
+      if (YT && YT.loaded) {
+        // API has been already loaded and the callback has been fired.
+        this.onReady();
       }
     }
+  }
+  /**
+   * Check whether the API should be loaded or not.
+   *
+   * @return {boolean} - True if it should be or false if not.
+   */
+  ;
+
+  _proto.shouldLoadAPI = function shouldLoadAPI() {
+    var scripts = document.getElementsByTagName('script');
+
+    for (var i = 0; i < scripts.length; i++) {
+      if (scripts[i].getAttribute('src') === YOUTUBE_API_SRC) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+  /**
+   * Listen onYouTubeIframeAPIReady event.
+   */
+  ;
+
+  _proto.bindAPICallback = function bindAPICallback() {
+    // Avoid unexpected collision against other libraries.
+    if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
+      this.oldCallback = window.onYouTubeIframeAPIReady;
+    }
+
+    window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind(this);
+  }
+  /**
+   * Called when the API is ready.
+   */
+  ;
+
+  _proto.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
+    if (this.oldCallback) {
+      this.oldCallback();
+    }
+
+    this.onReady();
+  }
+  /**
+   * Called when the YouTube API is ready.
+   */
+  ;
+
+  _proto.onReady = function onReady() {
+    this.createPlayers(youtube_player_Player, 'data-splide-youtube');
   };
-});
+
+  return YouTube;
+}(base_provider_BaseProvider);
+
+
 // EXTERNAL MODULE: ./node_modules/@vimeo/player/dist/player.es.js
 var player_es = __webpack_require__(1);
 
@@ -3737,6 +3922,18 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
 
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/index.js
+function vimeo_createSuper(Derived) { return function () { var Super = vimeo_getPrototypeOf(Derived), result; if (vimeo_isNativeReflectConstruct()) { var NewTarget = vimeo_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return vimeo_possibleConstructorReturn(this, result); }; }
+
+function vimeo_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return vimeo_assertThisInitialized(self); }
+
+function vimeo_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function vimeo_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function vimeo_getPrototypeOf(o) { vimeo_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return vimeo_getPrototypeOf(o); }
+
+function vimeo_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
 /**
  * The sub component for embedding a Vimeo video.
  *
@@ -3744,42 +3941,51 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
+
 /**
  * The sub component for embedding a Vimeo video.
- *
- * @param {Splide}  Splide     - A Splide instance.
- * @param {Object}  Components - An object containing components.
- *
- * @return {Object} - Sub component object.
  */
 
-/* harmony default export */ var providers_vimeo = (function (Splide, Components) {
-  return {
-    /**
-     * Initialization.
-     */
-    mount: function mount() {
-      var _this = this;
+var vimeo_Vimeo = /*#__PURE__*/function (_BaseProvider) {
+  vimeo_inheritsLoose(Vimeo, _BaseProvider);
 
-      Components.Elements.getSlides(false).forEach(function (Slide) {
-        var vimeo = Slide.slide.getAttribute('data-splide-vimeo');
+  var _super = vimeo_createSuper(Vimeo);
 
-        if (vimeo) {
-          _this.player = new vimeo_player_Player(Splide, Components, Slide);
-        }
-      });
-    },
+  /**
+   * Vimeo constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function Vimeo(Splide, Components) {
+    var _this;
 
-    /**
-     * Destroy.
-     */
-    destroy: function destroy() {
-      if (this.player) {
-        this.player.destroy();
-      }
-    }
-  };
-});
+    _this = _BaseProvider.call(this, Splide, Components) || this;
+
+    _this.createPlayers(vimeo_player_Player, 'data-splide-vimeo');
+
+    return _this;
+  }
+
+  return Vimeo;
+}(base_provider_BaseProvider);
+
+
+// CONCATENATED MODULE: ./src/js/providers/index.js
+/**
+ * Export provider classes.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+
+
+var PROVIDERS = {
+  HtmlVideo: html_video_HTMLVideo,
+  YouTube: youtube_YouTube,
+  Vimeo: vimeo_Vimeo
+};
 // CONCATENATED MODULE: ./src/js/constants/defaults.js
 /**
  * Export default options.
@@ -3794,6 +4000,13 @@ var DEFAULTS = {
    * @type {boolean}
    */
   autoplay: false,
+
+  /**
+   * Disable the overlay UI.
+   *
+   * @type {boolean}
+   */
+  disableOverlayUI: false,
 
   /**
    * Hide the video control UI.
@@ -3843,7 +4056,6 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-
 /**
  * The status class name added to the root element while the video is playing.
  *
@@ -3885,11 +4097,8 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
       }
 
       Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
-      var providers = [html_video, providers_youtube, providers_vimeo];
-      providers.forEach(function (provider) {
-        var Provider = provider(Splide, Components);
-        Providers.push(Provider);
-        Provider.mount();
+      each(PROVIDERS, function (Provider) {
+        Providers.push(new Provider(Splide, Components));
       });
       bind();
     },
@@ -3904,19 +4113,19 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
     }
   };
   /**
-   * Listen some events.
+   * Listen to some events.
+   *
+   * // todo!
    */
 
   function bind() {
-    Splide.on('video:play', function (Player) {
-      playingIndex = Player.Slide.index;
-      Splide.root.classList.add(PLAYING_STATUS_CLASS_NAME);
+    Splide.on('video:play', function (Player) {// playingIndex = Player.Slide.index;
+      // Splide.root.classList.add( PLAYING_STATUS_CLASS_NAME );
     });
-    Splide.on('video:pause video:end', function (Player) {
-      if (Player.Slide.index === playingIndex) {
-        playingIndex = -1;
-        Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);
-      }
+    Splide.on('video:pause video:end', function (Player) {// if ( Player.Slide.index === playingIndex ) {
+      // 	playingIndex = -1;
+      // 	Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
+      // }
     });
     Splide.on('destroy', function () {
       Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);

@@ -5,11 +5,9 @@
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
-import HtmlVideo from './providers/html-video';
-import YouTube from './providers/youtube';
-import Vimeo from './providers/vimeo';
-
+import { PROVIDERS } from "./providers";
 import { DEFAULTS } from "./constants/defaults";
+import { each } from "./utils";
 
 /**
  * The status class name added to the root element while the video is playing.
@@ -54,11 +52,8 @@ export default ( Splide, Components ) => {
 
 			Splide.options.video = { ...DEFAULTS, ...Splide.options.video };
 
-			const providers = [ HtmlVideo, YouTube, Vimeo ];
-			providers.forEach( provider => {
-				const Provider = provider( Splide, Components );
-				Providers.push( Provider );
-				Provider.mount();
+			each( PROVIDERS, Provider => {
+				Providers.push( new Provider( Splide, Components ) );
 			} );
 
 			bind();
@@ -73,19 +68,21 @@ export default ( Splide, Components ) => {
 	};
 
 	/**
-	 * Listen some events.
+	 * Listen to some events.
+	 *
+	 * // todo!
 	 */
 	function bind() {
 		Splide.on( 'video:play', Player => {
-			playingIndex = Player.Slide.index;
-			Splide.root.classList.add( PLAYING_STATUS_CLASS_NAME );
+			// playingIndex = Player.Slide.index;
+			// Splide.root.classList.add( PLAYING_STATUS_CLASS_NAME );
 		} );
 
 		Splide.on( 'video:pause video:end', Player => {
-			if ( Player.Slide.index === playingIndex ) {
-				playingIndex = -1;
-				Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
-			}
+			// if ( Player.Slide.index === playingIndex ) {
+			// 	playingIndex = -1;
+			// 	Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
+			// }
 		} );
 
 		Splide.on( 'destroy', () => {

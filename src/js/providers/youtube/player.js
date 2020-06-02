@@ -32,7 +32,7 @@ export default class Player extends BasePlayer {
 				loop          : options.loop,
 				playlist      : options.loop ? this.videoId : '',
 				rel           : 0,
-				autoplay      : false, // For UX.
+				autoplay      : false,
 			},
 			events: {
 				'onReady': e => {
