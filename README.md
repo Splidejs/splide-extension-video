@@ -54,7 +54,8 @@ Assign videos to slides by data attributes:
 ```
 
 ## Available Options
-* **autoplay**: Whether to play the video automatically.
+* **autoplay**: Whether to play the video automatically. This option is ignored when the [Grid](https://github.com/Splidejs/splide-extension-grid) extension is active.
+* **disableOverlayUI**: If true, the overlay UI including a play button is not rendered.
 * **hideControls**: Hide the video control UI.
 * **disableFullScreen**: Hide full screen button(Only for YouTube).
 * **loop**: Loop the video.
