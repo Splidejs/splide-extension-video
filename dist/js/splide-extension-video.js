@@ -3724,7 +3724,6 @@ var youtube_YouTube = /*#__PURE__*/function (_BaseProvider) {
 
     _this.loadAPI();
 
-    _this.players = [];
     _this.oldCallback = undefined;
     return _this;
   }
@@ -4064,11 +4063,11 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
 
 /* harmony default export */ var splide_extension_video = (function (Splide, Components) {
   /**
-   * Playing slide index.
+   * A slide element whose video is playing.
    *
-   * @type {number}
+   * @type {Element}
    */
-  var playingIndex = -1;
+  var activeSlide;
   /**
    * Store provider components.
    * 
@@ -4098,27 +4097,26 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
      */
     destroy: function destroy() {
       Providers.forEach(function (Provider) {
-        return Provider.destroy();
+        Provider.destroy();
       });
     }
   };
   /**
    * Listen to some events.
-   *
-   * // todo!
    */
 
   function bind() {
-    Splide.on('video:play', function (Player) {// playingIndex = Player.Slide.index;
-      // Splide.root.classList.add( PLAYING_STATUS_CLASS_NAME );
-    });
-    Splide.on('video:pause video:end', function (Player) {// if ( Player.Slide.index === playingIndex ) {
-      // 	playingIndex = -1;
-      // 	Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
-      // }
-    });
-    Splide.on('destroy', function () {
-      Splide.root.classList.remove(PLAYING_STATUS_CLASS_NAME);
+    var classList = Splide.root.classList;
+    Splide.on('video:play', function (Player) {
+      activeSlide = Player.slide;
+      classList.add(PLAYING_STATUS_CLASS_NAME);
+    }).on('video:pause video:end', function (Player) {
+      if (Player.slide === activeSlide) {
+        activeSlide = null;
+        classList.remove(PLAYING_STATUS_CLASS_NAME);
+      }
+    }).on('destroy', function () {
+      classList.remove(PLAYING_STATUS_CLASS_NAME);
     });
   }
 

@@ -27,11 +27,11 @@ const PLAYING_STATUS_CLASS_NAME = 'is-playing';
  */
 export default ( Splide, Components ) => {
 	/**
-	 * Playing slide index.
+	 * A slide element whose video is playing.
 	 *
-	 * @type {number}
+	 * @type {Element}
 	 */
-	let playingIndex = -1;
+	let activeSlide;
 
 	/**
 	 * Store provider components.
@@ -63,31 +63,29 @@ export default ( Splide, Components ) => {
 		 * Destroy.
 		 */
 		destroy() {
-			Providers.forEach( Provider => Provider.destroy() );
+			Providers.forEach( Provider => { Provider.destroy() } );
 		}
 	};
 
 	/**
 	 * Listen to some events.
-	 *
-	 * // todo!
 	 */
 	function bind() {
-		Splide.on( 'video:play', Player => {
-			// playingIndex = Player.Slide.index;
-			// Splide.root.classList.add( PLAYING_STATUS_CLASS_NAME );
-		} );
+		const classList = Splide.root.classList;
 
-		Splide.on( 'video:pause video:end', Player => {
-			// if ( Player.Slide.index === playingIndex ) {
-			// 	playingIndex = -1;
-			// 	Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
-			// }
-		} );
-
-		Splide.on( 'destroy', () => {
-			Splide.root.classList.remove( PLAYING_STATUS_CLASS_NAME );
-		} );
+		Splide
+			.on( 'video:play', Player => {
+				activeSlide = Player.slide;
+				classList.add( PLAYING_STATUS_CLASS_NAME );
+			} )
+			.on( 'video:pause video:end', Player => {
+				if ( Player.slide === activeSlide ) {
+					activeSlide = null;
+					classList.remove( PLAYING_STATUS_CLASS_NAME );
+				}
+			} ).on( 'destroy', () => {
+				classList.remove( PLAYING_STATUS_CLASS_NAME );
+			} );
 	}
 
 	return Video;

@@ -32,7 +32,6 @@ export default class YouTube extends BaseProvider {
 		this.bindAPICallback();
 		this.loadAPI();
 
-		this.players     = [];
 		this.oldCallback = undefined;
 	}
 
