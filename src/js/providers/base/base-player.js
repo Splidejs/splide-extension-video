@@ -253,8 +253,8 @@ export default class BasePlayer {
 	/**
 	 * Called when the video is ended.
 	 */
-	onEnd() {
-		this.Splide.emit( 'video:end', this );
+	onEnded() {
+		this.Splide.emit( 'video:ended', this );
 		this.state.set( IDLE );
 	}
 

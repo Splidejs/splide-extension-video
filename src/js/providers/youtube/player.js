@@ -84,7 +84,7 @@ export default class Player extends BasePlayer {
 				break;
 
 			case e.data === ENDED:
-				this.onEnd();
+				this.onEnded();
 				break;
 		}
 	}

@@ -32,7 +32,7 @@ export default class Player extends BasePlayer {
 
 		player.addEventListener( 'play', this.onPlay.bind( this ) );
 		player.addEventListener( 'pause', this.onPause.bind( this ) );
-		player.addEventListener( 'ended', this.onEnd.bind( this ) );
+		player.addEventListener( 'ended', this.onEnded.bind( this ) );
 
 		player.volume = Math.max( Math.min( options.volume, 1 ), 0 );
 		player.muted  = options.mute;

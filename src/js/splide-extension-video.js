@@ -78,7 +78,7 @@ export default ( Splide, Components ) => {
 				activeSlide = Player.slide;
 				classList.add( PLAYING_STATUS_CLASS_NAME );
 			} )
-			.on( 'video:pause video:end', Player => {
+			.on( 'video:pause video:ended', Player => {
 				if ( Player.slide === activeSlide ) {
 					activeSlide = null;
 					classList.remove( PLAYING_STATUS_CLASS_NAME );

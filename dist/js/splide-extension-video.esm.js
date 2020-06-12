@@ -3357,8 +3357,8 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
    */
   ;
 
-  _proto.onEnd = function onEnd() {
-    this.Splide.emit('video:end', this);
+  _proto.onEnded = function onEnded() {
+    this.Splide.emit('video:ended', this);
     this.state.set(IDLE);
   }
   /**
@@ -3437,7 +3437,7 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
     player.loop = options.loop;
     player.addEventListener('play', this.onPlay.bind(this));
     player.addEventListener('pause', this.onPause.bind(this));
-    player.addEventListener('ended', this.onEnd.bind(this));
+    player.addEventListener('ended', this.onEnded.bind(this));
     player.volume = Math.max(Math.min(options.volume, 1), 0);
     player.muted = options.mute;
 
@@ -3644,7 +3644,7 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
         break;
 
       case e.data === ENDED:
-        this.onEnd();
+        this.onEnded();
         break;
     }
   }
@@ -3877,7 +3877,7 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
     });
     player.on('play', this.onPlay.bind(this));
     player.on('pause', this.onPause.bind(this));
-    player.on('end', this.onEnd.bind(this));
+    player.on('ended', this.onEnded.bind(this));
     player.setVolume(Math.max(Math.min(options.volume, 1), 0));
     player.setMuted(options.mute);
 
@@ -4120,7 +4120,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
     Splide.on('video:play', function (Player) {
       activeSlide = Player.slide;
       classList.add(PLAYING_STATUS_CLASS_NAME);
-    }).on('video:pause video:end', function (Player) {
+    }).on('video:pause video:ended', function (Player) {
       if (Player.slide === activeSlide) {
         activeSlide = null;
         classList.remove(PLAYING_STATUS_CLASS_NAME);
