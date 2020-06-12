@@ -3408,7 +3408,6 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
 
   /**
    * Create a player.
-   * This must be overridden in a child class.
    *
    * @param {function} readyCallback - Callback function triggered when the player gets ready.
    *
@@ -3556,7 +3555,6 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
 
   /**
    * Create a player.
-   * This must be overridden in a child class.
    *
    * @param {function} readyCallback - Callback function triggered when the player gets ready.
    *
@@ -3848,7 +3846,6 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
 
   /**
    * Create a player.
-   * This must be overridden in a child class.
    *
    * @param {function} readyCallback - Callback function triggered when the player gets ready.
    *
