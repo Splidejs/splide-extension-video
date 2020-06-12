@@ -14,7 +14,6 @@ import BasePlayer from '../base/base-player';
 export default class Player extends BasePlayer {
 	/**
 	 * Create a player.
-	 * This must be overridden in a child class.
 	 *
 	 * @param {function} readyCallback - Callback function triggered when the player gets ready.
 	 *
