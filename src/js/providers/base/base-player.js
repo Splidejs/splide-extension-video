@@ -44,6 +44,7 @@ export default class BasePlayer {
 		if ( this.videoId ) {
 			this.init();
 			this.bind();
+			this.handleClick();
 		}
  	}
 
@@ -99,9 +100,21 @@ export default class BasePlayer {
 		      this.pause();
 			  }
 		  } );
+  }
 
-	  // Listen to a native click events for grid slides.
-	  this.slide.addEventListener( 'click', this.onClick.bind( this ) );
+	/**
+	 * In the fade mode, events will be fired in the order of drag -> dragged -> click,
+	 * which unexpectedly plays the previous video.
+	 */
+  handleClick() {
+	  // Listen to a native events for grid slides.
+		this.slide.addEventListener( 'mousedown', this.onMouseDown.bind( this ) );
+		this.slide.addEventListener( 'touchstart', this.onMouseDown.bind( this ) );
+		this.slide.addEventListener( 'mouseup', this.onMouseUp.bind( this ) );
+		this.slide.addEventListener( 'touchend', this.onMouseUp.bind( this ) );
+
+		// Interrupt playing the video because the slider starts being dragged.
+	  this.Splide.on( 'drag', () => { this.shouldHandleClick = false } );
   }
 
 	/**
@@ -222,11 +235,23 @@ export default class BasePlayer {
 	}
 
 	/**
-	 * Called when a slide is clicked.
+	 * Called on mousedown or touchstart.
+	 * Request playing the video on mouseup or touchend.
+	 * This may be interrupted a drag event.
 	 */
-	onClick() {
-		this.Splide.emit( 'video:click', this );
-		this.play();
+	onMouseDown() {
+		this.shouldHandleClick = true;
+	}
+
+	/**
+	 * Called on mouseup or touchend.
+	 * If the shouldHandleClick is still true, play the video.
+	 */
+	onMouseUp() {
+		if ( this.shouldHandleClick ) {
+			this.Splide.emit( 'video:click', this );
+			this.play();
+		}
 	}
 
 	/**
@@ -270,6 +295,10 @@ export default class BasePlayer {
 		this.toggleRootClass( false );
 		this.elements.destroy();
 
-		this.slide.removeEventListener( 'click', this.onClick.bind( this ) );
+		this.slide.removeEventListener( 'mousedown', this.onMouseDown.bind( this ) );
+		this.slide.removeEventListener( 'touchstart', this.onMouseDown.bind( this ) );
+		this.slide.removeEventListener( 'mouseup', this.onMouseUp.bind( this ) );
+		this.slide.removeEventListener( 'touchend', this.onMouseUp.bind( this ) );
+
 	}
 }
