@@ -24,10 +24,9 @@ This is an extension of the [Splide](https://github.com/Splidejs/splide) slider 
 1. Visit [jsDelivr](https://www.jsdelivr.com/package/npm/@splidejs/splide-extension-video) and get the links of the latest files or download files from the dist library.
 1. Import minified stylesheet and JavaScript files on your site:
     ```html
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.0.2/dist/css/splide-extension-video.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.0.2/dist/js/splide-extension-video.min.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@latest/dist/css/splide-extension-video.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@latest/dist/js/splide-extension-video.min.js">
     ```
-    Note that version numbers above are incorrect.
 1. Mount the extension to the Splide.
     ```javascript
     new Splide( '#splide' ).mount( window.splide.Extensions );
