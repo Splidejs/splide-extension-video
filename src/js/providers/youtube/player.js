@@ -45,7 +45,6 @@ export default class Player extends BasePlayer {
 			}
 		} );
 
-
 		return player;
 	}
 
