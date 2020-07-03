@@ -38,7 +38,7 @@ export default class BaseProvider {
 				} );
 			}
 
-			this.createPlayer( Slide.slide, Player,attributeName );
+			this.createPlayer( Slide.slide, Player, attributeName );
 		} );
 	}
 
