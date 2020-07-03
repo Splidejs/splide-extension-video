@@ -29,10 +29,10 @@ export default class YouTube extends BaseProvider {
 	constructor( Splide, Components ) {
 		super( Splide, Components );
 
+		this.oldCallback = undefined;
+
 		this.bindAPICallback();
 		this.loadAPI();
-
-		this.oldCallback = undefined;
 	}
 
 	/**

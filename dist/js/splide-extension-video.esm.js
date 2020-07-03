@@ -3761,12 +3761,12 @@ var youtube_YouTube = /*#__PURE__*/function (_BaseProvider) {
     var _this;
 
     _this = _BaseProvider.call(this, Splide, Components) || this;
+    _this.oldCallback = undefined;
 
     _this.bindAPICallback();
 
     _this.loadAPI();
 
-    _this.oldCallback = undefined;
     return _this;
   }
   /**
