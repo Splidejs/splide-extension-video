@@ -107,7 +107,7 @@ export default class BasePlayer {
 	 * which unexpectedly plays the previous video.
 	 */
   handleClick() {
-	  // Listen to a native events for grid slides.
+	  // Listen to native events for grid slides.
 		this.slide.addEventListener( 'mousedown', this.onMouseDown.bind( this ) );
 		this.slide.addEventListener( 'touchstart', this.onMouseDown.bind( this ) );
 		this.slide.addEventListener( 'mouseup', this.onMouseUp.bind( this ) );
@@ -299,6 +299,5 @@ export default class BasePlayer {
 		this.slide.removeEventListener( 'touchstart', this.onMouseDown.bind( this ) );
 		this.slide.removeEventListener( 'mouseup', this.onMouseUp.bind( this ) );
 		this.slide.removeEventListener( 'touchend', this.onMouseUp.bind( this ) );
-
 	}
 }
