@@ -26,7 +26,7 @@ export default class Player extends BasePlayer {
 			videoId: this.videoId,
 			playerVars: {
 				fs            : options.disableFullScreen,
-				controls      : options.hideControls,
+				controls      : options.hideControls ? 0 : 1,
 				iv_load_policy: 3,
 				loop          : options.loop,
 				playlist      : options.loop ? this.videoId : '',

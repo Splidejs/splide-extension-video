@@ -3185,7 +3185,7 @@ var base_player_BasePlayer = /*#__PURE__*/function () {
   _proto.handleClick = function handleClick() {
     var _this3 = this;
 
-    // Listen to a native events for grid slides.
+    // Listen to native events for grid slides.
     this.slide.addEventListener('mousedown', this.onMouseDown.bind(this));
     this.slide.addEventListener('touchstart', this.onMouseDown.bind(this));
     this.slide.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -3606,7 +3606,7 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
       videoId: this.videoId,
       playerVars: {
         fs: options.disableFullScreen,
-        controls: options.hideControls,
+        controls: options.hideControls ? 0 : 1,
         iv_load_policy: 3,
         loop: options.loop,
         playlist: options.loop ? this.videoId : '',
