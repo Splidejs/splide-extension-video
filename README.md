@@ -53,13 +53,34 @@ Assign videos to slides by data attributes:
 ```
 
 ## Available Options
+### Options
 * **autoplay**: Whether to play the video automatically. This option is ignored when the [Grid](https://github.com/Splidejs/splide-extension-grid) extension is active.
 * **disableOverlayUI**: If true, the overlay UI including a play button is not rendered.
 * **hideControls**: Hide the video control UI.
-* **disableFullScreen**: Hide full screen button(Only for YouTube).
 * **loop**: Loop the video.
 * **mute**: Mute the video.
 * **volume**: Volume(0.0-1.0).
+* **playerOptions**: Options for each player.
+
+### Player Options
+Each player accepts different options respectively. They can be changed through `playerOptions`. Be aware that individual options can overwrite options above.
+```javascript
+playerOptions: {
+  youtube: {
+    cc_lang_pref: 'jpn',
+  },
+  vimeo: {
+    byline: true,
+  },
+  htmlVideo: {
+    playsinline: true,
+  },
+}
+```
+Visit these links for a documentation of each player.
+- [Youtube](https://developers.google.com/youtube/player_parameters.html?playerVersion=HTML5)
+- [Vimeo](https://github.com/vimeo/player.js)
+- [HTML Video](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
 
 ## License
 Splide is released under the MIT license.  

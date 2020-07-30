@@ -3435,6 +3435,15 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
  * @copyright Naotoshi Fujita. All rights reserved.
  */
 
+
+/**
+ * Valid player props.
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ *
+ * @type {string[]}
+ */
+
+var PLAYER_PROPS = ['autoplay', 'autoPictureInPicture', 'controls', 'controlslist', 'crossorigin', 'currentTime', 'disablePictureInPicture', 'disableRemotePlayback', 'height', 'intrinsicsize', 'loop', 'muted', 'playsinline', 'poster', 'preload', 'width'];
 /**
  * The class for controlling a HTML video.
  */
@@ -3463,16 +3472,23 @@ var player_Player = /*#__PURE__*/function (_BasePlayer) {
     }
 
     var options = this.Splide.options.video;
+    var _options$playerOption = options.playerOptions.htmlVideo,
+        htmlVideo = _options$playerOption === void 0 ? {} : _options$playerOption;
     var player = document.createElement('video');
     player.src = this.videoId;
     this.elements.iframe.appendChild(player);
     player.controls = !options.hideControls;
     player.loop = options.loop;
+    player.volume = Math.max(Math.min(options.volume, 1), 0);
+    player.muted = options.mute;
+    each(htmlVideo, function (value, key) {
+      if (PLAYER_PROPS.indexOf(key) > -1) {
+        player[key] = value;
+      }
+    });
     player.addEventListener('play', this.onPlay.bind(this));
     player.addEventListener('pause', this.onPause.bind(this));
     player.addEventListener('ended', this.onEnded.bind(this));
-    player.volume = Math.max(Math.min(options.volume, 1), 0);
-    player.muted = options.mute;
 
     if (readyCallback) {
       player.addEventListener('loadeddata', readyCallback);
@@ -3563,6 +3579,8 @@ var html_video_HTMLVideo = /*#__PURE__*/function (_BaseProvider) {
 
 
 // CONCATENATED MODULE: ./src/js/providers/youtube/player.js
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function player_createSuper(Derived) { return function () { var Super = player_getPrototypeOf(Derived), result; if (player_isNativeReflectConstruct()) { var NewTarget = player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return player_possibleConstructorReturn(this, result); }; }
 
 function player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return player_assertThisInitialized(self); }
@@ -3612,17 +3630,18 @@ var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
     }
 
     var options = this.Splide.options.video;
+    var _options$playerOption = options.playerOptions.youtube,
+        youtube = _options$playerOption === void 0 ? {} : _options$playerOption;
     var player = new YT.Player(this.elements.iframe, {
       videoId: this.videoId,
-      playerVars: {
-        fs: options.disableFullScreen,
+      playerVars: _extends({
         controls: options.hideControls ? 0 : 1,
         iv_load_policy: 3,
         loop: options.loop,
         playlist: options.loop ? this.videoId : '',
         rel: 0,
         autoplay: false
-      },
+      }, youtube),
       events: {
         'onReady': function onReady(e) {
           _this.onPlayerReady(e);
@@ -3852,6 +3871,8 @@ var youtube_YouTube = /*#__PURE__*/function (_BaseProvider) {
 var player_es = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/player.js
+function player_extends() { player_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return player_extends.apply(this, arguments); }
+
 function vimeo_player_createSuper(Derived) { return function () { var Super = vimeo_player_getPrototypeOf(Derived), result; if (vimeo_player_isNativeReflectConstruct()) { var NewTarget = vimeo_player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return vimeo_player_possibleConstructorReturn(this, result); }; }
 
 function vimeo_player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return vimeo_player_assertThisInitialized(self); }
@@ -3901,16 +3922,18 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
     }
 
     var options = this.Splide.options.video;
-    var player = new player_es["a" /* default */](this.elements.iframe, {
+    var _options$playerOption = options.playerOptions.vimeo,
+        vimeo = _options$playerOption === void 0 ? {} : _options$playerOption;
+    var player = new player_es["a" /* default */](this.elements.iframe, player_extends({
       id: this.videoId,
       controls: !options.hideControls,
       loop: options.loop
-    });
+    }, vimeo));
     player.on('play', this.onPlay.bind(this));
     player.on('pause', this.onPause.bind(this));
     player.on('ended', this.onEnded.bind(this));
     player.setVolume(Math.max(Math.min(options.volume, 1), 0));
-    player.setMuted(options.mute);
+    player.setMuted(vimeo.muted || options.mute);
 
     if (readyCallback) {
       player.ready().then(readyCallback);
@@ -4046,14 +4069,6 @@ var DEFAULTS = {
   hideControls: false,
 
   /**
-   * Hide full screen button.
-   * Only for YouTube.
-   *
-   * @type {boolean}
-   */
-  disableFullScreen: false,
-
-  /**
    * Loop the video.
    *
    * @type {boolean}
@@ -4072,10 +4087,20 @@ var DEFAULTS = {
    *
    * @type {number}
    */
-  volume: 0.2
+  volume: 0.2,
+
+  /**
+   * Additional options for each player.
+   * - playerOptions.youtube
+   * - playerOptions.vimeo
+   * - playerOptions.htmlVideo
+   *
+   * @type {Object}
+   */
+  playerOptions: {}
 };
 // CONCATENATED MODULE: ./src/js/splide-extension-video.js
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function splide_extension_video_extends() { splide_extension_video_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return splide_extension_video_extends.apply(this, arguments); }
 
 /**
  * The extension component for embedding videos to slides.
@@ -4126,7 +4151,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
         Splide.options.video = {};
       }
 
-      Splide.options.video = _extends({}, DEFAULTS, {}, Splide.options.video);
+      Splide.options.video = splide_extension_video_extends({}, DEFAULTS, {}, Splide.options.video);
       each(PROVIDERS, function (Provider) {
         Providers.push(new Provider(Splide, Components));
       });

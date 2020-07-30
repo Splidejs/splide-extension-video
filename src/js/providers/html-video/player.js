@@ -6,6 +6,33 @@
  */
 
 import BasePlayer from '../base/base-player';
+import { each } from "../../utils";
+
+/**
+ * Valid player props.
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ *
+ * @type {string[]}
+ */
+const PLAYER_PROPS = [
+	'autoplay',
+	'autoPictureInPicture',
+	'controls',
+	'controlslist',
+	'crossorigin',
+	'currentTime',
+	'disablePictureInPicture',
+	'disableRemotePlayback',
+	'height',
+	'intrinsicsize',
+	'loop',
+	'muted',
+	'playsinline',
+	'poster',
+	'preload',
+	'width',
+];
+
 
 /**
  * The class for controlling a HTML video.
@@ -20,6 +47,7 @@ export default class Player extends BasePlayer {
 	 */
 	createPlayer( readyCallback = null ) {
 		const options = this.Splide.options.video;
+		const { htmlVideo = {} } = options.playerOptions;
 
 		const player = document.createElement( 'video' );
 		player.src = this.videoId;
@@ -28,13 +56,18 @@ export default class Player extends BasePlayer {
 
 		player.controls = ! options.hideControls;
 		player.loop     = options.loop;
+		player.volume = Math.max( Math.min( options.volume, 1 ), 0 );
+		player.muted  = options.mute;
+
+		each( htmlVideo, ( value, key ) => {
+			if ( PLAYER_PROPS.indexOf( key ) > -1 ) {
+				player[ key ] = value;
+			}
+		} );
 
 		player.addEventListener( 'play', this.onPlay.bind( this ) );
 		player.addEventListener( 'pause', this.onPause.bind( this ) );
 		player.addEventListener( 'ended', this.onEnded.bind( this ) );
-
-		player.volume = Math.max( Math.min( options.volume, 1 ), 0 );
-		player.muted  = options.mute;
 
 		if ( readyCallback ) {
 			player.addEventListener( 'loadeddata', readyCallback );

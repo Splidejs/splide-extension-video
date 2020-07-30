@@ -22,11 +22,13 @@ export default class Player extends BasePlayer {
 	 */
 	createPlayer( readyCallback = null ) {
 		const options = this.Splide.options.video;
+		const { vimeo = {} } = options.playerOptions;
 
 		const player = new VimeoPlayer( this.elements.iframe, {
 			id      : this.videoId,
 			controls: ! options.hideControls,
 			loop    : options.loop,
+			...vimeo,
 		} );
 
 		player.on( 'play', this.onPlay.bind( this ) );
@@ -34,7 +36,7 @@ export default class Player extends BasePlayer {
 		player.on( 'ended', this.onEnded.bind( this ) );
 
 		player.setVolume( Math.max( Math.min( options.volume, 1 ), 0 ) );
-		player.setMuted( options.mute );
+		player.setMuted( vimeo.muted || options.mute );
 
 		if ( readyCallback ) {
 			player.ready().then( readyCallback );

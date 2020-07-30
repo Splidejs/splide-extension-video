@@ -21,17 +21,18 @@ export default class Player extends BasePlayer {
 	 */
 	createPlayer( readyCallback = null ) {
 		const options = this.Splide.options.video;
+		const { youtube = {} } = options.playerOptions;
 
 		const player = new YT.Player( this.elements.iframe, {
 			videoId: this.videoId,
 			playerVars: {
-				fs            : options.disableFullScreen,
 				controls      : options.hideControls ? 0 : 1,
 				iv_load_policy: 3,
 				loop          : options.loop,
 				playlist      : options.loop ? this.videoId : '',
 				rel           : 0,
 				autoplay      : false,
+				...youtube,
 			},
 			events: {
 				'onReady': e => {

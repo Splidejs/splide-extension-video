@@ -28,14 +28,6 @@ export const DEFAULTS = {
 	hideControls: false,
 
 	/**
-	 * Hide full screen button.
-	 * Only for YouTube.
-	 *
-	 * @type {boolean}
-	 */
-	disableFullScreen: false,
-
-	/**
 	 * Loop the video.
 	 *
 	 * @type {boolean}
@@ -55,4 +47,14 @@ export const DEFAULTS = {
 	 * @type {number}
 	 */
 	volume: 0.2,
+
+	/**
+	 * Additional options for each player.
+	 * - playerOptions.youtube
+	 * - playerOptions.vimeo
+	 * - playerOptions.htmlVideo
+	 *
+	 * @type {Object}
+	 */
+	playerOptions: {},
 };
