@@ -10,6 +10,7 @@ const sassGlob      = require( 'gulp-sass-glob' );
 const postcss       = require( 'gulp-postcss' );
 const autoprefixer  = require( 'autoprefixer' );
 const cssnano       = require( 'cssnano' );
+const webpack       = require( 'webpack' );
 const webpackStream = require( 'webpack-stream' );
 
 /*
@@ -45,7 +46,7 @@ const css = {
  */
 gulp.task( 'build:js', done => {
 	Object.values( js ).forEach( settings => {
-		webpackStream( { config: require( settings.path ) } )
+		webpackStream( { config: require( settings.path ) }, webpack )
 			.pipe( gulp.dest( settings.dest ) );
 	} );
 

@@ -7,125 +7,1120 @@
 		exports["Splide"] = factory();
 	else
 		root["Splide"] = factory();
-})(window, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
+})(self, function() {
+return /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
-var g;
+/***/ 303:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "default": () => /* binding */ splide_extension_video
+});
+
+// CONCATENATED MODULE: ./src/js/utils/index.js
+/**
+ * Utility export functions.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * Iterate an object like Array.forEach.
+ *
+ * @param {Object}   obj      - An object.
+ * @param {function} callback - A export function handling each value. Arguments are value, property and index.
+ */
+function each(obj, callback) {
+  Object.keys(obj).some(function (key, index) {
+    return callback(obj[key], key, index);
+  });
 }
+// CONCATENATED MODULE: ./src/js/providers/base/base-provider.js
+/**
+ * The base class for the provider.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+;
+/**
+ * The sub component for the provider.
+ */
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+var BaseProvider = /*#__PURE__*/function () {
+  /**
+   * BaseProvider constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function BaseProvider(Splide, Components) {
+    this.Splide = Splide;
+    this.Components = Components;
+    this.players = [];
+  }
+  /**
+   * Create all players.
+   *
+   * @param {Player} Player        - A Player class.
+   * @param {string} attributeName - attribute name for a video URL.
+   */
 
-module.exports = g;
+
+  var _proto = BaseProvider.prototype;
+
+  _proto.createPlayers = function createPlayers(Player, attributeName) {
+    var _this = this;
+
+    this.Components.Elements.getSlides(true).forEach(function (Slide) {
+      if (_this.Components.Grid) {
+        each(Slide.slide.querySelectorAll("." + _this.Components.Grid.colClass), function (slide) {
+          _this.createPlayer(slide, Player, attributeName);
+        });
+      }
+
+      _this.createPlayer(Slide.slide, Player, attributeName);
+    });
+  }
+  /**
+   * Create a player.
+   *
+   * @param {Element} slide         - A slide element.
+   * @param {Player}  Player        - A Player class.
+   * @param {string}  attributeName - attribute name for a video URL.
+   */
+  ;
+
+  _proto.createPlayer = function createPlayer(slide, Player, attributeName) {
+    var data = slide.getAttribute(attributeName);
+
+    if (data) {
+      this.players.push(new Player(this.Splide, this.Components, slide));
+    }
+  }
+  /**
+   * Destroy.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    this.players.forEach(function (player) {
+      player.destroy();
+    });
+  };
+
+  return BaseProvider;
+}();
 
 
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+// CONCATENATED MODULE: ./src/js/elements/index.js
+/**
+ * The sub component for creating UI elements.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
 
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*! @vimeo/player v2.10.0 | (c) 2019 Vimeo | MIT License | https://github.com/vimeo/player.js */
+/**
+ * The class name of the wrapper element that will be containing video iframe.
+ *
+ * @type {string}
+ */
+var WRAPPER_CLASS = 'splide__video';
+/**
+ * The play button class name.
+ *
+ * @type {string}
+ */
+
+var PLAY_BUTTON_CLASS = 'splide__video__play';
+/**
+ * The sub component for creating UI elements.
+ *
+ * @param {Splide}  Splide - A Splide instance.
+ * @param {Element} slide  - A target slide element.
+ *
+ * @return {Object}
+ */
+
+/* harmony default export */ const js_elements = (function (Splide, slide) {
+  /**
+   * Elements sub component.
+   *
+   * @type {Object}
+   */
+  var Elements = {
+    /**
+     * Initialization.
+     */
+    init: function init() {
+      this.initElements();
+      this.toggleWrapper(false);
+      this.togglePlayButton(false);
+    },
+
+    /**
+     * Create some elements.
+     */
+    initElements: function initElements() {
+      var container = findContainer(slide);
+      this.parent = container || slide;
+      this.className = Splide.classes[container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
+      this.parent.classList.add(this.className);
+      this.wrapper = create('div');
+      this.iframe = create('div');
+      this.playButton = create('button');
+      this.wrapper.classList.add(WRAPPER_CLASS);
+      this.playButton.classList.add(PLAY_BUTTON_CLASS);
+      this.wrapper.appendChild(this.iframe);
+      this.parent.appendChild(this.wrapper);
+      this.parent.appendChild(this.playButton);
+    },
+
+    /**
+     * Destroy elements.
+     */
+    destroy: function destroy() {
+      this.parent.classList.remove(this.className);
+      remove(this.wrapper);
+      remove(this.playButton);
+    },
+
+    /**
+     * Toggle the play button.
+     *
+     * @param {boolean} show - Set true to show the button.
+     */
+    togglePlayButton: function togglePlayButton(show) {
+      this.playButton.style.display = show ? 'flex' : 'none';
+    },
+
+    /**
+     * Toggle the wrapper element.
+     *
+     * @param {boolean} show - Set true to show the wrapper.
+     */
+    toggleWrapper: function toggleWrapper(show) {
+      this.wrapper.style.display = show ? 'block' : 'none';
+    },
+
+    /**
+     * Hide the play button and show the wrapper element.
+     */
+    hide: function hide() {
+      this.togglePlayButton(false);
+      this.toggleWrapper(true);
+    },
+
+    /**
+     * Show the play button and hide the wrapper element.
+     */
+    show: function show() {
+      this.togglePlayButton(true);
+      this.toggleWrapper(false);
+    }
+  };
+  /**
+   * Find a container element.
+   *
+   * @param {Element} slide - A slide element.
+   *
+   * @return {Element} - A container element if found. Null otherwise.
+   */
+
+  function findContainer(slide) {
+    return findChild(slide, Splide.classes['container'].split(' ')[0] || '');
+  }
+  /**
+   * Find a child which has the given class name.
+   *
+   * @param {Element} parent    - A parent element.
+   * @param {string}  className - A class name.
+   *
+   * @return {Element|null} - A found child element if available or null if not.
+   */
+
+
+  function findChild(parent, className) {
+    return Object.keys(parent.children).map(function (key) {
+      return parent.children[key];
+    }).filter(function (child) {
+      return child.classList.contains(className);
+    })[0] || null;
+  }
+  /**
+   * Create a new element.
+   *
+   * @param {string} tag - A tag name for the element.
+   *
+   * @return {Element} - A created element.
+   */
+
+
+  function create(tag) {
+    return document.createElement(tag);
+  }
+  /**
+   * Remove the given element.
+   *
+   * @param {Element} elm - An element being removed.
+   */
+
+
+  function remove(elm) {
+    var parent = elm.parentElement;
+
+    if (parent) {
+      parent.removeChild(elm);
+    }
+  }
+
+  return Elements;
+});
+// CONCATENATED MODULE: ./src/js/utils/state.js
+/**
+ * The function providing a super simple state system.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The function providing a super simple state system.
+ *
+ * @param {string|number} initialState - Provide the initial state value.
+ */
+/* harmony default export */ const state = (function (initialState) {
+  /**
+   * Store the current state.
+   *
+   * @type {string|number}
+   */
+  var curr = initialState;
+  return {
+    /**
+     * Change state.
+     *
+     * @param {string|number} state - A new state.
+     */
+    set: function set(state) {
+      curr = state;
+    },
+
+    /**
+     * Verify if the current state is given one or not.
+     *
+     * @param {string|number} states - A state name(s) to be verified.
+     *
+     * @return {boolean} - True if the current state is the given one.
+     */
+    is: function is() {
+      for (var i = 0; i < arguments.length; i++) {
+        if ((i < 0 || arguments.length <= i ? undefined : arguments[i]) === curr) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  };
+});
+// CONCATENATED MODULE: ./src/js/constants/states.js
+/**
+ * Export state constants.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The player is not initialized.
+ *
+ * @type {number}
+ */
+var NOT_INITIALIZED = 1;
+/**
+ * The player is being created.
+ *
+ * @type {number}
+ */
+
+var CREATING_PLAYER = 2;
+/**
+ * Playing video is requested while creating a player.
+ *
+ * @type {number}
+ */
+
+var PENDING_PLAY = 3;
+/**
+ * Ready to play a video.
+ *
+ * @type {number}
+ */
+
+var IDLE = 4;
+/**
+ * Loading a video.
+ *
+ * @type {number}
+ */
+
+var LOADING = 5;
+/**
+ * Play request has been sent to the player, but it is aborted.
+ *
+ * @type {number}
+ */
+
+var PLAY_REQUEST_ABORTED = 6;
+/**
+ * Playing a video.
+ *
+ * @type {number}
+ */
+
+var PLAYING = 7;
+// CONCATENATED MODULE: ./src/js/providers/base/base-player.js
+/**
+ * The base class of the video player.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+;
+
+
+/**
+ * The base class of the video player.
+ */
+
+var BasePlayer = /*#__PURE__*/function () {
+  /**
+   * BasePlayer constructor.
+   *
+   * @param {Splide}  Splide     - A Splide instance.
+   * @param {Object}  Components - An object containing components.
+   * @param {Element} slide      - A target slide element.
+   */
+  function BasePlayer(Splide, Components, slide) {
+    this.Splide = Splide;
+    this.Components = Components;
+    this.slide = slide;
+    this.player = null;
+    this.elements = null;
+    this.state = new state(NOT_INITIALIZED);
+    this.videoId = this.findVideoId();
+
+    if (this.videoId) {
+      this.init();
+      this.bind();
+      this.handleClick();
+    }
+  }
+  /**
+   * Initialization.
+   */
+
+
+  var _proto = BasePlayer.prototype;
+
+  _proto.init = function init() {
+    this.elements = new js_elements(this.Splide, this.slide);
+    this.elements.init();
+    this.toggleRootClass(true);
+    this.elements.togglePlayButton(!this.Splide.options.video.disableOverlayUI);
+
+    if (this.isAutoplay() && this.isActive()) {
+      this.play();
+    }
+  }
+  /**
+   * Setup.
+   * This must be called after MOUNTED state.
+   */
+  ;
+
+  _proto.setup = function setup() {
+    var _this = this;
+
+    this.state.set(CREATING_PLAYER);
+    this.player = this.createPlayer(function () {
+      var isPendingPlay = _this.state.is(PENDING_PLAY);
+
+      _this.state.set(IDLE);
+
+      if (isPendingPlay) {
+        _this.play();
+      }
+    });
+  }
+  /**
+   * Listen to some events.
+   */
+  ;
+
+  _proto.bind = function bind() {
+    var _this2 = this;
+
+    this.Splide.on('active', function (Slide) {
+      if (_this2.isAutoplay()) {
+        if (Slide.slide === _this2.slide) {
+          _this2.play();
+        } else {
+          _this2.pause();
+        }
+      }
+    }).on('move', function () {
+      _this2.pause();
+    }).on('video:click', function (Player) {
+      if (Player.slide !== _this2.slide) {
+        _this2.pause();
+      }
+    });
+  }
+  /**
+   * In the fade mode, events will be fired in the order of drag -> dragged -> click,
+   * which unexpectedly plays the previous video.
+   */
+  ;
+
+  _proto.handleClick = function handleClick() {
+    var _this3 = this;
+
+    // Listen to native events for grid slides.
+    this.slide.addEventListener('mousedown', this.onMouseDown.bind(this));
+    this.slide.addEventListener('touchstart', this.onMouseDown.bind(this));
+    this.slide.addEventListener('mouseup', this.onMouseUp.bind(this));
+    this.slide.addEventListener('touchend', this.onMouseUp.bind(this)); // Interrupt playing the video because the slider starts being dragged.
+
+    this.Splide.on('drag', function () {
+      _this3.shouldHandleClick = false;
+    });
+  }
+  /**
+   * Create a player.
+   * This must be overridden in a child class.
+   *
+   * @param {function} readyCallback
+   *
+   * @return {null} - Always null.
+   */
+  ;
+
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
+    return null;
+  }
+  /**
+   * Play the video.
+   */
+  ;
+
+  _proto.play = function play() {
+    var _this4 = this;
+
+    if (this.state.is(NOT_INITIALIZED)) {
+      this.setup();
+    }
+
+    if (this.state.is(PLAYING, PENDING_PLAY)) {
+      return;
+    } // Hide immediately for UX.
+
+
+    setTimeout(function () {
+      _this4.elements.hide();
+    }); // Pending play because the player is being created now.
+
+    if (this.state.is(CREATING_PLAYER)) {
+      this.state.set(PENDING_PLAY);
+      return;
+    } // Play request is canceled but requested again.
+
+
+    if (this.state.is(PLAY_REQUEST_ABORTED)) {
+      this.state.set(LOADING);
+      return;
+    }
+
+    this.playVideo();
+    this.state.set(LOADING);
+  }
+  /**
+   * Pause the video.
+   */
+  ;
+
+  _proto.pause = function pause() {
+    if (!this.Splide.options.video.disableOverlayUI) {
+      this.elements.show();
+    } // Cancel the "pending play" status.
+
+
+    if (this.state.is(PENDING_PLAY)) {
+      this.state.set(CREATING_PLAYER);
+      return;
+    } // The video is paused while being loaded.
+
+
+    if (this.state.is(LOADING)) {
+      this.state.set(PLAY_REQUEST_ABORTED);
+      return;
+    }
+
+    if (this.state.is(PLAYING)) {
+      this.state.set(IDLE);
+      this.pauseVideo();
+    }
+  }
+  /**
+   * Play video. Override this if necessary.
+   */
+  ;
+
+  _proto.playVideo = function playVideo() {
+    this.player.play();
+  }
+  /**
+   * Pause video. Override this if necessary.
+   */
+  ;
+
+  _proto.pauseVideo = function pauseVideo() {
+    this.player.pause();
+  }
+  /**
+   * Check if the slide is active or not.
+   */
+  ;
+
+  _proto.isActive = function isActive() {
+    return this.slide.classList.contains('is-active');
+  }
+  /**
+   * Check whether a video should be played automatically.
+   *
+   * @return {boolean}
+   */
+  ;
+
+  _proto.isAutoplay = function isAutoplay() {
+    return this.Splide.options.video.autoplay;
+  }
+  /**
+   * Find the video ID from the HTML.
+   *
+   * @return {string|number}
+   */
+  ;
+
+  _proto.findVideoId = function findVideoId() {
+    return '';
+  }
+  /**
+   * Toggle the root class.
+   *
+   * @param {boolean} add - Whether to add a class or not.
+   */
+  ;
+
+  _proto.toggleRootClass = function toggleRootClass(add) {
+    this.Splide.root.classList[add ? 'add' : 'remove'](this.Splide.classes.root.split(' ')[0] + '--has-video');
+  }
+  /**
+   * Called on mousedown or touchstart.
+   * Request playing the video on mouseup or touchend.
+   * This may be interrupted a drag event.
+   */
+  ;
+
+  _proto.onMouseDown = function onMouseDown() {
+    this.shouldHandleClick = true;
+  }
+  /**
+   * Called on mouseup or touchend.
+   * If the shouldHandleClick is still true, play the video.
+   */
+  ;
+
+  _proto.onMouseUp = function onMouseUp() {
+    if (this.shouldHandleClick) {
+      this.Splide.emit('video:click', this);
+      this.play();
+    }
+  }
+  /**
+   * Called when the player is playing a video.
+   */
+  ;
+
+  _proto.onPlay = function onPlay() {
+    if (this.state.is(PLAY_REQUEST_ABORTED)) {
+      this.state.set(PLAYING);
+      this.pause();
+    } else {
+      this.Splide.emit('video:play', this);
+      this.state.set(PLAYING);
+    }
+  }
+  /**
+   * Called when the player is paused a video.
+   */
+  ;
+
+  _proto.onPause = function onPause() {
+    this.Splide.emit('video:pause', this);
+    this.state.set(IDLE);
+  }
+  /**
+   * Called when the video is ended.
+   */
+  ;
+
+  _proto.onEnded = function onEnded() {
+    this.Splide.emit('video:ended', this);
+    this.state.set(IDLE);
+  }
+  /**
+   * Destroy the player.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    if (this.player) {
+      this.player.destroy();
+      this.player = null;
+    }
+
+    this.toggleRootClass(false);
+    this.elements.destroy();
+    this.slide.removeEventListener('mousedown', this.onMouseDown.bind(this));
+    this.slide.removeEventListener('touchstart', this.onMouseDown.bind(this));
+    this.slide.removeEventListener('mouseup', this.onMouseUp.bind(this));
+    this.slide.removeEventListener('touchend', this.onMouseUp.bind(this));
+  };
+
+  return BasePlayer;
+}();
+
+
+// CONCATENATED MODULE: ./src/js/providers/html-video/player.js
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+/**
+ * The class for controlling a HTML video.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+
+/**
+ * Valid player props.
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ *
+ * @type {string[]}
+ */
+
+var PLAYER_PROPS = ['autoplay', 'autoPictureInPicture', 'controls', 'controlslist', 'crossorigin', 'currentTime', 'disablePictureInPicture', 'disableRemotePlayback', 'height', 'intrinsicsize', 'loop', 'muted', 'playsinline', 'poster', 'preload', 'width'];
+/**
+ * The class for controlling a HTML video.
+ */
+
+var Player = /*#__PURE__*/function (_BasePlayer) {
+  _inheritsLoose(Player, _BasePlayer);
+
+  function Player() {
+    return _BasePlayer.apply(this, arguments) || this;
+  }
+
+  var _proto = Player.prototype;
+
+  /**
+   * Create a player.
+   *
+   * @param {function} readyCallback - Callback function triggered when the player gets ready.
+   *
+   * @return {object|null} - A created player object.
+   */
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
+    var options = this.Splide.options.video;
+    var _options$playerOption = options.playerOptions.htmlVideo,
+        htmlVideo = _options$playerOption === void 0 ? {} : _options$playerOption;
+    var player = document.createElement('video');
+    player.src = this.videoId;
+    this.elements.iframe.appendChild(player);
+    player.controls = !options.hideControls;
+    player.loop = options.loop;
+    player.volume = Math.max(Math.min(options.volume, 1), 0);
+    player.muted = options.mute;
+    each(htmlVideo, function (value, key) {
+      if (PLAYER_PROPS.indexOf(key) > -1) {
+        player[key] = value;
+      }
+    });
+    player.addEventListener('play', this.onPlay.bind(this));
+    player.addEventListener('pause', this.onPause.bind(this));
+    player.addEventListener('ended', this.onEnded.bind(this));
+
+    if (readyCallback) {
+      player.addEventListener('loadeddata', readyCallback);
+    }
+
+    return player;
+  }
+  /**
+   * Find the video ID from the HTML.
+   * Use the given path or URL as ID for a raw video.
+   *
+   * @return {string} - Video ID(path or URL).
+   */
+  ;
+
+  _proto.findVideoId = function findVideoId() {
+    return this.slide.getAttribute('data-splide-html-video');
+  }
+  /**
+   * Destroy.
+   */
+  ;
+
+  _proto.destroy = function destroy() {
+    if (this.player) {
+      this.player.pause();
+      this.player.removeAttribute('src');
+      this.player.load();
+      this.elements.iframe.removeChild(this.player);
+      this.player = null;
+    }
+
+    this.elements.destroy();
+  };
+
+  return Player;
+}(BasePlayer);
+
+
+// CONCATENATED MODULE: ./src/js/providers/html-video/index.js
+function html_video_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+/**
+ * The sub component for embedding a HTML video.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+
+/**
+ * The sub component for embedding a HTML video.
+ */
+
+var HTMLVideo = /*#__PURE__*/function (_BaseProvider) {
+  html_video_inheritsLoose(HTMLVideo, _BaseProvider);
+
+  /**
+   * HTMLVideo constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function HTMLVideo(Splide, Components) {
+    var _this;
+
+    _this = _BaseProvider.call(this, Splide, Components) || this;
+
+    _this.createPlayers(Player, 'data-splide-html-video');
+
+    return _this;
+  }
+
+  return HTMLVideo;
+}(BaseProvider);
+
+
+// CONCATENATED MODULE: ./src/js/providers/youtube/player.js
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+/**
+ * The class for controlling YouTube video.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+/**
+ * The class for controlling YouTube video.
+ */
+
+var player_Player = /*#__PURE__*/function (_BasePlayer) {
+  player_inheritsLoose(Player, _BasePlayer);
+
+  function Player() {
+    return _BasePlayer.apply(this, arguments) || this;
+  }
+
+  var _proto = Player.prototype;
+
+  /**
+   * Create a player.
+   *
+   * @param {function} readyCallback - Callback function triggered when the player gets ready.
+   *
+   * @return {object|null} - A created player object.
+   */
+  _proto.createPlayer = function createPlayer(readyCallback) {
+    var _this = this;
+
+    if (readyCallback === void 0) {
+      readyCallback = null;
+    }
+
+    var options = this.Splide.options.video;
+    var _options$playerOption = options.playerOptions.youtube,
+        youtube = _options$playerOption === void 0 ? {} : _options$playerOption;
+    var player = new YT.Player(this.elements.iframe, {
+      videoId: this.videoId,
+      playerVars: _extends({
+        controls: options.hideControls ? 0 : 1,
+        iv_load_policy: 3,
+        loop: options.loop,
+        playlist: options.loop ? this.videoId : '',
+        rel: 0,
+        autoplay: false
+      }, youtube),
+      events: {
+        'onReady': function onReady(e) {
+          _this.onPlayerReady(e);
+
+          if (readyCallback) {
+            readyCallback();
+          }
+        },
+        'onStateChange': this.onPlayerStateChange.bind(this)
+      }
+    });
+    return player;
+  }
+  /**
+   * Called when the YouTube player is ready.
+   *
+   * @param {Object} e - An event object.
+   */
+  ;
+
+  _proto.onPlayerReady = function onPlayerReady(e) {
+    var player = e.target;
+    var options = this.Splide.options.video;
+
+    if (options.mute) {
+      player.mute();
+    }
+
+    player.setVolume(Math.max(Math.min(options.volume * 100, 100), 0));
+  }
+  /**
+   * Called when the YouTube player state is changed.
+   *
+   * @param {Object} e - An event object.
+   */
+  ;
+
+  _proto.onPlayerStateChange = function onPlayerStateChange(e) {
+    var _YT$PlayerState = YT.PlayerState,
+        PLAYING = _YT$PlayerState.PLAYING,
+        PAUSED = _YT$PlayerState.PAUSED,
+        ENDED = _YT$PlayerState.ENDED;
+
+    switch (true) {
+      case e.data === PLAYING:
+        this.onPlay();
+        break;
+
+      case e.data === PAUSED:
+        this.onPause();
+        break;
+
+      case e.data === ENDED:
+        this.onEnded();
+        break;
+    }
+  }
+  /**
+   * Play video.
+   */
+  ;
+
+  _proto.playVideo = function playVideo() {
+    this.player.playVideo();
+  }
+  /**
+   * Pause video.
+   */
+  ;
+
+  _proto.pauseVideo = function pauseVideo() {
+    this.player.pauseVideo();
+  }
+  /**
+   * Find the video ID from the HTML.
+   *
+   * @return {string} - Video ID.
+   */
+  ;
+
+  _proto.findVideoId = function findVideoId() {
+    var url = this.slide.getAttribute('data-splide-youtube');
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    return match && match[7].length === 11 ? match[7] : '';
+  };
+
+  return Player;
+}(BasePlayer);
+
+
+// CONCATENATED MODULE: ./src/js/providers/youtube/index.js
+function youtube_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+/**
+ * The sub component for embedding a YouTube video.
+ *
+ * @author    Naotoshi Fujita
+ * @copyright Naotoshi Fujita. All rights reserved.
+ */
+
+
+/**
+ * URL to the YouTube API script.
+ *
+ * @type {string}
+ */
+
+var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
+/**
+ * The sub component for embedding a YouTube video.
+ */
+
+var YouTube = /*#__PURE__*/function (_BaseProvider) {
+  youtube_inheritsLoose(YouTube, _BaseProvider);
+
+  /**
+   * YouTube constructor.
+   *
+   * @param {Splide} Splide     - A Splide instance.
+   * @param {Object} Components - An object containing components.
+   */
+  function YouTube(Splide, Components) {
+    var _this;
+
+    _this = _BaseProvider.call(this, Splide, Components) || this;
+    _this.oldCallback = undefined;
+
+    _this.bindAPICallback();
+
+    _this.loadAPI();
+
+    return _this;
+  }
+  /**
+   * Load the YouTube iframe API.
+   */
+
+
+  var _proto = YouTube.prototype;
+
+  _proto.loadAPI = function loadAPI() {
+    var _window = window,
+        YT = _window.YT;
+
+    if (this.shouldLoadAPI()) {
+      var tag = document.createElement('script');
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      tag.src = YOUTUBE_API_SRC;
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    } else {
+      if (YT && YT.loaded) {
+        // API has been already loaded and the callback has been fired.
+        this.onReady();
+      }
+    }
+  }
+  /**
+   * Check whether the API should be loaded or not.
+   *
+   * @return {boolean} - True if it should be or false if not.
+   */
+  ;
+
+  _proto.shouldLoadAPI = function shouldLoadAPI() {
+    var scripts = document.getElementsByTagName('script');
+
+    for (var i = 0; i < scripts.length; i++) {
+      if (scripts[i].getAttribute('src') === YOUTUBE_API_SRC) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+  /**
+   * Listen onYouTubeIframeAPIReady event.
+   */
+  ;
+
+  _proto.bindAPICallback = function bindAPICallback() {
+    // Avoid unexpected collision against other libraries.
+    if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
+      this.oldCallback = window.onYouTubeIframeAPIReady;
+    }
+
+    window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind(this);
+  }
+  /**
+   * Called when the API is ready.
+   */
+  ;
+
+  _proto.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
+    if (this.oldCallback) {
+      this.oldCallback();
+    }
+
+    this.onReady();
+  }
+  /**
+   * Called when the YouTube API is ready.
+   */
+  ;
+
+  _proto.onReady = function onReady() {
+    this.createPlayers(player_Player, 'data-splide-youtube');
+  };
+
+  return YouTube;
+}(BaseProvider);
+
+
+// CONCATENATED MODULE: ./node_modules/@vimeo/player/dist/player.es.js
+/*! @vimeo/player v2.14.1 | (c) 2020 Vimeo | MIT License | https://github.com/vimeo/player.js */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -158,7 +1153,7 @@ function _createClass(Constructor, protoProps, staticProps) {
  */
 
 /* global global */
-var isNode = typeof global !== 'undefined' && {}.toString.call(global) === '[object global]';
+var isNode = typeof __webpack_require__.g !== 'undefined' && {}.toString.call(__webpack_require__.g) === '[object global]';
 /**
  * Get the name of the method for a given getter or setter.
  *
@@ -247,16 +1242,16 @@ if (!isNode && (!arrayIndexOfSupport || !postMessageSupport)) {
   throw new Error('Sorry, the Vimeo Player API is not available in this browser.');
 }
 
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof __webpack_require__.g !== 'undefined' ? __webpack_require__.g : typeof self !== 'undefined' ? self : {};
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
 /*!
- * weakmap-polyfill v2.0.0 - ECMAScript6 WeakMap polyfill
+ * weakmap-polyfill v2.0.1 - ECMAScript6 WeakMap polyfill
  * https://github.com/polygonplanet/weakmap-polyfill
- * Copyright (c) 2015-2016 polygon planet <polygon.planet.aqua@gmail.com>
+ * Copyright (c) 2015-2020 Polygon Planet <polygon.planet.aqua@gmail.com>
  * @license MIT
  */
 (function (self) {
@@ -394,7 +1389,7 @@ var npo_src = createCommonjsModule(function (module) {
   // special form of UMD for polyfilling across evironments
   context[name] = context[name] || definition();
 
-  if (module.exports) {
+  if ( module.exports) {
     module.exports = context[name];
   }
 })("Promise", typeof commonjsGlobal != "undefined" ? commonjsGlobal : commonjsGlobal, function DEF() {
@@ -1029,11 +2024,7 @@ function resizeEmbeds() {
     }
   };
 
-  if (window.addEventListener) {
-    window.addEventListener('message', onMessage, false);
-  } else if (window.attachEvent) {
-    window.attachEvent('onmessage', onMessage);
-  }
+  window.addEventListener('message', onMessage);
 }
 
 /**
@@ -1138,12 +2129,125 @@ function processData(player, data) {
   });
 }
 
+/* MIT License
+
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Terms */
+function initializeScreenfull() {
+  var fn = function () {
+    var val;
+    var fnMap = [['requestFullscreen', 'exitFullscreen', 'fullscreenElement', 'fullscreenEnabled', 'fullscreenchange', 'fullscreenerror'], // New WebKit
+    ['webkitRequestFullscreen', 'webkitExitFullscreen', 'webkitFullscreenElement', 'webkitFullscreenEnabled', 'webkitfullscreenchange', 'webkitfullscreenerror'], // Old WebKit
+    ['webkitRequestFullScreen', 'webkitCancelFullScreen', 'webkitCurrentFullScreenElement', 'webkitCancelFullScreen', 'webkitfullscreenchange', 'webkitfullscreenerror'], ['mozRequestFullScreen', 'mozCancelFullScreen', 'mozFullScreenElement', 'mozFullScreenEnabled', 'mozfullscreenchange', 'mozfullscreenerror'], ['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError']];
+    var i = 0;
+    var l = fnMap.length;
+    var ret = {};
+
+    for (; i < l; i++) {
+      val = fnMap[i];
+
+      if (val && val[1] in document) {
+        for (i = 0; i < val.length; i++) {
+          ret[fnMap[0][i]] = val[i];
+        }
+
+        return ret;
+      }
+    }
+
+    return false;
+  }();
+
+  var eventNameMap = {
+    fullscreenchange: fn.fullscreenchange,
+    fullscreenerror: fn.fullscreenerror
+  };
+  var screenfull = {
+    request: function request(element) {
+      return new Promise(function (resolve, reject) {
+        var onFullScreenEntered = function onFullScreenEntered() {
+          screenfull.off('fullscreenchange', onFullScreenEntered);
+          resolve();
+        };
+
+        screenfull.on('fullscreenchange', onFullScreenEntered);
+        element = element || document.documentElement;
+        var returnPromise = element[fn.requestFullscreen]();
+
+        if (returnPromise instanceof Promise) {
+          returnPromise.then(onFullScreenEntered).catch(reject);
+        }
+      });
+    },
+    exit: function exit() {
+      return new Promise(function (resolve, reject) {
+        if (!screenfull.isFullscreen) {
+          resolve();
+          return;
+        }
+
+        var onFullScreenExit = function onFullScreenExit() {
+          screenfull.off('fullscreenchange', onFullScreenExit);
+          resolve();
+        };
+
+        screenfull.on('fullscreenchange', onFullScreenExit);
+        var returnPromise = document[fn.exitFullscreen]();
+
+        if (returnPromise instanceof Promise) {
+          returnPromise.then(onFullScreenExit).catch(reject);
+        }
+      });
+    },
+    on: function on(event, callback) {
+      var eventName = eventNameMap[event];
+
+      if (eventName) {
+        document.addEventListener(eventName, callback);
+      }
+    },
+    off: function off(event, callback) {
+      var eventName = eventNameMap[event];
+
+      if (eventName) {
+        document.removeEventListener(eventName, callback);
+      }
+    }
+  };
+  Object.defineProperties(screenfull, {
+    isFullscreen: {
+      get: function get() {
+        return Boolean(document[fn.fullscreenElement]);
+      }
+    },
+    element: {
+      enumerable: true,
+      get: function get() {
+        return document[fn.fullscreenElement];
+      }
+    },
+    isEnabled: {
+      enumerable: true,
+      get: function get() {
+        // Coerce to boolean in case of old WebKit
+        return Boolean(document[fn.fullscreenEnabled]);
+      }
+    }
+  });
+  return screenfull;
+}
+
 var playerMap = new WeakMap();
 var readyMap = new WeakMap();
+var screenfull = {};
 
-var Player =
-/*#__PURE__*/
-function () {
+var player_es_Player = /*#__PURE__*/function () {
   /**
    * Create a Player.
    *
@@ -1176,9 +2280,8 @@ function () {
 
     if (!isDomElement(element)) {
       throw new TypeError('You must pass either a valid element or a valid id.');
-    }
+    } // Already initialized an embed in this div, so grab the iframe
 
-    var win = element.ownerDocument.defaultView; // Already initialized an embed in this div, so grab the iframe
 
     if (element.nodeName !== 'IFRAME') {
       var iframe = element.querySelector('iframe');
@@ -1198,10 +2301,11 @@ function () {
       return playerMap.get(element);
     }
 
+    this._window = element.ownerDocument.defaultView;
     this.element = element;
     this.origin = '*';
     var readyPromise = new npo_src(function (resolve, reject) {
-      var onMessage = function onMessage(event) {
+      _this._onMessage = function (event) {
         if (!isVimeoUrl(event.origin) || _this.element.contentWindow !== event.source) {
           return;
         }
@@ -1234,11 +2338,7 @@ function () {
         processData(_this, data);
       };
 
-      if (win.addEventListener) {
-        win.addEventListener('message', onMessage, false);
-      } else if (win.attachEvent) {
-        win.attachEvent('onmessage', onMessage);
-      }
+      _this._window.addEventListener('message', _this._onMessage);
 
       if (_this.element.nodeName !== 'IFRAME') {
         var params = getOEmbedParameters(element, options);
@@ -1262,6 +2362,25 @@ function () {
 
     if (this.element.nodeName === 'IFRAME') {
       postMessage(this, 'ping');
+    }
+
+    if (screenfull.isEnabled) {
+      var exitFullscreen = function exitFullscreen() {
+        return screenfull.exit();
+      };
+
+      screenfull.on('fullscreenchange', function () {
+        if (screenfull.isFullscreen) {
+          storeCallback(_this, 'event:exitFullscreen', exitFullscreen);
+        } else {
+          removeCallback(_this, 'event:exitFullscreen', exitFullscreen);
+        } // eslint-disable-next-line
+
+
+        _this.ready().then(function () {
+          postMessage(_this, 'fullscreenchange', screenfull.isFullscreen);
+        });
+      });
     }
 
     return this;
@@ -1615,6 +2734,48 @@ function () {
       return this.callMethod('play');
     }
     /**
+     * Request that the player enters fullscreen.
+     * @return {Promise}
+     */
+
+  }, {
+    key: "requestFullscreen",
+    value: function requestFullscreen() {
+      if (screenfull.isEnabled) {
+        return screenfull.request(this.element);
+      }
+
+      return this.callMethod('requestFullscreen');
+    }
+    /**
+     * Request that the player exits fullscreen.
+     * @return {Promise}
+     */
+
+  }, {
+    key: "exitFullscreen",
+    value: function exitFullscreen() {
+      if (screenfull.isEnabled) {
+        return screenfull.exit();
+      }
+
+      return this.callMethod('exitFullscreen');
+    }
+    /**
+     * Returns true if the player is currently fullscreen.
+     * @return {Promise}
+     */
+
+  }, {
+    key: "getFullscreen",
+    value: function getFullscreen() {
+      if (screenfull.isEnabled) {
+        return npo_src.resolve(screenfull.isFullscreen);
+      }
+
+      return this.get('fullscreen');
+    }
+    /**
      * A promise to unload the video.
      *
      * @promise UnloadPromise
@@ -1658,7 +2819,21 @@ function () {
 
         if (_this5.element && _this5.element.nodeName === 'IFRAME' && _this5.element.parentNode) {
           _this5.element.parentNode.removeChild(_this5.element);
+        } // If the clip is private there is a case where the element stays the
+        // div element. Destroy should reset the div and remove the iframe child.
+
+
+        if (_this5.element && _this5.element.nodeName === 'DIV' && _this5.element.parentNode) {
+          _this5.element.removeAttribute('data-vimeo-initialized');
+
+          var iframe = _this5.element.querySelector('iframe');
+
+          if (iframe && iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+          }
         }
+
+        _this5._window.removeEventListener('message', _this5._onMessage);
 
         resolve();
       });
@@ -1726,6 +2901,97 @@ function () {
     key: "getBuffered",
     value: function getBuffered() {
       return this.get('buffered');
+    }
+    /**
+     * @typedef {Object} CameraProperties
+     * @prop {number} props.yaw - Number between 0 and 360.
+     * @prop {number} props.pitch - Number between -90 and 90.
+     * @prop {number} props.roll - Number between -180 and 180.
+     * @prop {number} props.fov - The field of view in degrees.
+     */
+
+    /**
+     * A promise to get the camera properties of the player.
+     *
+     * @promise GetCameraPromise
+     * @fulfill {CameraProperties} The camera properties.
+     */
+
+    /**
+     * For 360° videos get the camera properties for this player.
+     *
+     * @return {GetCameraPromise}
+     */
+
+  }, {
+    key: "getCameraProps",
+    value: function getCameraProps() {
+      return this.get('cameraProps');
+    }
+    /**
+     * A promise to set the camera properties of the player.
+     *
+     * @promise SetCameraPromise
+     * @fulfill {Object} The camera was successfully set.
+     * @reject {RangeError} The range was out of bounds.
+     */
+
+    /**
+     * For 360° videos set the camera properties for this player.
+     *
+     * @param {CameraProperties} camera The camera properties
+     * @return {SetCameraPromise}
+     */
+
+  }, {
+    key: "setCameraProps",
+    value: function setCameraProps(camera) {
+      return this.set('cameraProps', camera);
+    }
+    /**
+     * A representation of a chapter.
+     *
+     * @typedef {Object} VimeoChapter
+     * @property {number} startTime The start time of the chapter.
+     * @property {object} title The title of the chapter.
+     * @property {number} index The place in the order of Chapters. Starts at 1.
+     */
+
+    /**
+     * A promise to get chapters for the video.
+     *
+     * @promise GetChaptersPromise
+     * @fulfill {VimeoChapter[]} The chapters for the video.
+     */
+
+    /**
+     * Get an array of all the chapters for the video.
+     *
+     * @return {GetChaptersPromise}
+     */
+
+  }, {
+    key: "getChapters",
+    value: function getChapters() {
+      return this.get('chapters');
+    }
+    /**
+     * A promise to get the currently active chapter.
+     *
+     * @promise GetCurrentChaptersPromise
+     * @fulfill {VimeoChapter|undefined} The current chapter for the video.
+     */
+
+    /**
+     * Get the currently active chapter for the video.
+     *
+     * @return {GetCurrentChaptersPromise}
+     */
+
+  }, {
+    key: "getCurrentChapter",
+    value: function getCurrentChapter() {
+      return this.get('currentChapter');
     }
     /**
      * A promise to get the color of the player.
@@ -2037,6 +3303,62 @@ function () {
       return this.get('played');
     }
     /**
+     * A promise to get the qualities available of the current video.
+     *
+     * @promise GetQualitiesPromise
+     * @fulfill {Array} The qualities of the video.
+     */
+
+    /**
+     * Get the qualities of the current video.
+     *
+     * @return {GetQualitiesPromise}
+     */
+
+  }, {
+    key: "getQualities",
+    value: function getQualities() {
+      return this.get('qualities');
+    }
+    /**
+     * A promise to get the current set quality of the video.
+     *
+     * @promise GetQualityPromise
+     * @fulfill {string} The current set quality.
+     */
+
+    /**
+     * Get the current set quality of the video.
+     *
+     * @return {GetQualityPromise}
+     */
+
+  }, {
+    key: "getQuality",
+    value: function getQuality() {
+      return this.get('quality');
+    }
+    /**
+     * A promise to set the video quality.
+     *
+     * @promise SetQualityPromise
+     * @fulfill {number} The quality was set.
+     * @reject {RangeError} The quality is not available.
+     */
+
+    /**
+     * Set a video quality.
+     *
+     * @param {string} quality
+     * @return {SetQualityPromise}
+     */
+
+  }, {
+    key: "setQuality",
+    value: function setQuality(quality) {
+      return this.set('quality', quality);
+    }
+    /**
      * A promise to get the seekable property of the video.
      *
      * @promise GetSeekablePromise
@@ -2254,1634 +3576,15 @@ function () {
 
 
 if (!isNode) {
+  screenfull = initializeScreenfull();
   initializeEmbeds();
   resizeEmbeds();
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (Player);
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(2).setImmediate))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
-            (typeof self !== "undefined" && self) ||
-            window;
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(scope, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(3);
-// On some exotic environments, it's not clear which object `setimmediate` was
-// able to install onto.  Search each possibility in the same order as the
-// `setimmediate` library.
-exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
-                       (typeof global !== "undefined" && global.setImmediate) ||
-                       (this && this.setImmediate);
-exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
-                         (typeof global !== "undefined" && global.clearImmediate) ||
-                         (this && this.clearImmediate);
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)))
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0), __webpack_require__(4)))
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// CONCATENATED MODULE: ./src/js/utils/index.js
-/**
- * Utility export functions.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * Iterate an object like Array.forEach.
- *
- * @param {Object}   obj      - An object.
- * @param {function} callback - A export function handling each value. Arguments are value, property and index.
- */
-function each(obj, callback) {
-  Object.keys(obj).some(function (key, index) {
-    return callback(obj[key], key, index);
-  });
-}
-// CONCATENATED MODULE: ./src/js/providers/base/base-provider.js
-/**
- * The base class for the provider.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * The sub component for the provider.
- */
-
-var base_provider_BaseProvider = /*#__PURE__*/function () {
-  /**
-   * BaseProvider constructor.
-   *
-   * @param {Splide} Splide     - A Splide instance.
-   * @param {Object} Components - An object containing components.
-   */
-  function BaseProvider(Splide, Components) {
-    this.Splide = Splide;
-    this.Components = Components;
-    this.players = [];
-  }
-  /**
-   * Create all players.
-   *
-   * @param {Player} Player        - A Player class.
-   * @param {string} attributeName - attribute name for a video URL.
-   */
-
-
-  var _proto = BaseProvider.prototype;
-
-  _proto.createPlayers = function createPlayers(Player, attributeName) {
-    var _this = this;
-
-    this.Components.Elements.getSlides(true).forEach(function (Slide) {
-      if (_this.Components.Grid) {
-        each(Slide.slide.querySelectorAll("." + _this.Components.Grid.colClass), function (slide) {
-          _this.createPlayer(slide, Player, attributeName);
-        });
-      }
-
-      _this.createPlayer(Slide.slide, Player, attributeName);
-    });
-  }
-  /**
-   * Create a player.
-   *
-   * @param {Element} slide         - A slide element.
-   * @param {Player}  Player        - A Player class.
-   * @param {string}  attributeName - attribute name for a video URL.
-   */
-  ;
-
-  _proto.createPlayer = function createPlayer(slide, Player, attributeName) {
-    var data = slide.getAttribute(attributeName);
-
-    if (data) {
-      this.players.push(new Player(this.Splide, this.Components, slide));
-    }
-  }
-  /**
-   * Destroy.
-   */
-  ;
-
-  _proto.destroy = function destroy() {
-    this.players.forEach(function (player) {
-      player.destroy();
-    });
-  };
-
-  return BaseProvider;
-}();
-
-
-// CONCATENATED MODULE: ./src/js/elements/index.js
-/**
- * The sub component for creating UI elements.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * The class name of the wrapper element that will be containing video iframe.
- *
- * @type {string}
- */
-var WRAPPER_CLASS = 'splide__video';
-/**
- * The play button class name.
- *
- * @type {string}
- */
-
-var PLAY_BUTTON_CLASS = 'splide__video__play';
-/**
- * The sub component for creating UI elements.
- *
- * @param {Splide}  Splide - A Splide instance.
- * @param {Element} slide  - A target slide element.
- *
- * @return {Object}
- */
-
-/* harmony default export */ var js_elements = (function (Splide, slide) {
-  /**
-   * Elements sub component.
-   *
-   * @type {Object}
-   */
-  var Elements = {
-    /**
-     * Initialization.
-     */
-    init: function init() {
-      this.initElements();
-      this.toggleWrapper(false);
-      this.togglePlayButton(false);
-    },
-
-    /**
-     * Create some elements.
-     */
-    initElements: function initElements() {
-      var container = findContainer(slide);
-      this.parent = container || slide;
-      this.className = Splide.classes[container ? 'container' : 'slide'].split(' ')[0] + "--has-video";
-      this.parent.classList.add(this.className);
-      this.wrapper = create('div');
-      this.iframe = create('div');
-      this.playButton = create('button');
-      this.wrapper.classList.add(WRAPPER_CLASS);
-      this.playButton.classList.add(PLAY_BUTTON_CLASS);
-      this.wrapper.appendChild(this.iframe);
-      this.parent.appendChild(this.wrapper);
-      this.parent.appendChild(this.playButton);
-    },
-
-    /**
-     * Destroy elements.
-     */
-    destroy: function destroy() {
-      this.parent.classList.remove(this.className);
-      remove(this.wrapper);
-      remove(this.playButton);
-    },
-
-    /**
-     * Toggle the play button.
-     *
-     * @param {boolean} show - Set true to show the button.
-     */
-    togglePlayButton: function togglePlayButton(show) {
-      this.playButton.style.display = show ? 'flex' : 'none';
-    },
-
-    /**
-     * Toggle the wrapper element.
-     *
-     * @param {boolean} show - Set true to show the wrapper.
-     */
-    toggleWrapper: function toggleWrapper(show) {
-      this.wrapper.style.display = show ? 'block' : 'none';
-    },
-
-    /**
-     * Hide the play button and show the wrapper element.
-     */
-    hide: function hide() {
-      this.togglePlayButton(false);
-      this.toggleWrapper(true);
-    },
-
-    /**
-     * Show the play button and hide the wrapper element.
-     */
-    show: function show() {
-      this.togglePlayButton(true);
-      this.toggleWrapper(false);
-    }
-  };
-  /**
-   * Find a container element.
-   *
-   * @param {Element} slide - A slide element.
-   *
-   * @return {Element} - A container element if found. Null otherwise.
-   */
-
-  function findContainer(slide) {
-    return findChild(slide, Splide.classes['container'].split(' ')[0] || '');
-  }
-  /**
-   * Find a child which has the given class name.
-   *
-   * @param {Element} parent    - A parent element.
-   * @param {string}  className - A class name.
-   *
-   * @return {Element|null} - A found child element if available or null if not.
-   */
-
-
-  function findChild(parent, className) {
-    return Object.keys(parent.children).map(function (key) {
-      return parent.children[key];
-    }).filter(function (child) {
-      return child.classList.contains(className);
-    })[0] || null;
-  }
-  /**
-   * Create a new element.
-   *
-   * @param {string} tag - A tag name for the element.
-   *
-   * @return {Element} - A created element.
-   */
-
-
-  function create(tag) {
-    return document.createElement(tag);
-  }
-  /**
-   * Remove the given element.
-   *
-   * @param {Element} elm - An element being removed.
-   */
-
-
-  function remove(elm) {
-    var parent = elm.parentElement;
-
-    if (parent) {
-      parent.removeChild(elm);
-    }
-  }
-
-  return Elements;
-});
-// CONCATENATED MODULE: ./src/js/utils/state.js
-/**
- * The function providing a super simple state system.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * The function providing a super simple state system.
- *
- * @param {string|number} initialState - Provide the initial state value.
- */
-/* harmony default export */ var state = (function (initialState) {
-  /**
-   * Store the current state.
-   *
-   * @type {string|number}
-   */
-  var curr = initialState;
-  return {
-    /**
-     * Change state.
-     *
-     * @param {string|number} state - A new state.
-     */
-    set: function set(state) {
-      curr = state;
-    },
-
-    /**
-     * Verify if the current state is given one or not.
-     *
-     * @param {string|number} states - A state name(s) to be verified.
-     *
-     * @return {boolean} - True if the current state is the given one.
-     */
-    is: function is() {
-      for (var i = 0; i < arguments.length; i++) {
-        if ((i < 0 || arguments.length <= i ? undefined : arguments[i]) === curr) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-  };
-});
-// CONCATENATED MODULE: ./src/js/constants/states.js
-/**
- * Export state constants.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * The player is not initialized.
- *
- * @type {number}
- */
-var NOT_INITIALIZED = 1;
-/**
- * The player is being created.
- *
- * @type {number}
- */
-
-var CREATING_PLAYER = 2;
-/**
- * Playing video is requested while creating a player.
- *
- * @type {number}
- */
-
-var PENDING_PLAY = 3;
-/**
- * Ready to play a video.
- *
- * @type {number}
- */
-
-var IDLE = 4;
-/**
- * Loading a video.
- *
- * @type {number}
- */
-
-var LOADING = 5;
-/**
- * Play request has been sent to the player, but it is aborted.
- *
- * @type {number}
- */
-
-var PLAY_REQUEST_ABORTED = 6;
-/**
- * Playing a video.
- *
- * @type {number}
- */
-
-var PLAYING = 7;
-// CONCATENATED MODULE: ./src/js/providers/base/base-player.js
-/**
- * The base class of the video player.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-
-
-/**
- * The base class of the video player.
- */
-
-var base_player_BasePlayer = /*#__PURE__*/function () {
-  /**
-   * BasePlayer constructor.
-   *
-   * @param {Splide}  Splide     - A Splide instance.
-   * @param {Object}  Components - An object containing components.
-   * @param {Element} slide      - A target slide element.
-   */
-  function BasePlayer(Splide, Components, slide) {
-    this.Splide = Splide;
-    this.Components = Components;
-    this.slide = slide;
-    this.player = null;
-    this.elements = null;
-    this.state = new state(NOT_INITIALIZED);
-    this.videoId = this.findVideoId();
-
-    if (this.videoId) {
-      this.init();
-      this.bind();
-      this.handleClick();
-    }
-  }
-  /**
-   * Initialization.
-   */
-
-
-  var _proto = BasePlayer.prototype;
-
-  _proto.init = function init() {
-    this.elements = new js_elements(this.Splide, this.slide);
-    this.elements.init();
-    this.toggleRootClass(true);
-    this.elements.togglePlayButton(!this.Splide.options.video.disableOverlayUI);
-
-    if (this.isAutoplay() && this.isActive()) {
-      this.play();
-    }
-  }
-  /**
-   * Setup.
-   * This must be called after MOUNTED state.
-   */
-  ;
-
-  _proto.setup = function setup() {
-    var _this = this;
-
-    this.state.set(CREATING_PLAYER);
-    this.player = this.createPlayer(function () {
-      var isPendingPlay = _this.state.is(PENDING_PLAY);
-
-      _this.state.set(IDLE);
-
-      if (isPendingPlay) {
-        _this.play();
-      }
-    });
-  }
-  /**
-   * Listen to some events.
-   */
-  ;
-
-  _proto.bind = function bind() {
-    var _this2 = this;
-
-    this.Splide.on('active', function (Slide) {
-      if (_this2.isAutoplay()) {
-        if (Slide.slide === _this2.slide) {
-          _this2.play();
-        } else {
-          _this2.pause();
-        }
-      }
-    }).on('move', function () {
-      _this2.pause();
-    }).on('video:click', function (Player) {
-      if (Player.slide !== _this2.slide) {
-        _this2.pause();
-      }
-    });
-  }
-  /**
-   * In the fade mode, events will be fired in the order of drag -> dragged -> click,
-   * which unexpectedly plays the previous video.
-   */
-  ;
-
-  _proto.handleClick = function handleClick() {
-    var _this3 = this;
-
-    // Listen to native events for grid slides.
-    this.slide.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.slide.addEventListener('touchstart', this.onMouseDown.bind(this));
-    this.slide.addEventListener('mouseup', this.onMouseUp.bind(this));
-    this.slide.addEventListener('touchend', this.onMouseUp.bind(this)); // Interrupt playing the video because the slider starts being dragged.
-
-    this.Splide.on('drag', function () {
-      _this3.shouldHandleClick = false;
-    });
-  }
-  /**
-   * Create a player.
-   * This must be overridden in a child class.
-   *
-   * @param {function} readyCallback
-   *
-   * @return {null} - Always null.
-   */
-  ;
-
-  _proto.createPlayer = function createPlayer(readyCallback) {
-    if (readyCallback === void 0) {
-      readyCallback = null;
-    }
-
-    return null;
-  }
-  /**
-   * Play the video.
-   */
-  ;
-
-  _proto.play = function play() {
-    var _this4 = this;
-
-    if (this.state.is(NOT_INITIALIZED)) {
-      this.setup();
-    }
-
-    if (this.state.is(PLAYING, PENDING_PLAY)) {
-      return;
-    } // Hide immediately for UX.
-
-
-    setTimeout(function () {
-      _this4.elements.hide();
-    }); // Pending play because the player is being created now.
-
-    if (this.state.is(CREATING_PLAYER)) {
-      this.state.set(PENDING_PLAY);
-      return;
-    } // Play request is canceled but requested again.
-
-
-    if (this.state.is(PLAY_REQUEST_ABORTED)) {
-      this.state.set(LOADING);
-      return;
-    }
-
-    this.playVideo();
-    this.state.set(LOADING);
-  }
-  /**
-   * Pause the video.
-   */
-  ;
-
-  _proto.pause = function pause() {
-    if (!this.Splide.options.video.disableOverlayUI) {
-      this.elements.show();
-    } // Cancel the "pending play" status.
-
-
-    if (this.state.is(PENDING_PLAY)) {
-      this.state.set(CREATING_PLAYER);
-      return;
-    } // The video is paused while being loaded.
-
-
-    if (this.state.is(LOADING)) {
-      this.state.set(PLAY_REQUEST_ABORTED);
-      return;
-    }
-
-    if (this.state.is(PLAYING)) {
-      this.state.set(IDLE);
-      this.pauseVideo();
-    }
-  }
-  /**
-   * Play video. Override this if necessary.
-   */
-  ;
-
-  _proto.playVideo = function playVideo() {
-    this.player.play();
-  }
-  /**
-   * Pause video. Override this if necessary.
-   */
-  ;
-
-  _proto.pauseVideo = function pauseVideo() {
-    this.player.pause();
-  }
-  /**
-   * Check if the slide is active or not.
-   */
-  ;
-
-  _proto.isActive = function isActive() {
-    return this.slide.classList.contains('is-active');
-  }
-  /**
-   * Check whether a video should be played automatically.
-   *
-   * @return {boolean}
-   */
-  ;
-
-  _proto.isAutoplay = function isAutoplay() {
-    return this.Splide.options.video.autoplay;
-  }
-  /**
-   * Find the video ID from the HTML.
-   *
-   * @return {string|number}
-   */
-  ;
-
-  _proto.findVideoId = function findVideoId() {
-    return '';
-  }
-  /**
-   * Toggle the root class.
-   *
-   * @param {boolean} add - Whether to add a class or not.
-   */
-  ;
-
-  _proto.toggleRootClass = function toggleRootClass(add) {
-    this.Splide.root.classList[add ? 'add' : 'remove'](this.Splide.classes.root.split(' ')[0] + '--has-video');
-  }
-  /**
-   * Called on mousedown or touchstart.
-   * Request playing the video on mouseup or touchend.
-   * This may be interrupted a drag event.
-   */
-  ;
-
-  _proto.onMouseDown = function onMouseDown() {
-    this.shouldHandleClick = true;
-  }
-  /**
-   * Called on mouseup or touchend.
-   * If the shouldHandleClick is still true, play the video.
-   */
-  ;
-
-  _proto.onMouseUp = function onMouseUp() {
-    if (this.shouldHandleClick) {
-      this.Splide.emit('video:click', this);
-      this.play();
-    }
-  }
-  /**
-   * Called when the player is playing a video.
-   */
-  ;
-
-  _proto.onPlay = function onPlay() {
-    if (this.state.is(PLAY_REQUEST_ABORTED)) {
-      this.state.set(PLAYING);
-      this.pause();
-    } else {
-      this.Splide.emit('video:play', this);
-      this.state.set(PLAYING);
-    }
-  }
-  /**
-   * Called when the player is paused a video.
-   */
-  ;
-
-  _proto.onPause = function onPause() {
-    this.Splide.emit('video:pause', this);
-    this.state.set(IDLE);
-  }
-  /**
-   * Called when the video is ended.
-   */
-  ;
-
-  _proto.onEnded = function onEnded() {
-    this.Splide.emit('video:ended', this);
-    this.state.set(IDLE);
-  }
-  /**
-   * Destroy the player.
-   */
-  ;
-
-  _proto.destroy = function destroy() {
-    if (this.player) {
-      this.player.destroy();
-      this.player = null;
-    }
-
-    this.toggleRootClass(false);
-    this.elements.destroy();
-    this.slide.removeEventListener('mousedown', this.onMouseDown.bind(this));
-    this.slide.removeEventListener('touchstart', this.onMouseDown.bind(this));
-    this.slide.removeEventListener('mouseup', this.onMouseUp.bind(this));
-    this.slide.removeEventListener('touchend', this.onMouseUp.bind(this));
-  };
-
-  return BasePlayer;
-}();
-
-
-// CONCATENATED MODULE: ./src/js/providers/html-video/player.js
-function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-/**
- * The class for controlling a HTML video.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-
-/**
- * Valid player props.
- * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
- *
- * @type {string[]}
- */
-
-var PLAYER_PROPS = ['autoplay', 'autoPictureInPicture', 'controls', 'controlslist', 'crossorigin', 'currentTime', 'disablePictureInPicture', 'disableRemotePlayback', 'height', 'intrinsicsize', 'loop', 'muted', 'playsinline', 'poster', 'preload', 'width'];
-/**
- * The class for controlling a HTML video.
- */
-
-var player_Player = /*#__PURE__*/function (_BasePlayer) {
-  _inheritsLoose(Player, _BasePlayer);
-
-  var _super = _createSuper(Player);
-
-  function Player() {
-    return _BasePlayer.apply(this, arguments) || this;
-  }
-
-  var _proto = Player.prototype;
-
-  /**
-   * Create a player.
-   *
-   * @param {function} readyCallback - Callback function triggered when the player gets ready.
-   *
-   * @return {object|null} - A created player object.
-   */
-  _proto.createPlayer = function createPlayer(readyCallback) {
-    if (readyCallback === void 0) {
-      readyCallback = null;
-    }
-
-    var options = this.Splide.options.video;
-    var _options$playerOption = options.playerOptions.htmlVideo,
-        htmlVideo = _options$playerOption === void 0 ? {} : _options$playerOption;
-    var player = document.createElement('video');
-    player.src = this.videoId;
-    this.elements.iframe.appendChild(player);
-    player.controls = !options.hideControls;
-    player.loop = options.loop;
-    player.volume = Math.max(Math.min(options.volume, 1), 0);
-    player.muted = options.mute;
-    each(htmlVideo, function (value, key) {
-      if (PLAYER_PROPS.indexOf(key) > -1) {
-        player[key] = value;
-      }
-    });
-    player.addEventListener('play', this.onPlay.bind(this));
-    player.addEventListener('pause', this.onPause.bind(this));
-    player.addEventListener('ended', this.onEnded.bind(this));
-
-    if (readyCallback) {
-      player.addEventListener('loadeddata', readyCallback);
-    }
-
-    return player;
-  }
-  /**
-   * Find the video ID from the HTML.
-   * Use the given path or URL as ID for a raw video.
-   *
-   * @return {string} - Video ID(path or URL).
-   */
-  ;
-
-  _proto.findVideoId = function findVideoId() {
-    return this.slide.getAttribute('data-splide-html-video');
-  }
-  /**
-   * Destroy.
-   */
-  ;
-
-  _proto.destroy = function destroy() {
-    if (this.player) {
-      this.player.pause();
-      this.player.removeAttribute('src');
-      this.player.load();
-      this.elements.iframe.removeChild(this.player);
-      this.player = null;
-    }
-
-    this.elements.destroy();
-  };
-
-  return Player;
-}(base_player_BasePlayer);
-
-
-// CONCATENATED MODULE: ./src/js/providers/html-video/index.js
-function html_video_createSuper(Derived) { return function () { var Super = html_video_getPrototypeOf(Derived), result; if (html_video_isNativeReflectConstruct()) { var NewTarget = html_video_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return html_video_possibleConstructorReturn(this, result); }; }
-
-function html_video_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return html_video_assertThisInitialized(self); }
-
-function html_video_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function html_video_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function html_video_getPrototypeOf(o) { html_video_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return html_video_getPrototypeOf(o); }
-
-function html_video_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-/**
- * The sub component for embedding a HTML video.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-
-/**
- * The sub component for embedding a HTML video.
- */
-
-var html_video_HTMLVideo = /*#__PURE__*/function (_BaseProvider) {
-  html_video_inheritsLoose(HTMLVideo, _BaseProvider);
-
-  var _super = html_video_createSuper(HTMLVideo);
-
-  /**
-   * HTMLVideo constructor.
-   *
-   * @param {Splide} Splide     - A Splide instance.
-   * @param {Object} Components - An object containing components.
-   */
-  function HTMLVideo(Splide, Components) {
-    var _this;
-
-    _this = _BaseProvider.call(this, Splide, Components) || this;
-
-    _this.createPlayers(player_Player, 'data-splide-html-video');
-
-    return _this;
-  }
-
-  return HTMLVideo;
-}(base_provider_BaseProvider);
-
-
-// CONCATENATED MODULE: ./src/js/providers/youtube/player.js
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function player_createSuper(Derived) { return function () { var Super = player_getPrototypeOf(Derived), result; if (player_isNativeReflectConstruct()) { var NewTarget = player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return player_possibleConstructorReturn(this, result); }; }
-
-function player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return player_assertThisInitialized(self); }
-
-function player_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function player_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function player_getPrototypeOf(o) { player_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return player_getPrototypeOf(o); }
-
-function player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-/**
- * The class for controlling YouTube video.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-/**
- * The class for controlling YouTube video.
- */
-
-var youtube_player_Player = /*#__PURE__*/function (_BasePlayer) {
-  player_inheritsLoose(Player, _BasePlayer);
-
-  var _super = player_createSuper(Player);
-
-  function Player() {
-    return _BasePlayer.apply(this, arguments) || this;
-  }
-
-  var _proto = Player.prototype;
-
-  /**
-   * Create a player.
-   *
-   * @param {function} readyCallback - Callback function triggered when the player gets ready.
-   *
-   * @return {object|null} - A created player object.
-   */
-  _proto.createPlayer = function createPlayer(readyCallback) {
-    var _this = this;
-
-    if (readyCallback === void 0) {
-      readyCallback = null;
-    }
-
-    var options = this.Splide.options.video;
-    var _options$playerOption = options.playerOptions.youtube,
-        youtube = _options$playerOption === void 0 ? {} : _options$playerOption;
-    var player = new YT.Player(this.elements.iframe, {
-      videoId: this.videoId,
-      playerVars: _extends({
-        controls: options.hideControls ? 0 : 1,
-        iv_load_policy: 3,
-        loop: options.loop,
-        playlist: options.loop ? this.videoId : '',
-        rel: 0,
-        autoplay: false
-      }, youtube),
-      events: {
-        'onReady': function onReady(e) {
-          _this.onPlayerReady(e);
-
-          if (readyCallback) {
-            readyCallback();
-          }
-        },
-        'onStateChange': this.onPlayerStateChange.bind(this)
-      }
-    });
-    return player;
-  }
-  /**
-   * Called when the YouTube player is ready.
-   *
-   * @param {Object} e - An event object.
-   */
-  ;
-
-  _proto.onPlayerReady = function onPlayerReady(e) {
-    var player = e.target;
-    var options = this.Splide.options.video;
-
-    if (options.mute) {
-      player.mute();
-    }
-
-    player.setVolume(Math.max(Math.min(options.volume * 100, 100), 0));
-  }
-  /**
-   * Called when the YouTube player state is changed.
-   *
-   * @param {Object} e - An event object.
-   */
-  ;
-
-  _proto.onPlayerStateChange = function onPlayerStateChange(e) {
-    var _YT$PlayerState = YT.PlayerState,
-        PLAYING = _YT$PlayerState.PLAYING,
-        PAUSED = _YT$PlayerState.PAUSED,
-        ENDED = _YT$PlayerState.ENDED;
-
-    switch (true) {
-      case e.data === PLAYING:
-        this.onPlay();
-        break;
-
-      case e.data === PAUSED:
-        this.onPause();
-        break;
-
-      case e.data === ENDED:
-        this.onEnded();
-        break;
-    }
-  }
-  /**
-   * Play video.
-   */
-  ;
-
-  _proto.playVideo = function playVideo() {
-    this.player.playVideo();
-  }
-  /**
-   * Pause video.
-   */
-  ;
-
-  _proto.pauseVideo = function pauseVideo() {
-    this.player.pauseVideo();
-  }
-  /**
-   * Find the video ID from the HTML.
-   *
-   * @return {string} - Video ID.
-   */
-  ;
-
-  _proto.findVideoId = function findVideoId() {
-    var url = this.slide.getAttribute('data-splide-youtube');
-    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
-    var match = url.match(regExp);
-    return match && match[7].length === 11 ? match[7] : '';
-  };
-
-  return Player;
-}(base_player_BasePlayer);
-
-
-// CONCATENATED MODULE: ./src/js/providers/youtube/index.js
-function youtube_createSuper(Derived) { return function () { var Super = youtube_getPrototypeOf(Derived), result; if (youtube_isNativeReflectConstruct()) { var NewTarget = youtube_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return youtube_possibleConstructorReturn(this, result); }; }
-
-function youtube_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return youtube_assertThisInitialized(self); }
-
-function youtube_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function youtube_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function youtube_getPrototypeOf(o) { youtube_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return youtube_getPrototypeOf(o); }
-
-function youtube_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-/**
- * The sub component for embedding a YouTube video.
- *
- * @author    Naotoshi Fujita
- * @copyright Naotoshi Fujita. All rights reserved.
- */
-
-
-/**
- * URL to the YouTube API script.
- *
- * @type {string}
- */
-
-var YOUTUBE_API_SRC = 'https://www.youtube.com/player_api';
-/**
- * The sub component for embedding a YouTube video.
- */
-
-var youtube_YouTube = /*#__PURE__*/function (_BaseProvider) {
-  youtube_inheritsLoose(YouTube, _BaseProvider);
-
-  var _super = youtube_createSuper(YouTube);
-
-  /**
-   * YouTube constructor.
-   *
-   * @param {Splide} Splide     - A Splide instance.
-   * @param {Object} Components - An object containing components.
-   */
-  function YouTube(Splide, Components) {
-    var _this;
-
-    _this = _BaseProvider.call(this, Splide, Components) || this;
-    _this.oldCallback = undefined;
-
-    _this.bindAPICallback();
-
-    _this.loadAPI();
-
-    return _this;
-  }
-  /**
-   * Load the YouTube iframe API.
-   */
-
-
-  var _proto = YouTube.prototype;
-
-  _proto.loadAPI = function loadAPI() {
-    var _window = window,
-        YT = _window.YT;
-
-    if (this.shouldLoadAPI()) {
-      var tag = document.createElement('script');
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      tag.src = YOUTUBE_API_SRC;
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    } else {
-      if (YT && YT.loaded) {
-        // API has been already loaded and the callback has been fired.
-        this.onReady();
-      }
-    }
-  }
-  /**
-   * Check whether the API should be loaded or not.
-   *
-   * @return {boolean} - True if it should be or false if not.
-   */
-  ;
-
-  _proto.shouldLoadAPI = function shouldLoadAPI() {
-    var scripts = document.getElementsByTagName('script');
-
-    for (var i = 0; i < scripts.length; i++) {
-      if (scripts[i].getAttribute('src') === YOUTUBE_API_SRC) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-  /**
-   * Listen onYouTubeIframeAPIReady event.
-   */
-  ;
-
-  _proto.bindAPICallback = function bindAPICallback() {
-    // Avoid unexpected collision against other libraries.
-    if (typeof window.onYouTubeIframeAPIReady !== 'undefined') {
-      this.oldCallback = window.onYouTubeIframeAPIReady;
-    }
-
-    window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady.bind(this);
-  }
-  /**
-   * Called when the API is ready.
-   */
-  ;
-
-  _proto.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
-    if (this.oldCallback) {
-      this.oldCallback();
-    }
-
-    this.onReady();
-  }
-  /**
-   * Called when the YouTube API is ready.
-   */
-  ;
-
-  _proto.onReady = function onReady() {
-    this.createPlayers(youtube_player_Player, 'data-splide-youtube');
-  };
-
-  return YouTube;
-}(base_provider_BaseProvider);
-
-
-// EXTERNAL MODULE: ./node_modules/@vimeo/player/dist/player.es.js
-var player_es = __webpack_require__(1);
+/* harmony default export */ const player_es = (player_es_Player);
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/player.js
 function player_extends() { player_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return player_extends.apply(this, arguments); }
-
-function vimeo_player_createSuper(Derived) { return function () { var Super = vimeo_player_getPrototypeOf(Derived), result; if (vimeo_player_isNativeReflectConstruct()) { var NewTarget = vimeo_player_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return vimeo_player_possibleConstructorReturn(this, result); }; }
-
-function vimeo_player_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return vimeo_player_assertThisInitialized(self); }
-
-function vimeo_player_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function vimeo_player_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function vimeo_player_getPrototypeOf(o) { vimeo_player_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return vimeo_player_getPrototypeOf(o); }
 
 function vimeo_player_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
@@ -3900,8 +3603,6 @@ function vimeo_player_inheritsLoose(subClass, superClass) { subClass.prototype =
 
 var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
   vimeo_player_inheritsLoose(Player, _BasePlayer);
-
-  var _super = vimeo_player_createSuper(Player);
 
   function Player() {
     return _BasePlayer.apply(this, arguments) || this;
@@ -3924,7 +3625,7 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
     var options = this.Splide.options.video;
     var _options$playerOption = options.playerOptions.vimeo,
         vimeo = _options$playerOption === void 0 ? {} : _options$playerOption;
-    var player = new player_es["a" /* default */](this.elements.iframe, player_extends({
+    var player = new player_es(this.elements.iframe, player_extends({
       id: this.videoId,
       controls: !options.hideControls,
       loop: options.loop
@@ -3971,20 +3672,10 @@ var vimeo_player_Player = /*#__PURE__*/function (_BasePlayer) {
   };
 
   return Player;
-}(base_player_BasePlayer);
+}(BasePlayer);
 
 
 // CONCATENATED MODULE: ./src/js/providers/vimeo/index.js
-function vimeo_createSuper(Derived) { return function () { var Super = vimeo_getPrototypeOf(Derived), result; if (vimeo_isNativeReflectConstruct()) { var NewTarget = vimeo_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return vimeo_possibleConstructorReturn(this, result); }; }
-
-function vimeo_possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return vimeo_assertThisInitialized(self); }
-
-function vimeo_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function vimeo_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function vimeo_getPrototypeOf(o) { vimeo_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return vimeo_getPrototypeOf(o); }
-
 function vimeo_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
 /**
@@ -3999,10 +3690,8 @@ function vimeo_inheritsLoose(subClass, superClass) { subClass.prototype = Object
  * The sub component for embedding a Vimeo video.
  */
 
-var vimeo_Vimeo = /*#__PURE__*/function (_BaseProvider) {
+var Vimeo = /*#__PURE__*/function (_BaseProvider) {
   vimeo_inheritsLoose(Vimeo, _BaseProvider);
-
-  var _super = vimeo_createSuper(Vimeo);
 
   /**
    * Vimeo constructor.
@@ -4021,7 +3710,7 @@ var vimeo_Vimeo = /*#__PURE__*/function (_BaseProvider) {
   }
 
   return Vimeo;
-}(base_provider_BaseProvider);
+}(BaseProvider);
 
 
 // CONCATENATED MODULE: ./src/js/providers/index.js
@@ -4031,13 +3720,13 @@ var vimeo_Vimeo = /*#__PURE__*/function (_BaseProvider) {
  * @author    Naotoshi Fujita
  * @copyright Naotoshi Fujita. All rights reserved.
  */
-
+;
 
 
 var PROVIDERS = {
-  HtmlVideo: html_video_HTMLVideo,
-  YouTube: youtube_YouTube,
-  Vimeo: vimeo_Vimeo
+  HtmlVideo: HTMLVideo,
+  YouTube: YouTube,
+  Vimeo: Vimeo
 };
 // CONCATENATED MODULE: ./src/js/constants/defaults.js
 /**
@@ -4127,7 +3816,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
  * @return {Object} - Extension object.
  */
 
-/* harmony default export */ var splide_extension_video = __webpack_exports__["default"] = (function (Splide, Components) {
+/* harmony default export */ const splide_extension_video = (function (Splide, Components) {
   /**
    * A slide element whose video is playing.
    *
@@ -4151,7 +3840,7 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
         Splide.options.video = {};
       }
 
-      Splide.options.video = splide_extension_video_extends({}, DEFAULTS, {}, Splide.options.video);
+      Splide.options.video = splide_extension_video_extends({}, DEFAULTS, Splide.options.video);
       each(PROVIDERS, function (Provider) {
         Providers.push(new Provider(Splide, Components));
       });
@@ -4190,5 +3879,78 @@ var PLAYING_STATUS_CLASS_NAME = 'is-playing';
 });
 
 /***/ })
-/******/ ]);
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(303);
+/******/ })()
+;
 });
