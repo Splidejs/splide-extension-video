@@ -29,7 +29,7 @@ export default class Player extends BasePlayer {
 				controls      : options.hideControls ? 0 : 1,
 				iv_load_policy: 3,
 				loop          : options.loop,
-				playlist      : options.loop ? this.videoId : '',
+				playlist      : options.loop ? this.videoId : undefined,
 				rel           : 0,
 				autoplay      : false,
 				...youtube,
