@@ -1,73 +1,11 @@
-'use strict';
+const { parallel } = require( 'gulp' );
+const { develop } = require( './gulp/develop' );
+const { buildCss } = require( './gulp/build-css' );
+const { buildScript, buildModule } = require( './gulp/build-script' );
 
-/*
- * Dependencies.
- */
-const gulp          = require( 'gulp' );
-const rename        = require( 'gulp-rename' );
-const sass          = require( 'gulp-sass' );
-const sassGlob      = require( 'gulp-sass-glob' );
-const postcss       = require( 'gulp-postcss' );
-const autoprefixer  = require( 'autoprefixer' );
-const cssnano       = require( 'cssnano' );
-const webpack       = require( 'webpack' );
-const webpackStream = require( 'webpack-stream' );
 
-/*
- * Webpack config paths.
- */
-const js = {
-	global: {
-		path: './build/global/config',
-		dest: './dist/js',
-	},
-	minified: {
-		path: './build/global/config-min',
-		dest: './dist/js',
-	},
-	module: {
-		path: './build/module/config',
-		dest: './dist/js',
-	},
-};
-
-/*
- * Path definitions.
- */
-const css = {
-	main: {
-		path: './src/sass/splide-extension-video.scss',
-		dest: './dist/css',
-	},
-};
-
-/*
- * Build a script file.
- */
-gulp.task( 'build:js', done => {
-	Object.values( js ).forEach( settings => {
-		webpackStream( { config: require( settings.path ) }, webpack )
-			.pipe( gulp.dest( settings.dest ) );
-	} );
-
-	done();
-} );
-
-/*
- * Build sass files.
- */
-gulp.task( 'build:sass', done => {
-	Object.values( css ).forEach( settings => {
-		gulp.src( settings.path )
-			.pipe( sassGlob() )
-			.pipe( sass() )
-			.pipe( postcss( [
-				cssnano( { reduceIdents: false } ),
-				autoprefixer( { overrideBrowserslist: [ '> 5%' ] } )
-			] ) )
-			.pipe( rename( { suffix: '.min' } ) )
-			.pipe( gulp.dest( settings.dest ) );
-	} );
-
-	done();
-} );
+exports[ 'develop' ]      = develop;
+exports[ 'build:js' ]     = buildScript;
+exports[ 'build:module' ] = buildModule;
+exports[ 'build:css' ]    = buildCss;
+exports[ 'build:all' ]    = parallel( buildScript, buildModule, buildCss );
