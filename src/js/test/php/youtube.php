@@ -6,7 +6,7 @@
 	<title>YouTube</title>
 
   <link rel="stylesheet" href="../../../../node_modules/@splidejs/splide/dist/css/themes/splide-default.min.css">
-  <link rel="stylesheet" href="../../../../dist/css/splide-extension-video.css">
+  <link rel="stylesheet" href="../../../../dist/css/splide-extension-video.min.css">
 
 	<script type="text/javascript" src="../../../../node_modules/@splidejs/splide/dist/js/splide.js"></script>
   <script type="text/javascript" src="../../../../dist/js/splide-extension-video.js"></script>

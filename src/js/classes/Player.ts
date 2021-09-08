@@ -89,8 +89,8 @@ export class Player {
       const id = getAttribute( slide, attr );
 
       if ( id ) {
-        this.ui     = new PlayerUI( slide );
-        this.player = new Constructor( this.ui.iframeWrapper, id, this.options );
+        this.ui     = new PlayerUI( this.Splide, slide );
+        this.player = new Constructor( this.ui.getPlaceholder(), id, this.options );
         this.ui.disable( this.options.disableOverlayUI );
       }
     } );

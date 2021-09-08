@@ -4046,29 +4046,69 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   var CLASS_SLIDE = PROJECT_CODE + "__slide";
   var CLASS_CONTAINER = CLASS_SLIDE + "__container";
-  var CLASS_VIDEO_WRAPPER = 'splide__video';
-  var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO_WRAPPER + "__play";
+  var I18N = {
+    playVideo: 'Play Video'
+  };
+  var CLASS_VIDEO = 'splide__video';
+  var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
+  var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play";
+  /**
+   * The class for the UI of the video player.
+   *
+   * @since 0.5.0
+   */
 
   var PlayerUI = /*#__PURE__*/function () {
-    function PlayerUI(slide) {
+    /**
+     * The PlayerUI constructor.
+     *
+     * @param Splide - A Splide instance.
+     * @param slide  - A slide element where the player is mounted.
+     */
+    function PlayerUI(Splide, slide) {
+      /**
+       * The EventBus object.
+       */
       this.event = EventBus();
-      var container = child(slide, "." + CLASS_CONTAINER);
-      this.parent = container || slide;
-      this.modifier = (container ? CLASS_CONTAINER : CLASS_SLIDE) + "--has-video";
+      this.Splide = Splide;
+      this.slide = slide;
+      this.init();
       this.create();
+      this.show();
       this.listen();
     }
+    /**
+     * Initializes the instance.
+     */
+
 
     var _proto6 = PlayerUI.prototype;
 
+    _proto6.init = function init() {
+      var container = child(this.slide, "." + CLASS_CONTAINER);
+      this.parent = container || this.slide;
+      this.modifier = (container ? CLASS_CONTAINER : CLASS_SLIDE) + "--has-video";
+      addClass(this.parent, this.modifier);
+    }
+    /**
+     * Creates wrapper, placeholder and button elements.
+     */
+    ;
+
     _proto6.create = function create() {
-      this.wrapper = _create('div', CLASS_VIDEO_WRAPPER, this.parent);
-      this.iframeWrapper = _create('div', null, this.wrapper);
+      this.video = _create('div', CLASS_VIDEO, this.parent);
+      this.wrapper = _create('div', CLASS_VIDEO_WRAPPER, this.video);
+      this.placeholder = _create('div', null, this.wrapper);
       this.playButton = _create('button', {
         "class": CLASS_VIDEO_PLAY_BUTTON,
-        type: 'button'
-      }, this.parent);
-    };
+        type: 'button',
+        'aria-label': this.Splide.options.i18n.playVideo || I18N.playVideo
+      }, this.video);
+    }
+    /**
+     * Listens to some events.
+     */
+    ;
 
     _proto6.listen = function listen() {
       var _this11 = this;
@@ -4076,26 +4116,48 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       this.parent.addEventListener('click', function () {
         _this11.event.emit('click');
       });
-    };
-
-    _proto6.destroy = function destroy() {
-      removeClass(this.parent, this.modifier);
-      remove([this.wrapper, this.playButton]);
-      this.event.destroy();
-    };
+    }
+    /**
+     * Toggles the play button.
+     *
+     * @param show - Determines whether to show or hide the button.
+     */
+    ;
 
     _proto6.toggleButton = function toggleButton(show) {
       display(this.playButton, show ? '' : 'none');
-    };
+    }
+    /**
+     * Toggles the wrapper element.
+     *
+     * @param show - Determines whether to show or hide the button.
+     */
+    ;
 
     _proto6.toggleWrapper = function toggleWrapper(show) {
       display(this.wrapper, show ? '' : 'none');
-    };
+    }
+    /**
+     * Returns the placeholder element.
+     */
+    ;
+
+    _proto6.getPlaceholder = function getPlaceholder() {
+      return this.placeholder;
+    }
+    /**
+     * Hides UI and displays the video.
+     */
+    ;
 
     _proto6.hide = function hide() {
       this.toggleButton(false);
       this.toggleWrapper(true);
-    };
+    }
+    /**
+     * Displays UI and hides the video.
+     */
+    ;
 
     _proto6.show = function show() {
       if (!this.disabled) {
@@ -4103,18 +4165,41 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       }
 
       this.toggleWrapper(false);
-    };
+    }
+    /**
+     * Disables UI (the play button) displays on the slide.
+     *
+     * @param disabled - Determines whether to disable UI or not.
+     */
+    ;
 
     _proto6.disable = function disable(disabled) {
       this.disabled = disabled;
 
       if (disabled) {
-        this.hide();
+        this.toggleButton(false);
       }
-    };
+    }
+    /**
+     * Attaches an event handler.
+     *
+     * @param events   - An event or events.
+     * @param callback - A callback function.
+     */
+    ;
 
     _proto6.on = function on(events, callback) {
       this.event.on(events, callback);
+    }
+    /**
+     * Destroys the instance.
+     */
+    ;
+
+    _proto6.destroy = function destroy() {
+      removeClass(this.parent, this.modifier);
+      remove([this.wrapper, this.playButton]);
+      this.event.destroy();
     };
 
     return PlayerUI;
@@ -4170,8 +4255,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         var id = getAttribute(slide, attr);
 
         if (id) {
-          _this12.ui = new PlayerUI(slide);
-          _this12.player = new Constructor(_this12.ui.iframeWrapper, id, _this12.options);
+          _this12.ui = new PlayerUI(_this12.Splide, slide);
+          _this12.player = new Constructor(_this12.ui.getPlaceholder(), id, _this12.options);
 
           _this12.ui.disable(_this12.options.disableOverlayUI);
         }
