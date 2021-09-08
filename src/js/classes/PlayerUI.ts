@@ -13,7 +13,7 @@ export class PlayerUI {
 
   wrapper: HTMLDivElement;
 
-  iframeWrapper: HTMLDivElement;
+  iframeWrapper: HTMLDivElement; // todo
 
   playButton: HTMLButtonElement;
 

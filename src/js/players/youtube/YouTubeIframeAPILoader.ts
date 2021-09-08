@@ -1,6 +1,9 @@
 import { isUndefined, queryAll, create, isFunction } from '@splidejs/splide/src/js/utils';
 
 
+/**
+ * Let the compiler understand the callback function.
+ */
 declare global {
   interface Window {
     onYouTubeIframeAPIReady: () => void;
@@ -9,8 +12,11 @@ declare global {
 
 /**
  * The URL to the YouTube iframe API script.
+ * The protocol will be prepended later.
+ *
+ * @since 0.5.0
  */
-const YOUTUBE_API_SRC = 'http://www.youtube.com/player_api'; // todo
+const YOUTUBE_API_SRC = '//www.youtube.com/player_api';
 
 /**
  * The class for loading the YouTube API script.
@@ -33,17 +39,18 @@ export class YouTubeIframeAPILoader {
     this.attachCallback( callback );
 
     if ( this.shouldLoad() ) {
-      create( 'script', { src: YOUTUBE_API_SRC }, document.head );
+      create( 'script', { src: `${ location.protocol }${ YOUTUBE_API_SRC }` }, document.head );
     }
   }
 
   /**
    * Checks if the new script tag for the YouTube API should be injected or not.
    *
-   * @return `true` if the source
+   * @return `true` if the API should be loaded.
    */
   private shouldLoad(): boolean {
-    return ! queryAll<HTMLScriptElement>( document, 'script' ).some( script => script.src === YOUTUBE_API_SRC );
+    return ! queryAll<HTMLScriptElement>( document, 'script' )
+      .some( script => script.src.replace( /^https?:/, '' ) === YOUTUBE_API_SRC );
   }
 
   /**

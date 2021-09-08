@@ -3799,11 +3799,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }(AbstractVideoPlayer);
   /**
    * The URL to the YouTube iframe API script.
+   * The protocol will be prepended later.
+   *
+   * @since 0.5.0
    */
 
 
-  var YOUTUBE_API_SRC = 'http://www.youtube.com/player_api'; // todo
-
+  var YOUTUBE_API_SRC = '//www.youtube.com/player_api';
   /**
    * The class for loading the YouTube API script.
    *
@@ -3831,7 +3833,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
       if (this.shouldLoad()) {
         _create('script', {
-          src: YOUTUBE_API_SRC
+          src: "" + location.protocol + YOUTUBE_API_SRC
         }, document.head);
       }
     }
@@ -3844,7 +3846,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto4.shouldLoad = function shouldLoad() {
       return !queryAll(document, 'script').some(function (script) {
-        return script.src === YOUTUBE_API_SRC;
+        return script.src.replace(/^https?:/, '') === YOUTUBE_API_SRC;
       });
     }
     /**
