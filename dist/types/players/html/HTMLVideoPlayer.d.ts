@@ -1,17 +1,19 @@
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
+import { VideoOptions } from '../../types/options';
 /**
- * The wrapper class for the Vimeo player.
+ * The wrapper class for the HTML video player.
  *
  * @since 0.5.0
  */
 export declare class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElement> {
     /**
-     * The VimeoPlayer constructor.
+     * The HTMLVideoPlayer constructor.
      *
      * @param target  - A target element where the player is mounted.
      * @param videoId - A video ID or an URL itself.
+     * @param options - Options.
      */
-    constructor(target: HTMLElement, videoId: string);
+    constructor(target: HTMLElement, videoId: string, options?: VideoOptions);
     /**
      * Creates a player.
      *

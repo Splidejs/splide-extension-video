@@ -45,8 +45,7 @@ export class VimeoPlayer extends AbstractVideoPlayer<Vimeo> {
     player.on( 'play', this.onPlay );
     player.on( 'pause', this.onPause );
     player.on( 'ended', this.onEnded );
-
-    player.ready().then( this.onPlayerReady ); // todo error
+    player.ready().then( this.onPlayerReady, this.onError );
 
     if ( ! player.getMuted() ) {
       player.setVolume( clamp( options.volume, 0, 1 ) );

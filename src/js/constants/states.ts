@@ -11,12 +11,7 @@ export const INITIALIZING = 2;
 /**
  * The player is not initialized.
  */
-export const INITIALIZED = 10;
-
-/**
- * The player is being created.
- */
-export const CREATING_PLAYER = 3;
+export const INITIALIZED = 3;
 
 /**
  * Requested to play a video while creating a player.

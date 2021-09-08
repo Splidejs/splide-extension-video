@@ -44,7 +44,8 @@ export class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElement> {
     on( 'play', this.onPlay );
     on( 'pause', this.onPause );
     on( 'ended', this.onEnded );
-    on( 'loadeddata', this.onPlayerReady ); // todo error
+    on( 'loadeddata', this.onPlayerReady );
+    on( 'error', this.onError );
 
     return player;
   }

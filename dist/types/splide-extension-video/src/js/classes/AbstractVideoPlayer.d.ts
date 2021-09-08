@@ -1,5 +1,6 @@
 import { EventBusCallback } from '@splidejs/splide';
 import { VideoPlayerInterface } from '../types/general';
+import { VideoOptions } from '../types/options';
 /**
  * The abstract class for implementing a video player.
  *
@@ -14,6 +15,10 @@ export declare abstract class AbstractVideoPlayer<T> implements VideoPlayerInter
      * The video ID or the URL itself.
      */
     protected videoId: string;
+    /**
+     * Video options.
+     */
+    protected readonly options: VideoOptions;
     /**
      * The state object.
      */
@@ -31,8 +36,9 @@ export declare abstract class AbstractVideoPlayer<T> implements VideoPlayerInter
      *
      * @param target  - A target element where the player is mounted.
      * @param videoId - A video ID or an URL itself.
+     * @param options - Optional. Options.
      */
-    protected constructor(target: HTMLElement, videoId: string);
+    protected constructor(target: HTMLElement, videoId: string, options?: VideoOptions);
     /**
      * Creates a player.
      *

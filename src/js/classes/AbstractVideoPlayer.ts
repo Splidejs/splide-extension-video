@@ -1,5 +1,7 @@
 import { EventBus, EventBusCallback, State } from '@splidejs/splide';
+import { error } from '@splidejs/splide/src/js/utils';
 import {
+  ERROR,
   IDLE,
   INITIALIZED,
   INITIALIZING,
@@ -65,6 +67,7 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
     this.onPause       = this.onPause.bind( this );
     this.onEnded       = this.onEnded.bind( this );
     this.onPlayerReady = this.onPlayerReady.bind( this );
+    this.onError       = this.onError.bind( this );
   }
 
   /**
@@ -98,11 +101,14 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
 
   /**
    * Requests to play the video.
-   *
-   * @todo invalid ID.
    */
   play(): void {
     const { state } = this;
+
+    if ( state.is( ERROR ) ) {
+      error( 'Can not play this video.' );
+      return;
+    }
 
     this.event.emit( 'play' );
 
@@ -130,6 +136,10 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
    */
   pause(): void {
     const { state } = this;
+
+    if ( state.is( ERROR ) ) {
+      return;
+    }
 
     this.event.emit( 'pause' );
 
@@ -198,5 +208,12 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
   protected onEnded(): void {
     this.state.set( IDLE );
     this.event.emit( 'ended' );
+  }
+
+  /**
+   * Called when an error occurs.
+   */
+  protected onError(): void {
+    this.state.set( ERROR );
   }
 }

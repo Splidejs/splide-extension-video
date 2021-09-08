@@ -70,6 +70,7 @@ export class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
       events: {
         onReady      : this.onPlayerReady.bind( this ),
         onStateChange: this.onPlayerStateChange.bind( this ),
+        onError      : this.onError.bind( this ),
       },
     } );
   }

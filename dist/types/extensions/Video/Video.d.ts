@@ -1,13 +1,14 @@
 import { BaseComponent, Components, Options, Splide } from '@splidejs/splide';
+import { VideoOptions } from '../../types/options';
 declare module '@splidejs/splide' {
     interface Options {
-        video: number;
+        video?: VideoOptions;
     }
 }
 /**
  * The extension for embedding videos to slides.
  *
- * @since 0.2.0
+ * @since 0.5.0
  *
  * @param Splide     - A Splide instance.
  * @param Components - A collection of components.

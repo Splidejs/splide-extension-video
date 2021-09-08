@@ -1,4 +1,5 @@
 import { EventBusCallback } from '@splidejs/splide';
+import { VideoOptions } from './options';
 /**
  * Determines members that must be implemented for the video player.
  *
@@ -16,6 +17,6 @@ export interface VideoPlayerInterface {
  * @since 0.5.0
  */
 export interface VideoPlayerConstructor {
-    new (target: HTMLElement, videoId: string): VideoPlayerInterface;
+    new (target: HTMLElement, videoId: string, options?: VideoOptions): VideoPlayerInterface;
 }
 //# sourceMappingURL=../../../../../../src/js/types/general.d.ts.map

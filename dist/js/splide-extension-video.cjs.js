@@ -121,6 +121,7 @@ function forOwn$1(object, iteratee) {
 }
 
 var EVENT_MOVE = 'move';
+var EVENT_ACTIVE = 'active';
 var EVENT_DESTROY = 'destroy';
 /**
  * The constructor to provided a simple event system.
@@ -638,6 +639,45 @@ function forOwn(object, iteratee) {
   return object;
 }
 /**
+ * Assigns all own enumerable properties of all source objects to the provided object.
+ * `undefined` in source objects will be skipped.
+ *
+ * @param object  - An object to assign properties to.
+ * @param sources - Objects to assign properties from.
+ *
+ * @return An object assigned properties of the sources to.
+ */
+
+
+function assign(object) {
+  for (var _len = arguments.length, sources = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    sources[_key - 1] = arguments[_key];
+  }
+
+  sources.forEach(function (source) {
+    forOwn(source, function (value, key) {
+      object[key] = source[key];
+    });
+  });
+  return object;
+}
+/**
+ * Recursively merges source properties to the object.
+ *
+ * @param object - An object to merge properties to.
+ * @param source - A source object to merge properties from.
+ *
+ * @return A new object with merged properties.
+ */
+
+
+function merge(object, source) {
+  forOwn(source, function (value, key) {
+    object[key] = isObject(value) ? merge(isObject(object[key]) ? object[key] : {}, value) : value;
+  });
+  return object;
+}
+/**
  * Removes attributes from the element.
  *
  * @param elm   - An element.
@@ -781,9 +821,36 @@ function removeClass(elm, classes) {
 
 
 var PROJECT_CODE = 'splide';
+var max = Math.max,
+    min = Math.min;
+/**
+ * Clamps a number.
+ *
+ * @param number - A subject number to check.
+ * @param x      - A min or max number.
+ * @param y      - A min or max number.
+ */
+
+function clamp(number, x, y) {
+  var minimum = min(x, y);
+  var maximum = max(x, y);
+  return min(max(minimum, number), maximum);
+}
+
 var YOUTUBE_DATA_ATTRIBUTE = 'data-splide-youtube';
 var VIMEO_DATA_ATTRIBUTE = 'data-splide-vimeo';
 var HTML_VIDEO__DATA_ATTRIBUTE = 'data-splide-html-video';
+/**
+ * Default options.
+ * Some parameters must be explicitly set to `false` for vimeo options.
+ */
+
+var DEFAULTS = {
+  hideControls: false,
+  loop: false,
+  mute: false,
+  volume: 0.2
+};
 var EVENT_VIDEO_PLAY = 'video:play';
 var EVENT_VIDEO_PAUSE = 'video:pause';
 var EVENT_VIDEO_CLICK = 'video:click';
@@ -839,8 +906,9 @@ var AbstractVideoPlayer = /*#__PURE__*/function () {
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  function AbstractVideoPlayer(target, videoId) {
+  function AbstractVideoPlayer(target, videoId, options) {
     /**
      * The state object.
      */
@@ -852,6 +920,7 @@ var AbstractVideoPlayer = /*#__PURE__*/function () {
     this.event = EventBus();
     this.target = target;
     this.videoId = videoId;
+    this.options = options || {};
     this.onPlay = this.onPlay.bind(this);
     this.onPause = this.onPause.bind(this);
     this.onEnded = this.onEnded.bind(this);
@@ -981,7 +1050,7 @@ var AbstractVideoPlayer = /*#__PURE__*/function () {
   return AbstractVideoPlayer;
 }();
 /**
- * The wrapper class for the Vimeo player.
+ * The wrapper class for the HTML video player.
  *
  * @since 0.5.0
  */
@@ -991,15 +1060,20 @@ var HTMLVideoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer) {
   _inheritsLoose(HTMLVideoPlayer, _AbstractVideoPlayer);
 
   /**
-   * The VimeoPlayer constructor.
+   * The HTMLVideoPlayer constructor.
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Options.
    */
-  function HTMLVideoPlayer(target, videoId) {
+  function HTMLVideoPlayer(target, videoId, options) {
     var _this6;
 
-    _this6 = _AbstractVideoPlayer.call(this, target, videoId) || this;
+    if (options === void 0) {
+      options = {};
+    }
+
+    _this6 = _AbstractVideoPlayer.call(this, target, videoId, options) || this;
 
     _this6.state.set(INITIALIZED);
 
@@ -1017,11 +1091,21 @@ var HTMLVideoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer) {
   var _proto2 = HTMLVideoPlayer.prototype;
 
   _proto2.createPlayer = function createPlayer(videoId) {
+    var options = this.options,
+        _this$options$playerO = this.options.playerOptions,
+        playerOptions = _this$options$playerO === void 0 ? {} : _this$options$playerO;
+
     var player = _create('video', {
       src: videoId
     }, this.target);
 
     var on = player.addEventListener.bind(player);
+    assign(player, {
+      controls: !options.hideControls,
+      loop: options.loop,
+      volume: clamp(options.volume, 0, 1),
+      muted: options.mute
+    }, playerOptions.htmlVideo || {});
     on('play', this.onPlay);
     on('pause', this.onPause);
     on('ended', this.onEnded);
@@ -3607,11 +3691,16 @@ var VimeoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer2) {
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  function VimeoPlayer(target, videoId) {
+  function VimeoPlayer(target, videoId, options) {
     var _this8;
 
-    _this8 = _AbstractVideoPlayer2.call(this, target, videoId) || this;
+    if (options === void 0) {
+      options = {};
+    }
+
+    _this8 = _AbstractVideoPlayer2.call(this, target, videoId, options) || this;
 
     _this8.state.set(INITIALIZED);
 
@@ -3619,6 +3708,8 @@ var VimeoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer2) {
   }
   /**
    * Creates a player.
+   * The `hideControls` option now only work for PRO users.
+   * Note that passing null/undefined can not disable each option.
    *
    * @param videoId - Optional. A video ID or an URL.
    *
@@ -3629,16 +3720,27 @@ var VimeoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer2) {
   var _proto3 = VimeoPlayer.prototype;
 
   _proto3.createPlayer = function createPlayer(videoId) {
-    var isURL = videoId.indexOf('http') === 0;
-    console.log(videoId, +videoId);
-    var player = new Player$1(this.target, {
-      id: isURL ? undefined : +videoId,
-      url: isURL ? videoId : undefined
-    });
+    var options = this.options,
+        _this$options$playerO2 = this.options.playerOptions,
+        playerOptions = _this$options$playerO2 === void 0 ? {} : _this$options$playerO2;
+    var vimeoOptions = videoId.indexOf('http') === 0 ? {
+      url: videoId
+    } : {
+      id: +videoId
+    };
+    var player = new Player$1(this.target, assign(vimeoOptions, {
+      controls: !options.hideControls,
+      loop: options.loop,
+      muted: options.mute
+    }, playerOptions.vimeo || {}));
     player.on('play', this.onPlay);
     player.on('pause', this.onPause);
     player.on('ended', this.onEnded);
     player.ready().then(this.onPlayerReady); // todo error
+
+    if (!player.getMuted()) {
+      player.setVolume(clamp(options.volume, 0, 1));
+    }
 
     return player;
   }
@@ -3750,15 +3852,20 @@ var YouTubePlayer = /*#__PURE__*/function (_AbstractVideoPlayer3) {
   _inheritsLoose(YouTubePlayer, _AbstractVideoPlayer3);
 
   /**
-   * The YouTube constructor.
+   * The YouTubePlayer constructor.
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  function YouTubePlayer(target, videoId) {
+  function YouTubePlayer(target, videoId, options) {
     var _this10;
 
-    _this10 = _AbstractVideoPlayer3.call(this, target, videoId) || this;
+    if (options === void 0) {
+      options = {};
+    }
+
+    _this10 = _AbstractVideoPlayer3.call(this, target, videoId, options) || this;
     _this10.videoId = _this10.parseVideoId(videoId);
 
     if (_this10.videoId) {
@@ -3787,6 +3894,9 @@ var YouTubePlayer = /*#__PURE__*/function (_AbstractVideoPlayer3) {
   }
   /**
    * Creates a player.
+   * Note that the `loop` does not work without the `playlist` parameter.
+   *
+   * @link https://developers.google.com/youtube/player_parameters
    *
    * @param videoId - Optional. A video ID.
    *
@@ -3795,13 +3905,35 @@ var YouTubePlayer = /*#__PURE__*/function (_AbstractVideoPlayer3) {
   ;
 
   _proto5.createPlayer = function createPlayer(videoId) {
+    var options = this.options,
+        _this$options$playerO3 = this.options.playerOptions,
+        playerOptions = _this$options$playerO3 === void 0 ? {} : _this$options$playerO3;
     return new YT.Player(this.target, {
       videoId: videoId,
+      playerVars: assign({
+        controls: options.hideControls ? 0 : 1,
+        iv_load_policy: 3,
+        loop: options.loop ? 1 : 0,
+        playlist: options.loop ? videoId : undefined,
+        rel: 0,
+        autoplay: 0,
+        mute: options.mute ? 1 : 0
+      }, playerOptions.youtube || {}),
       events: {
         onReady: this.onPlayerReady.bind(this),
         onStateChange: this.onPlayerStateChange.bind(this)
       }
     });
+  }
+  /**
+   * Called when the player becomes ready.
+   */
+  ;
+
+  _proto5.onPlayerReady = function onPlayerReady() {
+    _AbstractVideoPlayer3.prototype.onPlayerReady.call(this);
+
+    this.player.setVolume(clamp(this.options.volume, 0, 1) * 100);
   }
   /**
    * Called when the YouTube player state is changed.
@@ -3946,7 +4078,7 @@ var PlayerUI = /*#__PURE__*/function () {
   return PlayerUI;
 }();
 /**
- * Switches the player constructor by the data attribute name.
+ * Associates the data attribute name with the player constructor.
  *
  * @since 0.5.0
  */
@@ -3968,7 +4100,9 @@ var Player = /*#__PURE__*/function () {
    */
   function Player(Splide, slide) {
     this.Splide = Splide;
+    this.slide = slide;
     this.event = EventInterface(Splide);
+    this.options = merge(merge({}, DEFAULTS), this.Splide.options.video);
     this.createPlayer(slide);
 
     if (this.player) {
@@ -3977,7 +4111,7 @@ var Player = /*#__PURE__*/function () {
   }
   /**
    * Creates a Player.
-   * This will fail when the slide element does not have a data attribute for a video.
+   * This will fail when the slide element does not have the data attribute for the video.
    *
    * @param slide - A slide element.
    */
@@ -3995,7 +4129,7 @@ var Player = /*#__PURE__*/function () {
 
       if (id) {
         _this12.ui = new PlayerUI(slide);
-        _this12.player = new Constructor(_this12.ui.iframeWrapper, id);
+        _this12.player = new Constructor(_this12.ui.iframeWrapper, id, _this12.options);
       }
     });
   }
@@ -4005,13 +4139,20 @@ var Player = /*#__PURE__*/function () {
   ;
 
   _proto7.listen = function listen() {
+    var player = this.player,
+        event = this.event;
     this.ui.on('click', this.onClick.bind(this));
-    this.player.on('play', this.onPlay.bind(this));
-    this.player.on('played', this.onPlayed.bind(this));
-    this.player.on('pause', this.onPause.bind(this));
-    this.player.on('paused', this.onPaused.bind(this));
-    this.event.on(EVENT_MOVE, this.pause.bind(this));
-    this.event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
+    player.on('play', this.onPlay.bind(this)); // todo
+
+    player.on('played', this.onPlayed.bind(this));
+    player.on('pause', this.onPause.bind(this));
+    player.on('paused', this.onPaused.bind(this));
+    event.on(EVENT_MOVE, this.pause.bind(this));
+    event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
+
+    if (this.options.autoplay) {
+      event.on(EVENT_ACTIVE, this.onActive.bind(this));
+    }
   }
   /**
    * Starts the video.
@@ -4090,6 +4231,16 @@ var Player = /*#__PURE__*/function () {
     this.event.emit(EVENT_VIDEO_PAUSE, this);
   }
   /**
+   * Called any slides become active.
+   */
+  ;
+
+  _proto7.onActive = function onActive(Slide) {
+    if (Slide.slide === this.slide) {
+      this.play();
+    }
+  }
+  /**
    * Destroys the instance.
    */
   ;
@@ -4106,7 +4257,7 @@ var Player = /*#__PURE__*/function () {
 /**
  * The extension for embedding videos to slides.
  *
- * @since 0.2.0
+ * @since 0.5.0
  *
  * @param Splide     - A Splide instance.
  * @param Components - A collection of components.

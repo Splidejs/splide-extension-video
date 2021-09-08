@@ -820,6 +820,16 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
   var PROJECT_CODE = 'splide';
+  /**
+   * Displays the error message on the console.
+   *
+   * @param message - A message.
+   */
+
+  function error(message) {
+    console.error("[" + PROJECT_CODE + "] " + message);
+  }
+
   var max = Math.max,
       min = Math.min;
   /**
@@ -867,7 +877,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
    * The player is not initialized.
    */
 
-  var INITIALIZED = 10;
+  var INITIALIZED = 3;
   /**
    * Requested to play a video while creating a player.
    */
@@ -893,6 +903,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
    */
 
   var PLAYING = 8;
+  /**
+   * Any error has been occurred.
+   */
+
+  var ERROR = 9;
   /**
    * The abstract class for implementing a video player.
    *
@@ -924,6 +939,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       this.onPause = this.onPause.bind(this);
       this.onEnded = this.onEnded.bind(this);
       this.onPlayerReady = this.onPlayerReady.bind(this);
+      this.onError = this.onError.bind(this);
     }
     /**
      * Attaches a handler to a specified event or events.
@@ -940,13 +956,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     }
     /**
      * Requests to play the video.
-     *
-     * @todo invalid ID.
      */
     ;
 
     _proto.play = function play() {
       var state = this.state;
+
+      if (state.is(ERROR)) {
+        error('Can not play this video.');
+        return;
+      }
+
       this.event.emit('play');
 
       if (state.is(INITIALIZING)) {
@@ -974,6 +994,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto.pause = function pause() {
       var state = this.state;
+
+      if (state.is(ERROR)) {
+        return;
+      }
+
       this.event.emit('pause');
 
       if (state.is(PENDING_PLAY)) {
@@ -1044,6 +1069,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     _proto.onEnded = function onEnded() {
       this.state.set(IDLE);
       this.event.emit('ended');
+    }
+    /**
+     * Called when an error occurs.
+     */
+    ;
+
+    _proto.onError = function onError() {
+      this.state.set(ERROR);
     };
 
     return AbstractVideoPlayer;
@@ -1108,8 +1141,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       on('play', this.onPlay);
       on('pause', this.onPause);
       on('ended', this.onEnded);
-      on('loadeddata', this.onPlayerReady); // todo error
-
+      on('loadeddata', this.onPlayerReady);
+      on('error', this.onError);
       return player;
     }
     /**
@@ -3731,7 +3764,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on('play', this.onPlay);
       player.on('pause', this.onPause);
       player.on('ended', this.onEnded);
-      player.ready().then(this.onPlayerReady); // todo error
+      player.ready().then(this.onPlayerReady, this.onError);
 
       if (!player.getMuted()) {
         player.setVolume(clamp(options.volume, 0, 1));
@@ -3916,7 +3949,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         }, playerOptions.youtube || {}),
         events: {
           onReady: this.onPlayerReady.bind(this),
-          onStateChange: this.onPlayerStateChange.bind(this)
+          onStateChange: this.onPlayerStateChange.bind(this),
+          onError: this.onError.bind(this)
         }
       });
     }

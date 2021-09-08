@@ -1,5 +1,6 @@
 /// <reference types="youtube" />
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
+import { VideoOptions } from '../../types/options';
 /**
  * The wrapper class for the YouTube player.
  *
@@ -7,24 +8,32 @@ import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
  */
 export declare class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
     /**
-     * The YouTube constructor.
+     * The YouTubePlayer constructor.
      *
      * @param target  - A target element where the player is mounted.
      * @param videoId - A video ID or an URL itself.
+     * @param options - Optional. Options.
      */
-    constructor(target: HTMLElement, videoId: string);
+    constructor(target: HTMLElement, videoId: string, options?: VideoOptions);
     /**
      * Called when the YouTube iframe API is ready.
      */
     private onAPIReady;
     /**
      * Creates a player.
+     * Note that the `loop` does not work without the `playlist` parameter.
+     *
+     * @link https://developers.google.com/youtube/player_parameters
      *
      * @param videoId - Optional. A video ID.
      *
      * @return A YT.Player instance.
      */
     protected createPlayer(videoId: string): YT.Player;
+    /**
+     * Called when the player becomes ready.
+     */
+    protected onPlayerReady(): void;
     /**
      * Called when the YouTube player state is changed.
      *

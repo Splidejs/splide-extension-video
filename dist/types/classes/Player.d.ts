@@ -8,7 +8,15 @@ export declare class Player {
     /**
      * The Splide instance.
      */
-    private Splide;
+    private readonly Splide;
+    /**
+     * The slide element.
+     */
+    private readonly slide;
+    /**
+     * Video options.
+     */
+    private readonly options;
     /**
      * The PlayerUI instance.
      */
@@ -30,7 +38,7 @@ export declare class Player {
     constructor(Splide: Splide, slide: HTMLElement);
     /**
      * Creates a Player.
-     * This will fail when the slide element does not have a data attribute for a video.
+     * This will fail when the slide element does not have the data attribute for the video.
      *
      * @param slide - A slide element.
      */
@@ -74,6 +82,10 @@ export declare class Player {
      * Called when the video is paused.
      */
     private onPaused;
+    /**
+     * Called any slides become active.
+     */
+    private onActive;
     /**
      * Destroys the instance.
      */
