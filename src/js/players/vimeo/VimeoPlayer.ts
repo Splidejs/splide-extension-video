@@ -1,3 +1,4 @@
+import { assign, clamp } from '@splidejs/splide/src/js/utils';
 import Vimeo from '@vimeo/player';
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
 import { IDLE, INITIALIZED, PLAY_REQUEST_ABORTED } from '../../constants/states';
@@ -24,23 +25,32 @@ export class VimeoPlayer extends AbstractVideoPlayer<Vimeo> {
 
   /**
    * Creates a player.
+   * The `hideControls` option now only work for PRO users.
+   * Note that passing null/undefined can not disable each option.
    *
    * @param videoId - Optional. A video ID or an URL.
    *
    * @return A Vimeo player instance.
    */
   protected createPlayer( videoId: string ): Vimeo {
-    const isURL = videoId.indexOf( 'http' ) === 0;
+    const { options, options: { playerOptions = {} } } = this;
+    const vimeoOptions = videoId.indexOf( 'http' ) === 0 ? { url: videoId } : { id: +videoId };
 
-    const player = new Vimeo( this.target, {
-      id : isURL ? undefined : +videoId, // todo this does not work
-      url: isURL ? videoId : undefined,
-    } );
+    const player = new Vimeo( this.target, assign( vimeoOptions, {
+      controls: ! options.hideControls,
+      loop    : options.loop,
+      muted   : options.mute,
+    }, playerOptions.vimeo || {} ) );
 
     player.on( 'play', this.onPlay );
     player.on( 'pause', this.onPause );
     player.on( 'ended', this.onEnded );
+
     player.ready().then( this.onPlayerReady ); // todo error
+
+    if ( ! player.getMuted() ) {
+      player.setVolume( clamp( options.volume, 0, 1 ) );
+    }
 
     return player;
   }

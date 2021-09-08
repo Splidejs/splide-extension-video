@@ -1,3 +1,6 @@
+import { Options as VimeoOptions } from '@vimeo/player';
+
+
 export interface VideoOptions {
   /**
    * Enables autoplay. If `true`, the video of the active slide will automatically start.
@@ -34,5 +37,6 @@ export interface VideoOptions {
    */
   playerOptions?: {
     youtube?: YT.PlayerVars;
+    vimeo?: VimeoOptions,
   };
 }

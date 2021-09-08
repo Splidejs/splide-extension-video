@@ -2,8 +2,12 @@ import { VideoOptions } from '../types/options';
 
 
 /**
- * The default options.
+ * Default options.
+ * Some parameters must be explicitly set to `false` for vimeo options.
  */
 export const DEFAULTS: VideoOptions = {
-  volume: 0.2,
+  hideControls: false,
+  loop        : false,
+  mute        : false,
+  volume      : 0.2,
 }

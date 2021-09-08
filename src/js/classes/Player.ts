@@ -1,6 +1,6 @@
 import { EVENT_ACTIVE, EVENT_MOVE, EventInterface, EventInterfaceObject, Splide } from '@splidejs/splide';
 import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
-import { SlideComponent } from '../../../../splide/dist/types/components/Slides/Slide';
+import { SlideComponent } from '@splidejs/splide/src/js/components/Slides/Slide';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
 import { DEFAULTS } from '../constants/defaults';
 import { EVENT_VIDEO_CLICK, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
@@ -111,9 +111,9 @@ export class Player {
     event.on( EVENT_MOVE, this.pause.bind( this ) );
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
 
-    // if ( this.options.autoplay ) {
+    if ( this.options.autoplay ) {
       event.on( EVENT_ACTIVE, this.onActive.bind( this ) );
-    // }
+    }
   }
 
   /**
@@ -188,8 +188,6 @@ export class Player {
    * Called any slides become active.
    */
   private onActive( Slide: SlideComponent ): void {
-    console.log( Slide );
-
     if ( Slide.slide === this.slide ) {
       this.play();
     }

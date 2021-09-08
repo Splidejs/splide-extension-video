@@ -114,7 +114,7 @@ function buildModule( format, declaration ) {
 }
 
 exports.buildDevCode = function buildDevCode() {
-  return buildScript( 'default' );
+  return buildScript( 'default', false );
 }
 
 exports.buildScript = parallel(

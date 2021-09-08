@@ -19,6 +19,10 @@
 				height : 280,
 				gap    : '1rem',
         cover  : true,
+        video  : {
+          mute    : true,
+          autoplay: true,
+        },
 			} );
 
 			splide.mount( window.splide.Extensions );
@@ -39,13 +43,13 @@
 <div id="splide01" class="splide">
 	<div class="splide__track">
 		<ul class="splide__list">
-      <li class="splide__slide" data-splide-vimeo="https://vimeo.com/92731345">
+      <li class="splide__slide" data-splide-vimeo="92731345">
         1
       </li>
       <li class="splide__slide" data-splide-vimeo="https://vimeo.com/120480261">
         2
       </li>
-      <li class="splide__slide" data-splide-vimeo="https://vimeo.com/121607187">
+      <li class="splide__slide" data-splide-vimeo="121607187">
         3
       </li>
       <li class="splide__slide" data-splide-vimeo="https://vimeo.com/120887828">

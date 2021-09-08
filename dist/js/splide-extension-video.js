@@ -840,10 +840,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var VIMEO_DATA_ATTRIBUTE = 'data-splide-vimeo';
   var HTML_VIDEO__DATA_ATTRIBUTE = 'data-splide-html-video';
   /**
-   * The default options.
+   * Default options.
+   * Some parameters must be explicitly set to `false` for vimeo options.
    */
 
   var DEFAULTS = {
+    hideControls: false,
+    loop: false,
+    mute: false,
     volume: 0.2
   };
   var EVENT_VIDEO_PLAY = 'video:play';
@@ -3689,6 +3693,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     }
     /**
      * Creates a player.
+     * The `hideControls` option now only work for PRO users.
+     * Note that passing null/undefined can not disable each option.
      *
      * @param videoId - Optional. A video ID or an URL.
      *
@@ -3699,15 +3705,27 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     var _proto3 = VimeoPlayer.prototype;
 
     _proto3.createPlayer = function createPlayer(videoId) {
-      var isURL = videoId.indexOf('http') === 0;
-      var player = new Player$1(this.target, {
-        id: isURL ? undefined : +videoId,
-        url: isURL ? videoId : undefined
-      });
+      var options = this.options,
+          _this$options$playerO = this.options.playerOptions,
+          playerOptions = _this$options$playerO === void 0 ? {} : _this$options$playerO;
+      var vimeoOptions = videoId.indexOf('http') === 0 ? {
+        url: videoId
+      } : {
+        id: +videoId
+      };
+      var player = new Player$1(this.target, assign(vimeoOptions, {
+        controls: !options.hideControls,
+        loop: options.loop,
+        muted: options.mute
+      }, playerOptions.vimeo || {}));
       player.on('play', this.onPlay);
       player.on('pause', this.onPause);
       player.on('ended', this.onEnded);
       player.ready().then(this.onPlayerReady); // todo error
+
+      if (!player.getMuted()) {
+        player.setVolume(clamp(options.volume, 0, 1));
+      }
 
       return player;
     }
@@ -3873,8 +3891,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto5.createPlayer = function createPlayer(videoId) {
       var options = this.options,
-          _this$options$playerO = this.options.playerOptions,
-          playerOptions = _this$options$playerO === void 0 ? {} : _this$options$playerO;
+          _this$options$playerO2 = this.options.playerOptions,
+          playerOptions = _this$options$playerO2 === void 0 ? {} : _this$options$playerO2;
       return new YT.Player(this.target, {
         videoId: videoId,
         playerVars: assign({
@@ -4115,9 +4133,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on('pause', this.onPause.bind(this));
       player.on('paused', this.onPaused.bind(this));
       event.on(EVENT_MOVE, this.pause.bind(this));
-      event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this)); // if ( this.options.autoplay ) {
+      event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
 
-      event.on(EVENT_ACTIVE, this.onActive.bind(this)); // }
+      if (this.options.autoplay) {
+        event.on(EVENT_ACTIVE, this.onActive.bind(this));
+      }
     }
     /**
      * Starts the video.
@@ -4201,8 +4221,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     ;
 
     _proto7.onActive = function onActive(Slide) {
-      console.log(Slide);
-
       if (Slide.slide === this.slide) {
         this.play();
       }
@@ -4241,12 +4259,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     function mount() {
       Components.Slides.forEach(function (Slide) {
         new Player(Splide, Slide.slide);
-      });
-      Splide.on('mounted', function () {
-        console.log('mounted!!');
-      });
-      Splide.on('active', function () {
-        console.log('active!!');
       });
     }
 
