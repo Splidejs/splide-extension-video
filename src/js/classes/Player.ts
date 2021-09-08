@@ -1,6 +1,6 @@
 import { EVENT_ACTIVE, EVENT_MOVE, EventInterface, EventInterfaceObject, Splide } from '@splidejs/splide';
-import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
 import { SlideComponent } from '@splidejs/splide/src/js/components/Slides/Slide';
+import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
 import { DEFAULTS } from '../constants/defaults';
 import { EVENT_VIDEO_CLICK, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
@@ -91,6 +91,7 @@ export class Player {
       if ( id ) {
         this.ui     = new PlayerUI( slide );
         this.player = new Constructor( this.ui.iframeWrapper, id, this.options );
+        this.ui.disable( this.options.disableOverlayUI );
       }
     } );
   }
@@ -103,7 +104,7 @@ export class Player {
 
     this.ui.on( 'click', this.onClick.bind( this ) );
 
-    player.on( 'play', this.onPlay.bind( this ) ); // todo
+    player.on( 'play', this.onPlay.bind( this ) );
     player.on( 'played', this.onPlayed.bind( this ) );
     player.on( 'pause', this.onPause.bind( this ) );
     player.on( 'paused', this.onPaused.bind( this ) );
@@ -180,7 +181,6 @@ export class Player {
    * Called when the video is paused.
    */
   private onPaused(): void {
-    this.ui.show();
     this.event.emit( EVENT_VIDEO_PAUSE, this );
   }
 

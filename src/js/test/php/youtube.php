@@ -19,11 +19,10 @@
 				height : 280,
 				gap    : '1rem',
         cover  : true,
-        // autoplay: true,
-        video  : {
-          mute: true,
-          loop: true,
-          autoplay: true,
+        video: {
+          // mute    : true,
+          // loop    : true,
+          // autoplay: true,
         },
 			} );
 

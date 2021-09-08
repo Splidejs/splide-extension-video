@@ -3840,7 +3840,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     /**
      * Checks if the new script tag for the YouTube API should be injected or not.
      *
-     * @return `true` if the source
+     * @return `true` if the API should be loaded.
      */
     ;
 
@@ -4098,8 +4098,19 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto6.show = function show() {
-      this.toggleButton(true);
+      if (!this.disabled) {
+        this.toggleButton(true);
+      }
+
       this.toggleWrapper(false);
+    };
+
+    _proto6.disable = function disable(disabled) {
+      this.disabled = disabled;
+
+      if (disabled) {
+        this.hide();
+      }
     };
 
     _proto6.on = function on(events, callback) {
@@ -4161,6 +4172,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         if (id) {
           _this12.ui = new PlayerUI(slide);
           _this12.player = new Constructor(_this12.ui.iframeWrapper, id, _this12.options);
+
+          _this12.ui.disable(_this12.options.disableOverlayUI);
         }
       });
     }
@@ -4173,8 +4186,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       var player = this.player,
           event = this.event;
       this.ui.on('click', this.onClick.bind(this));
-      player.on('play', this.onPlay.bind(this)); // todo
-
+      player.on('play', this.onPlay.bind(this));
       player.on('played', this.onPlayed.bind(this));
       player.on('pause', this.onPause.bind(this));
       player.on('paused', this.onPaused.bind(this));
@@ -4258,7 +4270,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     ;
 
     _proto7.onPaused = function onPaused() {
-      this.ui.show();
       this.event.emit(EVENT_VIDEO_PAUSE, this);
     }
     /**

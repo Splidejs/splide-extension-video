@@ -11,6 +11,8 @@ export class PlayerUI {
 
   private readonly event = EventBus();
 
+  private disabled: boolean;
+
   wrapper: HTMLDivElement;
 
   iframeWrapper: HTMLDivElement; // todo
@@ -59,8 +61,19 @@ export class PlayerUI {
   }
 
   show(): void {
-    this.toggleButton( true );
+    if ( ! this.disabled ) {
+      this.toggleButton( true );
+    }
+
     this.toggleWrapper( false );
+  }
+
+  disable( disabled: boolean ): void {
+    this.disabled = disabled;
+
+    if ( disabled ) {
+      this.hide();
+    }
   }
 
   on( events: string | string[], callback: EventBusCallback ): void {
