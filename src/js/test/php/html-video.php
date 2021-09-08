@@ -19,6 +19,10 @@
 				height : 280,
 				gap    : '1rem',
         cover  : true,
+        video  : {
+          hideControls: true,
+          volume      : 0.1,
+        }
 			} );
 
 			splide.mount( window.splide.Extensions );

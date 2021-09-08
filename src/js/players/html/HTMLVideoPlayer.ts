@@ -1,4 +1,4 @@
-import { create } from '@splidejs/splide/src/js/utils';
+import { create, clamp, assign } from '@splidejs/splide/src/js/utils';
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
 import { IDLE, INITIALIZED, PLAY_REQUEST_ABORTED } from '../../constants/states';
 import { VideoOptions } from '../../types/options';
@@ -30,8 +30,16 @@ export class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElement> {
    * @return A Vimeo player instance.
    */
   protected createPlayer( videoId: string ): HTMLVideoElement {
+    const { options, options: { playerOptions = {} } } = this;
     const player = create( 'video', { src: videoId }, this.target );
     const on     = player.addEventListener.bind( player );
+
+    assign( player, {
+      controls: ! options.hideControls,
+      loop    : options.loop,
+      volume  : clamp( options.volume, 0, 1 ),
+      muted   : options.mute,
+    }, playerOptions.htmlVideo || {} );
 
     on( 'play', this.onPlay );
     on( 'pause', this.onPause );

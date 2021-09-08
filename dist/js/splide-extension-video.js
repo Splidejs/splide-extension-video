@@ -1090,11 +1090,21 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     var _proto2 = HTMLVideoPlayer.prototype;
 
     _proto2.createPlayer = function createPlayer(videoId) {
+      var options = this.options,
+          _this$options$playerO = this.options.playerOptions,
+          playerOptions = _this$options$playerO === void 0 ? {} : _this$options$playerO;
+
       var player = _create('video', {
         src: videoId
       }, this.target);
 
       var on = player.addEventListener.bind(player);
+      assign(player, {
+        controls: !options.hideControls,
+        loop: options.loop,
+        volume: clamp(options.volume, 0, 1),
+        muted: options.mute
+      }, playerOptions.htmlVideo || {});
       on('play', this.onPlay);
       on('pause', this.onPause);
       on('ended', this.onEnded);
@@ -3706,8 +3716,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto3.createPlayer = function createPlayer(videoId) {
       var options = this.options,
-          _this$options$playerO = this.options.playerOptions,
-          playerOptions = _this$options$playerO === void 0 ? {} : _this$options$playerO;
+          _this$options$playerO2 = this.options.playerOptions,
+          playerOptions = _this$options$playerO2 === void 0 ? {} : _this$options$playerO2;
       var vimeoOptions = videoId.indexOf('http') === 0 ? {
         url: videoId
       } : {
@@ -3891,8 +3901,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto5.createPlayer = function createPlayer(videoId) {
       var options = this.options,
-          _this$options$playerO2 = this.options.playerOptions,
-          playerOptions = _this$options$playerO2 === void 0 ? {} : _this$options$playerO2;
+          _this$options$playerO3 = this.options.playerOptions,
+          playerOptions = _this$options$playerO3 === void 0 ? {} : _this$options$playerO3;
       return new YT.Player(this.target, {
         videoId: videoId,
         playerVars: assign({
