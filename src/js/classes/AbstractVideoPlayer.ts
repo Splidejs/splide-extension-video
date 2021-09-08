@@ -1,6 +1,7 @@
 import { EventBus, EventBusCallback, State } from '@splidejs/splide';
 import {
-  IDLE, INITIALIZED,
+  IDLE,
+  INITIALIZED,
   INITIALIZING,
   LOADING,
   NOT_INITIALIZED,
@@ -9,6 +10,7 @@ import {
   PLAYING,
 } from '../constants/states';
 import { VideoPlayerInterface } from '../types/general';
+import { VideoOptions } from '../types/options';
 
 
 /**
@@ -26,6 +28,11 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
    * The video ID or the URL itself.
    */
   protected videoId: string;
+
+  /**
+   * Video options.
+   */
+  protected readonly options: VideoOptions;
 
   /**
    * The state object.
@@ -47,10 +54,12 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  protected constructor( target: HTMLElement, videoId: string ) {
+  protected constructor( target: HTMLElement, videoId: string, options?: VideoOptions ) {
     this.target  = target;
     this.videoId = videoId;
+    this.options = options || {};
 
     this.onPlay        = this.onPlay.bind( this );
     this.onPause       = this.onPause.bind( this );

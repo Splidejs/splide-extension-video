@@ -1,14 +1,18 @@
-import { BaseComponent, Components, EventInterface, Options, Splide } from '@splidejs/splide';
+import { BaseComponent, Components, Options, Splide } from '@splidejs/splide';
 import { Player } from '../../classes/Player';
+import { VideoOptions } from '../../types/options';
 
 
-export interface VideoComponent extends BaseComponent {
+declare module '@splidejs/splide' {
+  interface Options {
+    video?: VideoOptions;
+  }
 }
 
 /**
  * The extension for embedding videos to slides.
  *
- * @since 0.2.0
+ * @since 0.5.0
  *
  * @param Splide     - A Splide instance.
  * @param Components - A collection of components.
@@ -17,8 +21,6 @@ export interface VideoComponent extends BaseComponent {
  * @return A Video component object.
  */
 export function Video( Splide: Splide, Components: Components, options: Options ): BaseComponent {
-  const { on, bind } = EventInterface( Splide );
-
   /**
    * Called when the component is mounted.
    */

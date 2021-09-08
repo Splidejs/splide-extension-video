@@ -4,8 +4,9 @@
   "description": "The extension of Splide for embedding videos.",
   "author": "Naotoshi Fujita",
   "license": "MIT",
-  "main": "dist/js/splide-extension-video.js",
+  "main": "dist/js/splide-extension-video.cjs.js",
   "module": "dist/js/splide-extension-video.esm.js",
+  "types": "dist/types/index.d.ts",
   "keywords": [
     "splide",
     "slider",

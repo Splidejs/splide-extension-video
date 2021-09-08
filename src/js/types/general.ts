@@ -1,4 +1,5 @@
 import { EventBusCallback } from '@splidejs/splide';
+import { VideoOptions } from './options';
 
 
 /**
@@ -19,5 +20,5 @@ export interface VideoPlayerInterface {
  * @since 0.5.0
  */
 export interface VideoPlayerConstructor {
-  new ( target: HTMLElement, videoId: string ): VideoPlayerInterface;
+  new ( target: HTMLElement, videoId: string, options?: VideoOptions ): VideoPlayerInterface;
 }

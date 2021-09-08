@@ -1,16 +1,19 @@
-import { EVENT_MOVE, EventInterface, EventInterfaceObject, Splide } from '@splidejs/splide';
-import { getAttribute } from '@splidejs/splide/src/js/utils';
+import { EVENT_ACTIVE, EVENT_MOVE, EventInterface, EventInterfaceObject, Splide } from '@splidejs/splide';
+import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
+import { SlideComponent } from '../../../../splide/dist/types/components/Slides/Slide';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
+import { DEFAULTS } from '../constants/defaults';
 import { EVENT_VIDEO_CLICK, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
 import { HTMLVideoPlayer } from '../players/html/HTMLVideoPlayer';
 import { VimeoPlayer } from '../players/vimeo/VimeoPlayer';
 import { YouTubePlayer } from '../players/youtube/YouTubePlayer';
 import { VideoPlayerConstructor, VideoPlayerInterface } from '../types/general';
+import { VideoOptions } from '../types/options';
 import { PlayerUI } from './PlayerUI';
 
 
 /**
- * Switches the player constructor by the data attribute name.
+ * Associates the data attribute name with the player constructor.
  *
  * @since 0.5.0
  */
@@ -29,7 +32,17 @@ export class Player {
   /**
    * The Splide instance.
    */
-  private Splide: Splide;
+  private readonly Splide: Splide;
+
+  /**
+   * The slide element.
+   */
+  private readonly slide: HTMLElement;
+
+  /**
+   * Video options.
+   */
+  private readonly options: VideoOptions;
 
   /**
    * The PlayerUI instance.
@@ -53,8 +66,10 @@ export class Player {
    * @param slide  - A slide element where the player is applied.
    */
   constructor( Splide: Splide, slide: HTMLElement ) {
-    this.Splide = Splide;
-    this.event  = EventInterface( Splide );
+    this.Splide  = Splide;
+    this.slide   = slide;
+    this.event   = EventInterface( Splide );
+    this.options = merge( merge( {}, DEFAULTS ), this.Splide.options.video );
 
     this.createPlayer( slide );
 
@@ -65,7 +80,7 @@ export class Player {
 
   /**
    * Creates a Player.
-   * This will fail when the slide element does not have a data attribute for a video.
+   * This will fail when the slide element does not have the data attribute for the video.
    *
    * @param slide - A slide element.
    */
@@ -75,7 +90,7 @@ export class Player {
 
       if ( id ) {
         this.ui     = new PlayerUI( slide );
-        this.player = new Constructor( this.ui.iframeWrapper, id );
+        this.player = new Constructor( this.ui.iframeWrapper, id, this.options );
       }
     } );
   }
@@ -84,15 +99,21 @@ export class Player {
    * Listens to UI, VideoPlayer and Splide events.
    */
   private listen(): void {
+    const { player, event } = this;
+
     this.ui.on( 'click', this.onClick.bind( this ) );
 
-    this.player.on( 'play', this.onPlay.bind( this ) );
-    this.player.on( 'played', this.onPlayed.bind( this ) );
-    this.player.on( 'pause', this.onPause.bind( this ) );
-    this.player.on( 'paused', this.onPaused.bind( this ) );
+    player.on( 'play', this.onPlay.bind( this ) ); // todo
+    player.on( 'played', this.onPlayed.bind( this ) );
+    player.on( 'pause', this.onPause.bind( this ) );
+    player.on( 'paused', this.onPaused.bind( this ) );
 
-    this.event.on( EVENT_MOVE, this.pause.bind( this ) );
-    this.event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
+    event.on( EVENT_MOVE, this.pause.bind( this ) );
+    event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
+
+    // if ( this.options.autoplay ) {
+      event.on( EVENT_ACTIVE, this.onActive.bind( this ) );
+    // }
   }
 
   /**
@@ -161,6 +182,17 @@ export class Player {
   private onPaused(): void {
     this.ui.show();
     this.event.emit( EVENT_VIDEO_PAUSE, this );
+  }
+
+  /**
+   * Called any slides become active.
+   */
+  private onActive( Slide: SlideComponent ): void {
+    console.log( Slide );
+
+    if ( Slide.slide === this.slide ) {
+      this.play();
+    }
   }
 
   /**

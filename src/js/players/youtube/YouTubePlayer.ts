@@ -1,6 +1,7 @@
-import { find } from '@splidejs/splide/src/js/utils';
+import { assign, find, clamp } from '@splidejs/splide/src/js/utils';
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
-import { IDLE, INITIALIZED, INITIALIZING, PENDING_PLAY } from '../../constants/states';
+import { INITIALIZED, INITIALIZING, PENDING_PLAY } from '../../constants/states';
+import { VideoOptions } from '../../types/options';
 import { YouTubeIframeAPILoader } from './YouTubeIframeAPILoader';
 
 
@@ -11,13 +12,14 @@ import { YouTubeIframeAPILoader } from './YouTubeIframeAPILoader';
  */
 export class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
   /**
-   * The YouTube constructor.
+   * The YouTubePlayer constructor.
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  constructor( target: HTMLElement, videoId: string ) { //todo options
-    super( target, videoId );
+  constructor( target: HTMLElement, videoId: string, options: VideoOptions = {} ) {
+    super( target, videoId, options );
 
     this.videoId = this.parseVideoId( videoId );
 
@@ -43,19 +45,41 @@ export class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
 
   /**
    * Creates a player.
+   * Note that the `loop` does not work without the `playlist` parameter.
+   *
+   * @link https://developers.google.com/youtube/player_parameters
    *
    * @param videoId - Optional. A video ID.
    *
    * @return A YT.Player instance.
    */
   protected createPlayer( videoId: string ): YT.Player {
+    const { options, options: { playerOptions = {} } } = this;
+
     return new YT.Player( this.target, {
       videoId,
+      playerVars: assign( {
+        controls      : options.hideControls ? 0 : 1,
+        iv_load_policy: 3,
+        loop          : options.loop ? 1 : 0,
+        playlist      : options.loop ? videoId : undefined,
+        rel           : 0,
+        autoplay      : 0,
+        mute          : options.mute ? 1 : 0,
+      }, playerOptions.youtube || {} ),
       events: {
         onReady      : this.onPlayerReady.bind( this ),
         onStateChange: this.onPlayerStateChange.bind( this ),
       },
     } );
+  }
+
+  /**
+   * Called when the player becomes ready.
+   */
+  protected onPlayerReady(): void {
+    super.onPlayerReady();
+    this.player.setVolume( clamp( this.options.volume, 0, 1 ) * 100 );
   }
 
   /**

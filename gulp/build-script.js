@@ -18,14 +18,14 @@ function buildScript( type, minify ) {
 	const plugins = [
 		resolve(),
 		typescript( {
-      // transformers: minify ? [
-      //   service => ( {
-      //     before: [
-      //       rename( service.getProgram(), { internalPrefix: '' } ),
-      //     ],
-      //     after : [],
-      //   } ),
-      // ] : [],
+      transformers: minify ? [
+        service => ( {
+          before: [
+            rename( service.getProgram(), { internalPrefix: '' } ),
+          ],
+          after : [],
+        } ),
+      ] : [],
     } ),
 		babel.getBabelOutputPlugin( {
 			configFile: path.resolve( __dirname, '../.babelrc' ),
@@ -39,11 +39,11 @@ function buildScript( type, minify ) {
 				output: {
 					comments: /^!/,
 				},
-				// mangle: {
-				// 	properties: {
-				// 		regex: /^_(private)_/,
-				// 	},
-				// },
+				mangle: {
+					properties: {
+						regex: /^_(private)_/,
+					},
+				},
 			} ),
 		);
 	}

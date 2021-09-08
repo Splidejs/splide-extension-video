@@ -1,6 +1,7 @@
 import Vimeo from '@vimeo/player';
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
 import { IDLE, INITIALIZED, PLAY_REQUEST_ABORTED } from '../../constants/states';
+import { VideoOptions } from '../../types/options';
 
 
 /**
@@ -14,9 +15,10 @@ export class VimeoPlayer extends AbstractVideoPlayer<Vimeo> {
    *
    * @param target  - A target element where the player is mounted.
    * @param videoId - A video ID or an URL itself.
+   * @param options - Optional. Options.
    */
-  constructor( target: HTMLElement, videoId: string ) { // todo options
-    super( target, videoId );
+  constructor( target: HTMLElement, videoId: string, options: VideoOptions = {} ) {
+    super( target, videoId, options );
     this.state.set( INITIALIZED );
   }
 
@@ -30,10 +32,8 @@ export class VimeoPlayer extends AbstractVideoPlayer<Vimeo> {
   protected createPlayer( videoId: string ): Vimeo {
     const isURL = videoId.indexOf( 'http' ) === 0;
 
-    console.log( videoId, +videoId );
-
     const player = new Vimeo( this.target, {
-      id : isURL ? undefined : +videoId,
+      id : isURL ? undefined : +videoId, // todo this does not work
       url: isURL ? videoId : undefined,
     } );
 
