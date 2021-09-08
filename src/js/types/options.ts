@@ -10,32 +10,32 @@ export interface VideoOptions {
   /**
    * Enables autoplay. If `true`, the video of the active slide will automatically start.
    */
-  autoplay?: boolean,
+  autoplay?: boolean;
 
   /**
    * Disables the overlay controls such as the play button.
    */
-  disableOverlayUI?: boolean,
+  disableOverlayUI?: boolean;
 
   /**
    * Requests the video player to hide the player UI.
    */
-  hideControls?: boolean,
+  hideControls?: boolean;
 
   /**
    * Loops the video.
    */
-  loop?: boolean,
+  loop?: boolean;
 
   /**
    * Mutes the video.
    */
-  mute?: boolean,
+  mute?: boolean;
 
   /**
    * Sets the initial volume by 0.0 - 1.0
    */
-  volume?: number,
+  volume?: number;
 
   /**
    * Overwrites player options.
