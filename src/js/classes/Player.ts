@@ -1,4 +1,12 @@
-import { EVENT_ACTIVE, EVENT_MOVE, EventInterface, EventInterfaceObject, Splide } from '@splidejs/splide';
+import {
+  EVENT_ACTIVE,
+  EVENT_DRAG,
+  EVENT_MOVE,
+  EVENT_SCROLL,
+  EventInterface,
+  EventInterfaceObject,
+  Splide,
+} from '@splidejs/splide';
 import { SlideComponent } from '@splidejs/splide/src/js/components/Slides/Slide';
 import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
@@ -109,29 +117,11 @@ export class Player {
     player.on( 'pause', this.onPause.bind( this ) );
     player.on( 'paused', this.onPaused.bind( this ) );
 
-    event.on( EVENT_MOVE, this.pause.bind( this ) );
+    event.on( [ EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL ], this.pause.bind( this ) );
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
 
     if ( this.options.autoplay ) {
       event.on( EVENT_ACTIVE, this.onActive.bind( this ) );
-    }
-  }
-
-  /**
-   * Starts the video.
-   */
-  private play(): void {
-    if ( this.player ) {
-      this.player.play();
-    }
-  }
-
-  /**
-   * Pauses the video.
-   */
-  private pause(): void {
-    if ( this.player ) {
-      this.player.pause();
     }
   }
 
@@ -190,6 +180,24 @@ export class Player {
   private onActive( Slide: SlideComponent ): void {
     if ( Slide.slide === this.slide ) {
       this.play();
+    }
+  }
+
+  /**
+   * Starts the video.
+   */
+  play(): void {
+    if ( this.player ) {
+      this.player.play();
+    }
+  }
+
+  /**
+   * Pauses the video.
+   */
+  pause(): void {
+    if ( this.player ) {
+      this.player.pause();
     }
   }
 

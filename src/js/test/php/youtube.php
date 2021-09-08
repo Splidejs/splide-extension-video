@@ -14,6 +14,7 @@
 	<script>
 		document.addEventListener( 'DOMContentLoaded', function () {
 			var splide = new Splide( '#splide01', {
+        type   : 'loop',
         perPage: 2,
 				width  : 1000,
 				height : 280,

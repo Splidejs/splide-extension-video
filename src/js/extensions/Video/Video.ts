@@ -3,6 +3,9 @@ import { Player } from '../../classes/Player';
 import { VideoOptions } from '../../types/options';
 
 
+/**
+ * Lets the compiler know the type of video options.
+ */
 declare module '@splidejs/splide' {
   interface Options {
     video?: VideoOptions;
@@ -22,15 +25,30 @@ declare module '@splidejs/splide' {
  */
 export function Video( Splide: Splide, Components: Components, options: Options ): BaseComponent {
   /**
-   * Called when the component is mounted.
+   * Stores Player instances.
+   */
+  const players: Player[] = [];
+
+  /**
+   * Called when the extension is mounted.
    */
   function mount(): void {
     Components.Slides.forEach( Slide => {
-      new Player( Splide, Slide.slide );
+      players.push( new Player( Splide, Slide.slide ) );
+    } );
+  }
+
+  /**
+   * Destroys the extension.
+   */
+  function destroy(): void {
+    players.forEach( player => {
+      player.destroy();
     } );
   }
 
   return {
     mount,
+    destroy,
   }
 }

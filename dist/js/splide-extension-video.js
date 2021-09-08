@@ -121,6 +121,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   var EVENT_MOVE = 'move';
   var EVENT_ACTIVE = 'active';
+  var EVENT_DRAG = 'drag';
+  var EVENT_SCROLL = 'scroll';
   var EVENT_DESTROY = 'destroy';
   /**
    * The constructor to provided a simple event system.
@@ -4046,6 +4048,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   var CLASS_SLIDE = PROJECT_CODE + "__slide";
   var CLASS_CONTAINER = CLASS_SLIDE + "__container";
+  /**
+   * The collection of i18n strings.
+   *
+   * @since 0.5.0
+   */
+
   var I18N = {
     playVideo: 'Play Video'
   };
@@ -4198,7 +4206,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto6.destroy = function destroy() {
       removeClass(this.parent, this.modifier);
-      remove([this.wrapper, this.playButton]);
+      remove(this.video);
       this.event.destroy();
     };
 
@@ -4275,31 +4283,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on('played', this.onPlayed.bind(this));
       player.on('pause', this.onPause.bind(this));
       player.on('paused', this.onPaused.bind(this));
-      event.on(EVENT_MOVE, this.pause.bind(this));
+      event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
       event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
 
       if (this.options.autoplay) {
         event.on(EVENT_ACTIVE, this.onActive.bind(this));
-      }
-    }
-    /**
-     * Starts the video.
-     */
-    ;
-
-    _proto7.play = function play() {
-      if (this.player) {
-        this.player.play();
-      }
-    }
-    /**
-     * Pauses the video.
-     */
-    ;
-
-    _proto7.pause = function pause() {
-      if (this.player) {
-        this.player.pause();
       }
     }
     /**
@@ -4368,6 +4356,26 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       }
     }
     /**
+     * Starts the video.
+     */
+    ;
+
+    _proto7.play = function play() {
+      if (this.player) {
+        this.player.play();
+      }
+    }
+    /**
+     * Pauses the video.
+     */
+    ;
+
+    _proto7.pause = function pause() {
+      if (this.player) {
+        this.player.pause();
+      }
+    }
+    /**
      * Destroys the instance.
      */
     ;
@@ -4396,16 +4404,32 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   function Video(Splide, Components, options) {
     /**
-     * Called when the component is mounted.
+     * Stores Player instances.
      */
+    var players = [];
+    /**
+     * Called when the extension is mounted.
+     */
+
     function mount() {
       Components.Slides.forEach(function (Slide) {
-        new Player(Splide, Slide.slide);
+        players.push(new Player(Splide, Slide.slide));
+      });
+    }
+    /**
+     * Destroys the extension.
+     */
+
+
+    function destroy() {
+      players.forEach(function (player) {
+        player.destroy();
       });
     }
 
     return {
-      mount: mount
+      mount: mount,
+      destroy: destroy
     };
   }
 

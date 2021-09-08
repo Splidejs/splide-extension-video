@@ -188,7 +188,7 @@ export class PlayerUI {
    */
   destroy(): void {
     removeClass( this.parent, this.modifier );
-    remove( [ this.wrapper, this.playButton ] );
+    remove( this.video );
     this.event.destroy();
   }
 }
