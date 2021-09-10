@@ -48,14 +48,6 @@ export declare class Player {
      */
     private listen;
     /**
-     * Starts the video.
-     */
-    private play;
-    /**
-     * Pauses the video.
-     */
-    private pause;
-    /**
      * Called when the slide element is clicked.
      */
     private onClick;
@@ -86,6 +78,14 @@ export declare class Player {
      * Called any slides become active.
      */
     private onActive;
+    /**
+     * Starts the video.
+     */
+    play(): void;
+    /**
+     * Pauses the video.
+     */
+    pause(): void;
     /**
      * Destroys the instance.
      */

@@ -1,5 +1,8 @@
 import { BaseComponent, Components, Options, Splide } from '@splidejs/splide';
 import { VideoOptions } from '../../types/options';
+/**
+ * Lets the compiler know the type of video options.
+ */
 declare module '@splidejs/splide' {
     interface Options {
         video?: VideoOptions;
