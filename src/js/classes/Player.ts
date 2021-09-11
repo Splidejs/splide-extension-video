@@ -1,8 +1,8 @@
 import {
   EVENT_ACTIVE,
-  EVENT_DRAG,
-  EVENT_MOVE,
-  EVENT_SCROLL,
+  EVENT_DRAG, EVENT_MOUNTED,
+  EVENT_MOVE, EVENT_MOVED,
+  EVENT_SCROLL, EVENT_SCROLLED,
   EventInterface,
   EventInterfaceObject,
   Splide,
@@ -121,7 +121,7 @@ export class Player {
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
 
     if ( this.options.autoplay ) {
-      event.on( EVENT_ACTIVE, this.onActive.bind( this ) );
+      event.on( [ EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED ], this.onAutoplayRequested.bind( this ) );
     }
   }
 
@@ -175,10 +175,12 @@ export class Player {
   }
 
   /**
-   * Called any slides become active.
+   * Called when the autoplay option is `true` and the slider should start the video.
    */
-  private onActive( Slide: SlideComponent ): void {
-    if ( Slide.slide === this.slide ) {
+  private onAutoplayRequested(): void {
+    const activeSlide = this.Splide.Components.Slides.getAt( this.Splide.index );
+
+    if ( activeSlide.slide === this.slide ) {
       this.play();
     }
   }

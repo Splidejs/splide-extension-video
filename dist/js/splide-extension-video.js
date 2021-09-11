@@ -60,18 +60,21 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     return object;
   }
 
+  var EVENT_MOUNTED = "mounted";
   var EVENT_MOVE = "move";
-  var EVENT_ACTIVE = "active";
+  var EVENT_MOVED = "moved";
   var EVENT_DRAG = "drag";
   var EVENT_SCROLL = "scroll";
+  var EVENT_SCROLLED = "scrolled";
   var EVENT_DESTROY = "destroy";
+  var DEFAULT_EVENT_PRIORITY = 10;
 
   function EventBus() {
     var handlers = {};
 
     function on(events, callback, key, priority) {
       if (priority === void 0) {
-        priority = 10;
+        priority = DEFAULT_EVENT_PRIORITY;
       }
 
       forEachEvent(events, function (event, namespace) {
@@ -327,7 +330,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   function merge2(object, source) {
     forOwn2(source, function (value, key) {
-      object[key] = isObject2(value) ? merge2(isObject2(object[key]) ? object[key] : {}, value) : value;
+      if (isArray2(value)) {
+        object[key] = value.slice();
+      } else if (isObject2(value)) {
+        object[key] = merge2(isObject2(object[key]) ? object[key] : {}, value);
+      } else {
+        object[key] = value;
+      }
     });
     return object;
   } // ../splide/src/js/utils/dom/removeAttribute/removeAttribute.ts
@@ -2475,7 +2484,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
 
       if (this.options.autoplay) {
-        event.on(EVENT_ACTIVE, this.onActive.bind(this));
+        event.on([EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED], this.onAutoplayRequested.bind(this));
       }
     };
 
@@ -2507,8 +2516,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       this.event.emit(EVENT_VIDEO_PAUSE, this);
     };
 
-    _proto7.onActive = function onActive(Slide2) {
-      if (Slide2.slide === this.slide) {
+    _proto7.onAutoplayRequested = function onAutoplayRequested() {
+      var activeSlide = this.Splide.Components.Slides.getAt(this.Splide.index);
+
+      if (activeSlide.slide === this.slide) {
         this.play();
       }
     };
