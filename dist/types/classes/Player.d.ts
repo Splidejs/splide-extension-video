@@ -75,9 +75,9 @@ export declare class Player {
      */
     private onPaused;
     /**
-     * Called any slides become active.
+     * Called when the autoplay option is `true` and the slider should start the video.
      */
-    private onActive;
+    private onAutoplayRequested;
     /**
      * Starts the video.
      */

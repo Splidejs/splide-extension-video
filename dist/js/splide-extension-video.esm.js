@@ -5,6 +5,7 @@
  * Copyright: 2021 Naotoshi Fujita
  */
 // ../splide/dist/js/splide.esm.js
+var DEFAULT_EVENT_PRIORITY = 10;
 function isArray(subject) {
   return Array.isArray(subject);
 }
@@ -39,14 +40,9 @@ function forOwn(object, iteratee) {
   }
   return object;
 }
-var EVENT_MOVE = "move";
-var EVENT_ACTIVE = "active";
-var EVENT_DRAG = "drag";
-var EVENT_SCROLL = "scroll";
-var EVENT_DESTROY = "destroy";
 function EventBus() {
   let handlers = {};
-  function on(events, callback, key, priority = 10) {
+  function on(events, callback, key, priority = DEFAULT_EVENT_PRIORITY) {
     forEachEvent(events, (event, namespace) => {
       handlers[event] = handlers[event] || [];
       push(handlers[event], {
@@ -93,6 +89,13 @@ function EventBus() {
     destroy
   };
 }
+var EVENT_MOUNTED = "mounted";
+var EVENT_MOVE = "move";
+var EVENT_MOVED = "moved";
+var EVENT_DRAG = "drag";
+var EVENT_SCROLL = "scroll";
+var EVENT_SCROLLED = "scrolled";
+var EVENT_DESTROY = "destroy";
 function EventInterface(Splide22) {
   const { event } = Splide22;
   const key = {};
@@ -260,7 +263,13 @@ function assign2(object, ...sources) {
 // ../splide/src/js/utils/object/merge/merge.ts
 function merge2(object, source) {
   forOwn2(source, (value, key) => {
-    object[key] = isObject2(value) ? merge2(isObject2(object[key]) ? object[key] : {}, value) : value;
+    if (isArray2(value)) {
+      object[key] = value.slice();
+    } else if (isObject2(value)) {
+      object[key] = merge2(isObject2(object[key]) ? object[key] : {}, value);
+    } else {
+      object[key] = value;
+    }
   });
   return object;
 }
@@ -302,17 +311,13 @@ function create2(tag, attrs, parent) {
 }
 
 // ../splide/src/js/utils/dom/style/style.ts
-function style2(elms, styles) {
+function style2(elm, styles) {
   if (isString2(styles)) {
-    return isArray2(elms) ? null : getComputedStyle(elms)[styles];
+    return getComputedStyle(elm)[styles];
   }
   forOwn2(styles, (value, key) => {
     if (!isNull2(value)) {
-      forEach2(elms, (elm) => {
-        if (elm) {
-          elm.style[key] = `${value}`;
-        }
-      });
+      elm.style[key] = `${value}`;
     }
   });
 }
@@ -327,11 +332,6 @@ function getAttribute2(elm, attr) {
   return elm.getAttribute(attr);
 }
 
-// ../splide/src/js/utils/dom/queryAll/queryAll.ts
-function queryAll2(parent, selector) {
-  return slice2(parent.querySelectorAll(selector));
-}
-
 // ../splide/src/js/utils/dom/remove/remove.ts
 function remove2(nodes) {
   forEach2(nodes, (node) => {
@@ -339,6 +339,11 @@ function remove2(nodes) {
       node.parentNode.removeChild(node);
     }
   });
+}
+
+// ../splide/src/js/utils/dom/queryAll/queryAll.ts
+function queryAll2(parent, selector) {
+  return slice2(parent.querySelectorAll(selector));
 }
 
 // ../splide/src/js/utils/dom/removeClass/removeClass.ts
@@ -2012,7 +2017,7 @@ var Player2 = class {
     event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
     event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
     if (this.options.autoplay) {
-      event.on(EVENT_ACTIVE, this.onActive.bind(this));
+      event.on([EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED], this.onAutoplayRequested.bind(this));
     }
   }
   onClick() {
@@ -2037,8 +2042,9 @@ var Player2 = class {
   onPaused() {
     this.event.emit(EVENT_VIDEO_PAUSE, this);
   }
-  onActive(Slide2) {
-    if (Slide2.slide === this.slide) {
+  onAutoplayRequested() {
+    const activeSlide = this.Splide.Components.Slides.getAt(this.Splide.index);
+    if (activeSlide.slide === this.slide) {
       this.play();
     }
   }

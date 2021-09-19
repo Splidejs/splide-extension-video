@@ -15,6 +15,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 })(function () {
   'use strict'; // ../splide/dist/js/splide.esm.js
 
+  var DEFAULT_EVENT_PRIORITY = 10;
+
   function isArray(subject) {
     return Array.isArray(subject);
   }
@@ -59,15 +61,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     return object;
   }
-
-  var EVENT_MOUNTED = "mounted";
-  var EVENT_MOVE = "move";
-  var EVENT_MOVED = "moved";
-  var EVENT_DRAG = "drag";
-  var EVENT_SCROLL = "scroll";
-  var EVENT_SCROLLED = "scrolled";
-  var EVENT_DESTROY = "destroy";
-  var DEFAULT_EVENT_PRIORITY = 10;
 
   function EventBus() {
     var handlers = {};
@@ -132,6 +125,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       destroy: destroy
     };
   }
+
+  var EVENT_MOUNTED = "mounted";
+  var EVENT_MOVE = "move";
+  var EVENT_MOVED = "moved";
+  var EVENT_DRAG = "drag";
+  var EVENT_SCROLL = "scroll";
+  var EVENT_SCROLLED = "scrolled";
+  var EVENT_DESTROY = "destroy";
 
   function EventInterface(Splide22) {
     var event = Splide22.event;
@@ -381,18 +382,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   } // ../splide/src/js/utils/dom/style/style.ts
 
 
-  function style2(elms, styles) {
+  function style2(elm, styles) {
     if (isString2(styles)) {
-      return isArray2(elms) ? null : getComputedStyle(elms)[styles];
+      return getComputedStyle(elm)[styles];
     }
 
     forOwn2(styles, function (value, key) {
       if (!isNull2(value)) {
-        forEach2(elms, function (elm) {
-          if (elm) {
-            elm.style[key] = "" + value;
-          }
-        });
+        elm.style[key] = "" + value;
       }
     });
   } // ../splide/src/js/utils/dom/display/display.ts
@@ -407,11 +404,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   function getAttribute2(elm, attr) {
     return elm.getAttribute(attr);
-  } // ../splide/src/js/utils/dom/queryAll/queryAll.ts
-
-
-  function queryAll2(parent, selector) {
-    return slice2(parent.querySelectorAll(selector));
   } // ../splide/src/js/utils/dom/remove/remove.ts
 
 
@@ -421,6 +413,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         node.parentNode.removeChild(node);
       }
     });
+  } // ../splide/src/js/utils/dom/queryAll/queryAll.ts
+
+
+  function queryAll2(parent, selector) {
+    return slice2(parent.querySelectorAll(selector));
   } // ../splide/src/js/utils/dom/removeClass/removeClass.ts
 
 
