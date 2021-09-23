@@ -440,8 +440,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     var minimum = min2(x, y);
     var maximum = max2(x, y);
     return min2(max2(minimum, number), maximum);
-  } // src/js/constants/data-attributes.ts
+  } // src/js/constants/classes.ts
 
+
+  var CLASS_VIDEO = "splide__video";
+  var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
+  var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play";
+  var CLASS_PLAYING = "is-playing"; // src/js/constants/data-attributes.ts
 
   var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
   var VIMEO_DATA_ATTRIBUTE = "data-splide-vimeo";
@@ -456,6 +461,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   var EVENT_VIDEO_PLAY = "video:play";
   var EVENT_VIDEO_PAUSE = "video:pause";
+  var EVENT_VIDEO_ENDED = "video:ended";
   var EVENT_VIDEO_CLICK = "video:click"; // src/js/constants/states.ts
 
   var NOT_INITIALIZED = 1;
@@ -2343,11 +2349,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   var I18N2 = {
     playVideo: "Play Video"
-  }; // src/js/constants/classes.ts
-
-  var CLASS_VIDEO = "splide__video";
-  var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
-  var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play"; // src/js/classes/PlayerUI.ts
+  }; // src/js/classes/PlayerUI.ts
 
   var PlayerUI = /*#__PURE__*/function () {
     function PlayerUI(Splide4, slide) {
@@ -2477,6 +2479,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on("played", this.onPlayed.bind(this));
       player.on("pause", this.onPause.bind(this));
       player.on("paused", this.onPaused.bind(this));
+      player.on("ended", this.onEnded.bind(this));
       event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
       event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
 
@@ -2502,6 +2505,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto7.onPlayed = function onPlayed() {
       this.ui.hide();
+      this.togglePlaying(true);
       this.event.emit(EVENT_VIDEO_PLAY, this);
     };
 
@@ -2510,7 +2514,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto7.onPaused = function onPaused() {
+      this.togglePlaying(false);
       this.event.emit(EVENT_VIDEO_PAUSE, this);
+    };
+
+    _proto7.onEnded = function onEnded() {
+      this.togglePlaying(false);
+      this.event.emit(EVENT_VIDEO_ENDED, this);
     };
 
     _proto7.onAutoplayRequested = function onAutoplayRequested() {
@@ -2519,6 +2529,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       if (activeSlide.slide === this.slide) {
         this.play();
       }
+    };
+
+    _proto7.togglePlaying = function togglePlaying(add) {
+      toggleClass2(this.Splide.root, CLASS_PLAYING, add);
     };
 
     _proto7.play = function play() {

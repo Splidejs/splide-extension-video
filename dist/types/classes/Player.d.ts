@@ -75,9 +75,19 @@ export declare class Player {
      */
     private onPaused;
     /**
+     * Called when the video ends.
+     */
+    private onEnded;
+    /**
      * Called when the autoplay option is `true` and the slider should start the video.
      */
     private onAutoplayRequested;
+    /**
+     * Toggles the playing status class.
+     *
+     * @param add - Determines whether to add or remove the class.
+     */
+    private togglePlaying;
     /**
      * Starts the video.
      */

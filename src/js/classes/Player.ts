@@ -1,17 +1,19 @@
 import {
-  EVENT_ACTIVE,
-  EVENT_DRAG, EVENT_MOUNTED,
-  EVENT_MOVE, EVENT_MOVED,
-  EVENT_SCROLL, EVENT_SCROLLED,
+  EVENT_DRAG,
+  EVENT_MOUNTED,
+  EVENT_MOVE,
+  EVENT_MOVED,
+  EVENT_SCROLL,
+  EVENT_SCROLLED,
   EventInterface,
   EventInterfaceObject,
   Splide,
 } from '@splidejs/splide';
-import { SlideComponent } from '@splidejs/splide/src/js/components/Slides/Slide';
-import { getAttribute, merge } from '@splidejs/splide/src/js/utils';
+import { getAttribute, merge, toggleClass } from '@splidejs/splide/src/js/utils';
+import { CLASS_PLAYING } from '../constants/classes';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
 import { DEFAULTS } from '../constants/defaults';
-import { EVENT_VIDEO_CLICK, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
+import { EVENT_VIDEO_CLICK, EVENT_VIDEO_ENDED, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
 import { HTMLVideoPlayer } from '../players/html/HTMLVideoPlayer';
 import { VimeoPlayer } from '../players/vimeo/VimeoPlayer';
 import { YouTubePlayer } from '../players/youtube/YouTubePlayer';
@@ -116,6 +118,7 @@ export class Player {
     player.on( 'played', this.onPlayed.bind( this ) );
     player.on( 'pause', this.onPause.bind( this ) );
     player.on( 'paused', this.onPaused.bind( this ) );
+    player.on( 'ended', this.onEnded.bind( this ) );
 
     event.on( [ EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL ], this.pause.bind( this ) );
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
@@ -157,6 +160,7 @@ export class Player {
    */
   private onPlayed(): void {
     this.ui.hide();
+    this.togglePlaying( true );
     this.event.emit( EVENT_VIDEO_PLAY, this );
   }
 
@@ -171,7 +175,16 @@ export class Player {
    * Called when the video is paused.
    */
   private onPaused(): void {
+    this.togglePlaying( false );
     this.event.emit( EVENT_VIDEO_PAUSE, this );
+  }
+
+  /**
+   * Called when the video ends.
+   */
+  private onEnded(): void {
+    this.togglePlaying( false );
+    this.event.emit( EVENT_VIDEO_ENDED, this );
   }
 
   /**
@@ -183,6 +196,15 @@ export class Player {
     if ( activeSlide.slide === this.slide ) {
       this.play();
     }
+  }
+
+  /**
+   * Toggles the playing status class.
+   *
+   * @param add - Determines whether to add or remove the class.
+   */
+  private togglePlaying( add: boolean ): void {
+    toggleClass( this.Splide.root, CLASS_PLAYING, add );
   }
 
   /**

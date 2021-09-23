@@ -367,6 +367,12 @@ function clamp2(number, x, y) {
   return min2(max2(minimum, number), maximum);
 }
 
+// src/js/constants/classes.ts
+var CLASS_VIDEO = "splide__video";
+var CLASS_VIDEO_WRAPPER = `${CLASS_VIDEO}__wrapper`;
+var CLASS_VIDEO_PLAY_BUTTON = `${CLASS_VIDEO}__play`;
+var CLASS_PLAYING = "is-playing";
+
 // src/js/constants/data-attributes.ts
 var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
 var VIMEO_DATA_ATTRIBUTE = "data-splide-vimeo";
@@ -383,6 +389,7 @@ var DEFAULTS2 = {
 // src/js/constants/events.ts
 var EVENT_VIDEO_PLAY = "video:play";
 var EVENT_VIDEO_PAUSE = "video:pause";
+var EVENT_VIDEO_ENDED = "video:ended";
 var EVENT_VIDEO_CLICK = "video:click";
 
 // src/js/constants/states.ts
@@ -1908,11 +1915,6 @@ var I18N2 = {
   playVideo: "Play Video"
 };
 
-// src/js/constants/classes.ts
-var CLASS_VIDEO = "splide__video";
-var CLASS_VIDEO_WRAPPER = `${CLASS_VIDEO}__wrapper`;
-var CLASS_VIDEO_PLAY_BUTTON = `${CLASS_VIDEO}__play`;
-
 // src/js/classes/PlayerUI.ts
 var PlayerUI = class {
   constructor(Splide4, slide) {
@@ -2014,6 +2016,7 @@ var Player2 = class {
     player.on("played", this.onPlayed.bind(this));
     player.on("pause", this.onPause.bind(this));
     player.on("paused", this.onPaused.bind(this));
+    player.on("ended", this.onEnded.bind(this));
     event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
     event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
     if (this.options.autoplay) {
@@ -2034,19 +2037,28 @@ var Player2 = class {
   }
   onPlayed() {
     this.ui.hide();
+    this.togglePlaying(true);
     this.event.emit(EVENT_VIDEO_PLAY, this);
   }
   onPause() {
     this.ui.show();
   }
   onPaused() {
+    this.togglePlaying(false);
     this.event.emit(EVENT_VIDEO_PAUSE, this);
+  }
+  onEnded() {
+    this.togglePlaying(false);
+    this.event.emit(EVENT_VIDEO_ENDED, this);
   }
   onAutoplayRequested() {
     const activeSlide = this.Splide.Components.Slides.getAt(this.Splide.index);
     if (activeSlide.slide === this.slide) {
       this.play();
     }
+  }
+  togglePlaying(add) {
+    toggleClass2(this.Splide.root, CLASS_PLAYING, add);
   }
   play() {
     if (this.player) {

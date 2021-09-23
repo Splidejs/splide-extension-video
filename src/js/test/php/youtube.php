@@ -27,7 +27,19 @@
         },
 			} );
 
-			splide.mount( window.splide.Extensions );
+      splide.mount( window.splide.Extensions );
+
+      splide.on( 'video:play', () => {
+        console.log( 'play' );
+      } );
+
+      splide.on( 'video:pause', () => {
+        console.log( 'pause' );
+      } );
+
+      splide.on( 'video:ended', () => {
+        console.log( 'ended' );
+      } );
 		} );
 	</script>
 
