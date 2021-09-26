@@ -1,4 +1,4 @@
-import { BaseComponent, Components, Options, Splide } from '@splidejs/splide';
+import { BaseComponent, Components, EVENT_RESIZE, Options, Splide } from '@splidejs/splide';
 import { Player } from '../../classes/Player';
 import { VideoOptions } from '../../types/options';
 
@@ -36,6 +36,9 @@ export function Video( Splide: Splide, Components: Components, options: Options 
     Components.Slides.forEach( Slide => {
       players.push( new Player( Splide, Slide.slide ) );
     } );
+
+
+    Splide.emit( EVENT_RESIZE );
   }
 
   /**

@@ -13,7 +13,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) : factory();
 })(function () {
-  'use strict'; // ../splide/dist/js/splide.esm.js
+  'use strict'; // node_modules/@splidejs/splide/dist/js/splide.esm.js
 
   var DEFAULT_EVENT_PRIORITY = 10;
 
@@ -129,6 +129,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var EVENT_MOUNTED = "mounted";
   var EVENT_MOVE = "move";
   var EVENT_MOVED = "moved";
+  var EVENT_RESIZE = "resize";
   var EVENT_DRAG = "drag";
   var EVENT_SCROLL = "scroll";
   var EVENT_SCROLLED = "scrolled";
@@ -208,7 +209,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       set: set,
       is: is
     };
-  } // ../splide/src/js/utils/type/type.ts
+  } // node_modules/@splidejs/splide/src/js/utils/type/type.ts
 
 
   function isObject2(subject) {
@@ -233,29 +234,29 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
   function isNull2(subject) {
     return subject === null;
-  } // ../splide/src/js/utils/array/toArray/toArray.ts
+  } // node_modules/@splidejs/splide/src/js/utils/array/toArray/toArray.ts
 
 
   function toArray2(value) {
     return isArray2(value) ? value : [value];
-  } // ../splide/src/js/utils/array/forEach/forEach.ts
+  } // node_modules/@splidejs/splide/src/js/utils/array/forEach/forEach.ts
 
 
   function forEach2(values, iteratee) {
     toArray2(values).forEach(iteratee);
-  } // ../splide/src/js/utils/array/index.ts
+  } // node_modules/@splidejs/splide/src/js/utils/array/index.ts
 
 
-  var arrayProto2 = Array.prototype; // ../splide/src/js/utils/arrayLike/slice/slice.ts
+  var arrayProto2 = Array.prototype; // node_modules/@splidejs/splide/src/js/utils/arrayLike/slice/slice.ts
 
   function slice2(arrayLike, start, end) {
     return arrayProto2.slice.call(arrayLike, start, end);
-  } // ../splide/src/js/utils/arrayLike/find/find.ts
+  } // node_modules/@splidejs/splide/src/js/utils/arrayLike/find/find.ts
 
 
   function find2(arrayLike, predicate) {
     return slice2(arrayLike).filter(predicate)[0];
-  } // ../splide/src/js/utils/dom/toggleClass/toggleClass.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/toggleClass/toggleClass.ts
 
 
   function toggleClass2(elm, classes, add) {
@@ -266,34 +267,34 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         }
       });
     }
-  } // ../splide/src/js/utils/dom/addClass/addClass.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/addClass/addClass.ts
 
 
   function addClass2(elm, classes) {
-    toggleClass2(elm, classes, true);
-  } // ../splide/src/js/utils/dom/append/append.ts
+    toggleClass2(elm, isString2(classes) ? classes.split(" ") : classes, true);
+  } // node_modules/@splidejs/splide/src/js/utils/dom/append/append.ts
 
 
   function append2(parent, children3) {
     forEach2(children3, parent.appendChild.bind(parent));
-  } // ../splide/src/js/utils/dom/matches/matches.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/matches/matches.ts
 
 
   function matches2(elm, selector) {
     return (elm["msMatchesSelector"] || elm.matches).call(elm, selector);
-  } // ../splide/src/js/utils/dom/children/children.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/children/children.ts
 
 
   function children2(parent, selector) {
     return parent ? slice2(parent.children).filter(function (child3) {
       return matches2(child3, selector);
     }) : [];
-  } // ../splide/src/js/utils/dom/child/child.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/child/child.ts
 
 
   function child2(parent, selector) {
     return selector ? children2(parent, selector)[0] : parent.firstElementChild;
-  } // ../splide/src/js/utils/object/forOwn/forOwn.ts
+  } // node_modules/@splidejs/splide/src/js/utils/object/forOwn/forOwn.ts
 
 
   function forOwn2(object, iteratee) {
@@ -312,21 +313,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     }
 
     return object;
-  } // ../splide/src/js/utils/object/assign/assign.ts
+  } // node_modules/@splidejs/splide/src/js/utils/object/assign/assign.ts
 
 
   function assign2(object) {
-    for (var _len = arguments.length, sources = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      sources[_key - 1] = arguments[_key];
-    }
-
-    sources.forEach(function (source) {
+    slice2(arguments, 1).forEach(function (source) {
       forOwn2(source, function (value, key) {
         object[key] = source[key];
       });
     });
     return object;
-  } // ../splide/src/js/utils/object/merge/merge.ts
+  } // node_modules/@splidejs/splide/src/js/utils/object/merge/merge.ts
 
 
   function merge2(object, source) {
@@ -340,7 +337,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       }
     });
     return object;
-  } // ../splide/src/js/utils/dom/removeAttribute/removeAttribute.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/removeAttribute/removeAttribute.ts
 
 
   function removeAttribute2(elm, attrs) {
@@ -349,7 +346,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         elm.removeAttribute(attr);
       });
     }
-  } // ../splide/src/js/utils/dom/setAttribute/setAttribute.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/setAttribute/setAttribute.ts
 
 
   function setAttribute2(elm, attrs, value) {
@@ -360,26 +357,19 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     } else {
       isNull2(value) ? removeAttribute2(elm, attrs) : elm.setAttribute(attrs, String(value));
     }
-  } // ../splide/src/js/utils/dom/create/create.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/create/create.ts
 
 
   function create2(tag, attrs, parent) {
     var elm = document.createElement(tag);
 
     if (attrs) {
-      if (isString2(attrs) || isArray2(attrs)) {
-        addClass2(elm, attrs);
-      } else {
-        setAttribute2(elm, attrs);
-      }
+      isString2(attrs) ? addClass2(elm, attrs) : setAttribute2(elm, attrs);
     }
 
-    if (parent) {
-      append2(parent, elm);
-    }
-
+    parent && append2(parent, elm);
     return elm;
-  } // ../splide/src/js/utils/dom/style/style.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/style/style.ts
 
 
   function style2(elm, styles) {
@@ -392,19 +382,19 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         elm.style[key] = "" + value;
       }
     });
-  } // ../splide/src/js/utils/dom/display/display.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/display/display.ts
 
 
   function display2(elm, display3) {
     style2(elm, {
       display: display3
     });
-  } // ../splide/src/js/utils/dom/getAttribute/getAttribute.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/getAttribute/getAttribute.ts
 
 
   function getAttribute2(elm, attr) {
     return elm.getAttribute(attr);
-  } // ../splide/src/js/utils/dom/remove/remove.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/remove/remove.ts
 
 
   function remove2(nodes) {
@@ -413,28 +403,31 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         node.parentNode.removeChild(node);
       }
     });
-  } // ../splide/src/js/utils/dom/queryAll/queryAll.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/queryAll/queryAll.ts
 
 
   function queryAll2(parent, selector) {
     return slice2(parent.querySelectorAll(selector));
-  } // ../splide/src/js/utils/dom/removeClass/removeClass.ts
+  } // node_modules/@splidejs/splide/src/js/utils/dom/removeClass/removeClass.ts
 
 
   function removeClass2(elm, classes) {
     toggleClass2(elm, classes, false);
-  } // ../splide/src/js/constants/project.ts
+  } // node_modules/@splidejs/splide/src/js/constants/project.ts
 
 
-  var PROJECT_CODE2 = "splide"; // ../splide/src/js/utils/error/error/error.ts
+  var PROJECT_CODE2 = "splide"; // node_modules/@splidejs/splide/src/js/utils/error/error/error.ts
 
   function error(message) {
     console.error("[" + PROJECT_CODE2 + "] " + message);
-  } // ../splide/src/js/utils/math/clamp/clamp.ts
+  } // node_modules/@splidejs/splide/src/js/utils/math/math/math.ts
 
 
-  var max2 = Math.max,
-      min2 = Math.min;
+  var min2 = Math.min,
+      max2 = Math.max,
+      floor2 = Math.floor,
+      ceil2 = Math.ceil,
+      abs2 = Math.abs; // node_modules/@splidejs/splide/src/js/utils/math/clamp/clamp.ts
 
   function clamp2(number, x, y) {
     var minimum = min2(x, y);
@@ -2352,9 +2345,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }; // src/js/classes/PlayerUI.ts
 
   var PlayerUI = /*#__PURE__*/function () {
-    function PlayerUI(Splide4, slide) {
+    function PlayerUI(Splide5, slide) {
       this.event = EventBus();
-      this.Splide = Splide4;
+      this.Splide = Splide5;
       this.slide = slide;
       this.init();
       this.create();
@@ -2440,10 +2433,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var VIDEO_PLAYER_MAP = [[YOUTUBE_DATA_ATTRIBUTE, YouTubePlayer], [VIMEO_DATA_ATTRIBUTE, VimeoPlayer], [HTML_VIDEO__DATA_ATTRIBUTE, HTMLVideoPlayer]];
 
   var Player2 = /*#__PURE__*/function () {
-    function Player2(Splide4, slide) {
-      this.Splide = Splide4;
+    function Player2(Splide5, slide) {
+      this.Splide = Splide5;
       this.slide = slide;
-      this.event = EventInterface(Splide4);
+      this.event = EventInterface(Splide5);
       this.options = merge2(merge2({}, DEFAULTS2), this.Splide.options.video);
       this.createPlayer(slide);
 
@@ -2558,13 +2551,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }(); // src/js/extensions/Video/Video.ts
 
 
-  function Video(Splide4, Components, options) {
+  function Video(Splide5, Components2, options) {
     var players = [];
 
     function mount() {
-      Components.Slides.forEach(function (Slide2) {
-        players.push(new Player2(Splide4, Slide2.slide));
+      Components2.Slides.forEach(function (Slide2) {
+        players.push(new Player2(Splide5, Slide2.slide));
       });
+      Splide5.emit(EVENT_RESIZE);
     }
 
     function destroy() {
