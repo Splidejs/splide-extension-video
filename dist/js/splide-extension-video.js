@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.5.0
+ * Version  : 0.5.1
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -88,7 +88,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       forEachEvent(events, function (event, namespace) {
         var eventHandlers = handlers[event];
         handlers[event] = eventHandlers && eventHandlers.filter(function (handler) {
-          return handler._key ? handler._key !== key : handler._namespace !== namespace;
+          return handler._key ? handler._key !== key : key || handler._namespace !== namespace;
         });
       });
     }
@@ -155,10 +155,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       });
     }
 
-    function unbind(targets, events) {
+    function unbind(targets, events, callback) {
       forEachEvent(targets, events, function (target, event2) {
         listeners = listeners.filter(function (listener) {
-          if (listener[0] === target && listener[1] === event2) {
+          if (listener[0] === target && listener[1] === event2 && (!callback || listener[2] === callback)) {
             target.removeEventListener(event2, listener[2], listener[3]);
             return false;
           }
@@ -372,23 +372,24 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   } // node_modules/@splidejs/splide/src/js/utils/dom/style/style.ts
 
 
-  function style2(elm, styles) {
-    if (isString2(styles)) {
-      return getComputedStyle(elm)[styles];
+  function style2(elm, prop, value) {
+    if (isUndefined2(value)) {
+      return getComputedStyle(elm)[prop];
     }
 
-    forOwn2(styles, function (value, key) {
-      if (!isNull2(value)) {
-        elm.style[key] = "" + value;
+    if (!isNull2(value)) {
+      var style3 = elm.style;
+      value = "" + value;
+
+      if (style3[prop] !== value) {
+        style3[prop] = value;
       }
-    });
+    }
   } // node_modules/@splidejs/splide/src/js/utils/dom/display/display.ts
 
 
   function display2(elm, display3) {
-    style2(elm, {
-      display: display3
-    });
+    style2(elm, "display", display3);
   } // node_modules/@splidejs/splide/src/js/utils/dom/getAttribute/getAttribute.ts
 
 
@@ -2581,7 +2582,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }
   /*!
    * Splide.js
-   * Version  : 3.0.0
+   * Version  : 3.1.6
    * License  : MIT
    * Copyright: 2021 Naotoshi Fujita
    */

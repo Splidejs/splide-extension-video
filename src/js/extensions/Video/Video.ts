@@ -37,7 +37,6 @@ export function Video( Splide: Splide, Components: Components, options: Options 
       players.push( new Player( Splide, Slide.slide ) );
     } );
 
-
     Splide.emit( EVENT_RESIZE );
   }
 
