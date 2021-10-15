@@ -6,7 +6,7 @@
 <h1>Video - Splide Extension</h1>
 
 <p>
-The extension of the <a href="https://github.com/Splidejs/splide">Splide</a> slider library for playing and controls videos of HTML video, YouTube and Vimeo.
+The extension for assigning HTML, YouTube and Vimeo videos to slides in a <a href="https://github.com/Splidejs/splide">Splide</a> slider and controlling play/pause on slide change.
 </p>
 
 [![](https://data.jsdelivr.com/v1/package/npm/@splidejs/splide-extension-video/badge)](https://www.jsdelivr.com/package/npm/@splidejs/splide-extension-video)
