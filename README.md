@@ -12,6 +12,8 @@ The extension for assigning HTML, YouTube and Vimeo videos to slides in a <a hre
 [![](https://data.jsdelivr.com/v1/package/npm/@splidejs/splide-extension-video/badge)](https://www.jsdelivr.com/package/npm/@splidejs/splide-extension-video)
 
 <p>
+  <a href="https://splidejs.com/extensions/video/#overview">Demo</a>
+  <br>
   <a href="https://splidejs.com/extensions/video/">Getting Started</a>
   <br>
   <a href="https://splidejs.com/extensions/video/#options">Options</a>
