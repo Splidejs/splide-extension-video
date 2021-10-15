@@ -28,6 +28,8 @@ The package is available on NPM and [jsDelivr](https://www.jsdelivr.com/package/
 $ npm install @splidejs/splide-extension-video
 ```
 
+Or download files from the dist directory.
+
 ## License
 Splide is released under the MIT license.
 © 2021 Naotoshi Fujita
