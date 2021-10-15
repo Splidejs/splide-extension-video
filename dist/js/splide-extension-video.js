@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.5.1
+ * Version  : 0.5.2
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -129,7 +129,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var EVENT_MOUNTED = "mounted";
   var EVENT_MOVE = "move";
   var EVENT_MOVED = "moved";
-  var EVENT_RESIZE = "resize";
   var EVENT_DRAG = "drag";
   var EVENT_SCROLL = "scroll";
   var EVENT_SCROLLED = "scrolled";
@@ -2346,9 +2345,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }; // src/js/classes/PlayerUI.ts
 
   var PlayerUI = /*#__PURE__*/function () {
-    function PlayerUI(Splide5, slide) {
+    function PlayerUI(Splide4, slide) {
       this.event = EventBus();
-      this.Splide = Splide5;
+      this.Splide = Splide4;
       this.slide = slide;
       this.init();
       this.create();
@@ -2434,10 +2433,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var VIDEO_PLAYER_MAP = [[YOUTUBE_DATA_ATTRIBUTE, YouTubePlayer], [VIMEO_DATA_ATTRIBUTE, VimeoPlayer], [HTML_VIDEO__DATA_ATTRIBUTE, HTMLVideoPlayer]];
 
   var Player2 = /*#__PURE__*/function () {
-    function Player2(Splide5, slide) {
-      this.Splide = Splide5;
+    function Player2(Splide4, slide) {
+      this.Splide = Splide4;
       this.slide = slide;
-      this.event = EventInterface(Splide5);
+      this.event = EventInterface(Splide4);
       this.options = merge2(merge2({}, DEFAULTS2), this.Splide.options.video);
       this.createPlayer(slide);
 
@@ -2552,14 +2551,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }(); // src/js/extensions/Video/Video.ts
 
 
-  function Video(Splide5, Components2, options) {
+  function Video(Splide4, Components, options) {
     var players = [];
 
     function mount() {
-      Components2.Slides.forEach(function (Slide2) {
-        players.push(new Player2(Splide5, Slide2.slide));
+      Components.Slides.forEach(function (Slide2) {
+        players.push(new Player2(Splide4, Slide2.slide));
       });
-      Splide5.emit(EVENT_RESIZE);
+      Splide4.refresh();
     }
 
     function destroy() {

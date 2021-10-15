@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.5.1
+ * Version  : 0.5.2
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -96,7 +96,6 @@ function EventBus() {
 var EVENT_MOUNTED = "mounted";
 var EVENT_MOVE = "move";
 var EVENT_MOVED = "moved";
-var EVENT_RESIZE = "resize";
 var EVENT_DRAG = "drag";
 var EVENT_SCROLL = "scroll";
 var EVENT_SCROLLED = "scrolled";
@@ -1920,9 +1919,9 @@ var I18N2 = {
 
 // src/js/classes/PlayerUI.ts
 var PlayerUI = class {
-  constructor(Splide5, slide) {
+  constructor(Splide4, slide) {
     this.event = EventBus();
-    this.Splide = Splide5;
+    this.Splide = Splide4;
     this.slide = slide;
     this.init();
     this.create();
@@ -1992,10 +1991,10 @@ var VIDEO_PLAYER_MAP = [
   [HTML_VIDEO__DATA_ATTRIBUTE, HTMLVideoPlayer]
 ];
 var Player2 = class {
-  constructor(Splide5, slide) {
-    this.Splide = Splide5;
+  constructor(Splide4, slide) {
+    this.Splide = Splide4;
     this.slide = slide;
-    this.event = EventInterface(Splide5);
+    this.event = EventInterface(Splide4);
     this.options = merge2(merge2({}, DEFAULTS2), this.Splide.options.video);
     this.createPlayer(slide);
     if (this.player) {
@@ -2082,13 +2081,13 @@ var Player2 = class {
 };
 
 // src/js/extensions/Video/Video.ts
-function Video(Splide5, Components2, options) {
+function Video(Splide4, Components, options) {
   const players = [];
   function mount() {
-    Components2.Slides.forEach((Slide2) => {
-      players.push(new Player2(Splide5, Slide2.slide));
+    Components.Slides.forEach((Slide2) => {
+      players.push(new Player2(Splide4, Slide2.slide));
     });
-    Splide5.emit(EVENT_RESIZE);
+    Splide4.refresh();
   }
   function destroy() {
     players.forEach((player) => {
