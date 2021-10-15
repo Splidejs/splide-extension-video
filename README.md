@@ -10,8 +10,6 @@ The extension of the <a href="https://github.com/Splidejs/splide">Splide</a> sli
 </p>
 
 <p>
-  <a href="https://splidejs.com/extensions/video/">Download</a>
-  <br>
   <a href="https://splidejs.com/extensions/video/">Getting Started</a>
   <br>
   <a href="https://splidejs.com/extensions/video/#options">Options</a>
