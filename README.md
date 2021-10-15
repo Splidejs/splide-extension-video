@@ -9,6 +9,8 @@
 The extension of the <a href="https://github.com/Splidejs/splide">Splide</a> slider library for playing and controls videos of HTML video, YouTube and Vimeo.
 </p>
 
+[![](https://data.jsdelivr.com/v1/package/npm/@splidejs/splide-extension-video/badge)](https://www.jsdelivr.com/package/npm/@splidejs/splide-extension-video)
+
 <p>
   <a href="https://splidejs.com/extensions/video/">Getting Started</a>
   <br>

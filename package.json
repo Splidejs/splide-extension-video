@@ -71,6 +71,7 @@
     "build:all": "npm run build:js && npm run build:module && npm run build:css && npm run build:types",
     "jest": "jest --clearCache && jest",
     "eslint": "eslint src",
-    "stylelint": "npx stylelint --fix ./src/css/**/*.scss"
+    "stylelint": "npx stylelint --fix ./src/css/**/*.scss",
+    "serve": "node scripts/server.js"
   }
 }
