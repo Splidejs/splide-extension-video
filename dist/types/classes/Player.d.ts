@@ -30,6 +30,10 @@ export declare class Player {
      */
     private event;
     /**
+     * Indicates whether the player is disabled or not.
+     */
+    private disabled;
+    /**
      * The Player constructor.
      *
      * @param Splide - A Splide instance.
@@ -100,5 +104,9 @@ export declare class Player {
      * Destroys the instance.
      */
     destroy(): void;
+    /**
+     * Disables the play/pause control.
+     */
+    disable(disabled: boolean): void;
 }
 //# sourceMappingURL=../../../src/js/classes/Player.d.ts.map

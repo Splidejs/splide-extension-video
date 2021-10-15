@@ -10,7 +10,7 @@ import {
   Splide,
 } from '@splidejs/splide';
 import { getAttribute, merge, toggleClass } from '@splidejs/splide/src/js/utils';
-import { CLASS_PLAYING } from '../constants/classes';
+import { CLASS_PLAYING, CLASS_VIDEO_DISABLED } from '../constants/classes';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
 import { DEFAULTS } from '../constants/defaults';
 import { EVENT_VIDEO_CLICK, EVENT_VIDEO_ENDED, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
@@ -68,6 +68,11 @@ export class Player {
    * The EventInterface object.
    */
   private event: EventInterfaceObject;
+
+  /**
+   * Indicates whether the player is disabled or not.
+   */
+  private disabled: boolean;
 
   /**
    * The Player constructor.
@@ -211,7 +216,7 @@ export class Player {
    * Starts the video.
    */
   play(): void {
-    if ( this.player ) {
+    if ( this.player && ! this.disabled ) {
       this.player.play();
     }
   }
@@ -220,7 +225,7 @@ export class Player {
    * Pauses the video.
    */
   pause(): void {
-    if ( this.player ) {
+    if ( this.player && ! this.disabled ) {
       this.player.pause();
     }
   }
@@ -233,5 +238,15 @@ export class Player {
       this.ui.destroy();
       this.player.destroy();
     }
+
+    this.disable( false );
+  }
+
+  /**
+   * Disables the play/pause control.
+   */
+  disable( disabled: boolean ): void {
+    this.disabled = disabled;
+    toggleClass( this.Splide.root, CLASS_VIDEO_DISABLED, disabled );
   }
 }

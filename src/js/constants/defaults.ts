@@ -10,4 +10,4 @@ export const DEFAULTS: VideoOptions = {
   loop        : false,
   mute        : false,
   volume      : 0.2,
-}
+};

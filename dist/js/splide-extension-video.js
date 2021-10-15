@@ -439,7 +439,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var CLASS_VIDEO = "splide__video";
   var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
   var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play";
-  var CLASS_PLAYING = "is-playing"; // src/js/constants/data-attributes.ts
+  var CLASS_PLAYING = "is-playing";
+  var CLASS_VIDEO_DISABLED = "is-video-disabled"; // src/js/constants/data-attributes.ts
 
   var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
   var VIMEO_DATA_ATTRIBUTE = "data-splide-vimeo";
@@ -2529,13 +2530,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto7.play = function play() {
-      if (this.player) {
+      if (this.player && !this.disabled) {
         this.player.play();
       }
     };
 
     _proto7.pause = function pause() {
-      if (this.player) {
+      if (this.player && !this.disabled) {
         this.player.pause();
       }
     };
@@ -2545,13 +2546,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         this.ui.destroy();
         this.player.destroy();
       }
+
+      this.disable(false);
+    };
+
+    _proto7.disable = function disable(disabled) {
+      this.disabled = disabled;
+      toggleClass2(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
     };
 
     return Player2;
   }(); // src/js/extensions/Video/Video.ts
 
 
-  function Video(Splide4, Components, options) {
+  function Video(Splide4, Components) {
     var players = [];
 
     function mount() {
@@ -2567,9 +2575,23 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       });
     }
 
+    function pause() {
+      players.forEach(function (player) {
+        player.pause();
+      });
+    }
+
+    function disable(disabled) {
+      players.forEach(function (player) {
+        player.disable(disabled);
+      });
+    }
+
     return {
       mount: mount,
-      destroy: destroy
+      destroy: destroy,
+      pause: pause,
+      disable: disable
     };
   } // src/js/build/default.ts
 

@@ -60,7 +60,7 @@ export class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
       videoId,
       playerVars: assign( {
         controls      : options.hideControls ? 0 : 1,
-        iv_load_policy: 3,
+        iv_load_policy: 3, // eslint-disable-line camelcase
         loop          : options.loop ? 1 : 0,
         playlist      : options.loop ? videoId : undefined,
         rel           : 0,

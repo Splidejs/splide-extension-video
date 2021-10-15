@@ -1,4 +1,4 @@
-import { BaseComponent, Components, EVENT_RESIZE, Options, Splide } from '@splidejs/splide';
+import { BaseComponent, Components, Splide } from '@splidejs/splide';
 import { Player } from '../../classes/Player';
 import { VideoOptions } from '../../types/options';
 
@@ -13,17 +13,26 @@ declare module '@splidejs/splide' {
 }
 
 /**
+ * The interface for the Video component.
+ *
+ * @since 0.5.3
+ */
+export interface VideoComponent extends BaseComponent {
+  pause(): void;
+  disable( disabled: boolean ): void;
+}
+
+/**
  * The extension for embedding videos to slides.
  *
  * @since 0.5.0
  *
  * @param Splide     - A Splide instance.
  * @param Components - A collection of components.
- * @param options    - Options.
  *
  * @return A Video component object.
  */
-export function Video( Splide: Splide, Components: Components, options: Options ): BaseComponent {
+export function Video( Splide: Splide, Components: Components ): VideoComponent {
   /**
    * Stores Player instances.
    */
@@ -49,8 +58,30 @@ export function Video( Splide: Splide, Components: Components, options: Options 
     } );
   }
 
+  /**
+   * Pauses the playing video.
+   */
+  function pause(): void {
+    players.forEach( player => {
+      player.pause();
+    } );
+  }
+
+  /**
+   * Disables play/pause.
+   *
+   * @param disabled - Set `true` for disabling the play/pause control.
+   */
+  function disable( disabled: boolean ): void {
+    players.forEach( player => {
+      player.disable( disabled );
+    } );
+  }
+
   return {
     mount,
     destroy,
-  }
+    pause,
+    disable,
+  };
 }

@@ -370,6 +370,7 @@ var CLASS_VIDEO = "splide__video";
 var CLASS_VIDEO_WRAPPER = `${CLASS_VIDEO}__wrapper`;
 var CLASS_VIDEO_PLAY_BUTTON = `${CLASS_VIDEO}__play`;
 var CLASS_PLAYING = "is-playing";
+var CLASS_VIDEO_DISABLED = "is-video-disabled";
 
 // src/js/constants/data-attributes.ts
 var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
@@ -2059,12 +2060,12 @@ var Player2 = class {
     toggleClass2(this.Splide.root, CLASS_PLAYING, add);
   }
   play() {
-    if (this.player) {
+    if (this.player && !this.disabled) {
       this.player.play();
     }
   }
   pause() {
-    if (this.player) {
+    if (this.player && !this.disabled) {
       this.player.pause();
     }
   }
@@ -2073,11 +2074,16 @@ var Player2 = class {
       this.ui.destroy();
       this.player.destroy();
     }
+    this.disable(false);
+  }
+  disable(disabled) {
+    this.disabled = disabled;
+    toggleClass2(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
   }
 };
 
 // src/js/extensions/Video/Video.ts
-function Video(Splide4, Components, options) {
+function Video(Splide4, Components) {
   const players = [];
   function mount() {
     Components.Slides.forEach((Slide2) => {
@@ -2090,9 +2096,21 @@ function Video(Splide4, Components, options) {
       player.destroy();
     });
   }
+  function pause() {
+    players.forEach((player) => {
+      player.pause();
+    });
+  }
+  function disable(disabled) {
+    players.forEach((player) => {
+      player.disable(disabled);
+    });
+  }
   return {
     mount,
-    destroy
+    destroy,
+    pause,
+    disable
   };
 }
 /*!
