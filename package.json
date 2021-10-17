@@ -1,6 +1,6 @@
 {
   "name": "@splidejs/splide-extension-video",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "The Splide extension for embedding videos.",
   "author": "Naotoshi Fujita",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "@babel/preset-env": "^7.15.4",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@splidejs/splide": "^3.1.6",
+    "@splidejs/splide": "^3.1.7",
     "@types/jest": "^27.0.1",
     "@types/vimeo__player": "^2.10.1",
     "@types/youtube": "0.0.45",
