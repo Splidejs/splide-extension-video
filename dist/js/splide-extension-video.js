@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.5.4
+ * Version  : 0.5.5
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -44,9 +44,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     return arrayProto.slice.call(arrayLike, start, end);
   }
 
-  function forOwn(object, iteratee) {
+  function forOwn(object, iteratee, right) {
     if (object) {
       var keys = Object.keys(object);
+      keys = right ? keys.reverse() : keys;
 
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
@@ -296,9 +297,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   } // node_modules/@splidejs/splide/src/js/utils/object/forOwn/forOwn.ts
 
 
-  function forOwn2(object, iteratee) {
+  function forOwn2(object, iteratee, right) {
     if (object) {
       var keys = Object.keys(object);
+      keys = right ? keys.reverse() : keys;
 
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
@@ -2603,7 +2605,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   }
   /*!
    * Splide.js
-   * Version  : 3.1.7
+   * Version  : 3.1.9
    * License  : MIT
    * Copyright: 2021 Naotoshi Fujita
    */
