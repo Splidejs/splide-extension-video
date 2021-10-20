@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.5.3
+ * Version  : 0.5.4
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -26,9 +26,10 @@ var arrayProto = Array.prototype;
 function slice(arrayLike, start, end) {
   return arrayProto.slice.call(arrayLike, start, end);
 }
-function forOwn(object, iteratee) {
+function forOwn(object, iteratee, right) {
   if (object) {
-    const keys = Object.keys(object);
+    let keys = Object.keys(object);
+    keys = right ? keys.reverse() : keys;
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       if (key !== "__proto__") {
@@ -235,9 +236,10 @@ function child2(parent, selector) {
 }
 
 // node_modules/@splidejs/splide/src/js/utils/object/forOwn/forOwn.ts
-function forOwn2(object, iteratee) {
+function forOwn2(object, iteratee, right) {
   if (object) {
-    const keys = Object.keys(object);
+    let keys = Object.keys(object);
+    keys = right ? keys.reverse() : keys;
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       if (key !== "__proto__") {
@@ -2115,7 +2117,7 @@ function Video(Splide4, Components) {
 }
 /*!
  * Splide.js
- * Version  : 3.1.7
+ * Version  : 3.1.8
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */

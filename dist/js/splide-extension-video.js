@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.5.3
+ * Version  : 0.5.4
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
