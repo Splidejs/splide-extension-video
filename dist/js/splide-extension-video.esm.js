@@ -2117,7 +2117,7 @@ function Video(Splide4, Components) {
 }
 /*!
  * Splide.js
- * Version  : 3.3.0
+ * Version  : 3.4.0
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
