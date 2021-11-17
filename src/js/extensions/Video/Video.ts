@@ -10,6 +10,10 @@ declare module '@splidejs/splide' {
   interface Options {
     video?: VideoOptions;
   }
+
+  interface Components {
+    Video?: VideoComponent;
+  }
 }
 
 /**
