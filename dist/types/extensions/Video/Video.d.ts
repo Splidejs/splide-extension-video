@@ -17,6 +17,7 @@ declare module '@splidejs/splide' {
  * @since 0.5.3
  */
 export interface VideoComponent extends BaseComponent {
+    play(index?: number): void;
     pause(): void;
     disable(disabled: boolean): void;
 }

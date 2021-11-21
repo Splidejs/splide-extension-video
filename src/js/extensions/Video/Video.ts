@@ -1,4 +1,5 @@
 import { BaseComponent, Components, Splide } from '@splidejs/splide';
+import { forOwn } from '@splidejs/splide/src/js/utils';
 import { Player } from '../../classes/Player';
 import { VideoOptions } from '../../types/options';
 
@@ -22,6 +23,7 @@ declare module '@splidejs/splide' {
  * @since 0.5.3
  */
 export interface VideoComponent extends BaseComponent {
+  play( index?: number ): void;
   pause(): void;
   disable( disabled: boolean ): void;
 }
@@ -40,14 +42,14 @@ export function Video( Splide: Splide, Components: Components ): VideoComponent 
   /**
    * Stores Player instances.
    */
-  const players: Player[] = [];
+  const players: Record<number, Player> = {};
 
   /**
    * Called when the extension is mounted.
    */
   function mount(): void {
     Components.Slides.forEach( Slide => {
-      players.push( new Player( Splide, Slide.slide ) );
+      players[ Slide.index ] = new Player( Splide, Slide.slide );
     } );
 
     Splide.refresh();
@@ -57,16 +59,29 @@ export function Video( Splide: Splide, Components: Components ): VideoComponent 
    * Destroys the extension.
    */
   function destroy(): void {
-    players.forEach( player => {
+    forOwn( players, player => {
       player.destroy();
     } );
+  }
+
+  /**
+   * Plays the video at the active or specified index.
+   *
+   * @param index - A slide index.
+   */
+  function play( index = Splide.index ): void {
+    const player = players[ index ];
+
+    if ( player ) {
+      player.play();
+    }
   }
 
   /**
    * Pauses the playing video.
    */
   function pause(): void {
-    players.forEach( player => {
+    forOwn( players, player => {
       player.pause();
     } );
   }
@@ -77,7 +92,7 @@ export function Video( Splide: Splide, Components: Components ): VideoComponent 
    * @param disabled - Set `true` for disabling the play/pause control.
    */
   function disable( disabled: boolean ): void {
-    players.forEach( player => {
+    forOwn( players, player => {
       player.disable( disabled );
     } );
   }
@@ -85,6 +100,7 @@ export function Video( Splide: Splide, Components: Components ): VideoComponent 
   return {
     mount,
     destroy,
+    play,
     pause,
     disable,
   };

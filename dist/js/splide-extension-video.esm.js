@@ -1,32 +1,244 @@
 /*!
  * Splide.js
- * Version  : 0.5.14
+ * Version  : 0.6.0
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
-// node_modules/@splidejs/splide/dist/js/splide.esm.js
-var DEFAULT_EVENT_PRIORITY = 10;
+// node_modules/@splidejs/splide/src/js/utils/type/type.ts
+function isObject(subject) {
+  return !isNull(subject) && typeof subject === "object";
+}
 function isArray(subject) {
   return Array.isArray(subject);
 }
+function isFunction(subject) {
+  return typeof subject === "function";
+}
+function isString(subject) {
+  return typeof subject === "string";
+}
+function isUndefined(subject) {
+  return typeof subject === "undefined";
+}
+function isNull(subject) {
+  return subject === null;
+}
+function isHTMLElement(subject) {
+  return subject instanceof HTMLElement;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/array/toArray/toArray.ts
 function toArray(value) {
   return isArray(value) ? value : [value];
 }
+
+// node_modules/@splidejs/splide/src/js/utils/array/forEach/forEach.ts
 function forEach(values, iteratee) {
   toArray(values).forEach(iteratee);
 }
-function includes(array, value) {
-  return array.indexOf(value) > -1;
-}
-function push(array, items) {
-  array.push(...toArray(items));
-  return array;
-}
+
+// node_modules/@splidejs/splide/src/js/utils/array/index.ts
 var arrayProto = Array.prototype;
+
+// node_modules/@splidejs/splide/src/js/utils/arrayLike/slice/slice.ts
 function slice(arrayLike, start, end) {
   return arrayProto.slice.call(arrayLike, start, end);
 }
+
+// node_modules/@splidejs/splide/src/js/utils/arrayLike/find/find.ts
+function find(arrayLike, predicate) {
+  return slice(arrayLike).filter(predicate)[0];
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/toggleClass/toggleClass.ts
+function toggleClass(elm, classes, add) {
+  if (elm) {
+    forEach(classes, (name) => {
+      if (name) {
+        elm.classList[add ? "add" : "remove"](name);
+      }
+    });
+  }
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/addClass/addClass.ts
+function addClass(elm, classes) {
+  toggleClass(elm, isString(classes) ? classes.split(" ") : classes, true);
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/append/append.ts
+function append(parent, children3) {
+  forEach(children3, parent.appendChild.bind(parent));
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/matches/matches.ts
+function matches(elm, selector) {
+  return isHTMLElement(elm) && (elm["msMatchesSelector"] || elm.matches).call(elm, selector);
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/children/children.ts
+function children(parent, selector) {
+  return parent ? slice(parent.children).filter((child3) => matches(child3, selector)) : [];
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/child/child.ts
+function child(parent, selector) {
+  return selector ? children(parent, selector)[0] : parent.firstElementChild;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/object/forOwn/forOwn.ts
 function forOwn(object, iteratee, right) {
+  if (object) {
+    let keys = Object.keys(object);
+    keys = right ? keys.reverse() : keys;
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (key !== "__proto__") {
+        if (iteratee(object[key], key) === false) {
+          break;
+        }
+      }
+    }
+  }
+  return object;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/object/assign/assign.ts
+function assign(object) {
+  slice(arguments, 1).forEach((source) => {
+    forOwn(source, (value, key) => {
+      object[key] = source[key];
+    });
+  });
+  return object;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/object/merge/merge.ts
+function merge(object, source) {
+  forOwn(source, (value, key) => {
+    if (isArray(value)) {
+      object[key] = value.slice();
+    } else if (isObject(value)) {
+      object[key] = merge(isObject(object[key]) ? object[key] : {}, value);
+    } else {
+      object[key] = value;
+    }
+  });
+  return object;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/removeAttribute/removeAttribute.ts
+function removeAttribute(elm, attrs) {
+  if (elm) {
+    forEach(attrs, (attr) => {
+      elm.removeAttribute(attr);
+    });
+  }
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/setAttribute/setAttribute.ts
+function setAttribute(elm, attrs, value) {
+  if (isObject(attrs)) {
+    forOwn(attrs, (value2, name) => {
+      setAttribute(elm, name, value2);
+    });
+  } else {
+    isNull(value) ? removeAttribute(elm, attrs) : elm.setAttribute(attrs, String(value));
+  }
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/create/create.ts
+function create(tag, attrs, parent) {
+  const elm = document.createElement(tag);
+  if (attrs) {
+    isString(attrs) ? addClass(elm, attrs) : setAttribute(elm, attrs);
+  }
+  parent && append(parent, elm);
+  return elm;
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/style/style.ts
+function style(elm, prop, value) {
+  if (isUndefined(value)) {
+    return getComputedStyle(elm)[prop];
+  }
+  if (!isNull(value)) {
+    const { style: style3 } = elm;
+    value = `${value}`;
+    if (style3[prop] !== value) {
+      style3[prop] = value;
+    }
+  }
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/display/display.ts
+function display(elm, display3) {
+  style(elm, "display", display3);
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/getAttribute/getAttribute.ts
+function getAttribute(elm, attr) {
+  return elm.getAttribute(attr);
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/remove/remove.ts
+function remove(nodes) {
+  forEach(nodes, (node) => {
+    if (node && node.parentNode) {
+      node.parentNode.removeChild(node);
+    }
+  });
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/queryAll/queryAll.ts
+function queryAll(parent, selector) {
+  return slice(parent.querySelectorAll(selector));
+}
+
+// node_modules/@splidejs/splide/src/js/utils/dom/removeClass/removeClass.ts
+function removeClass(elm, classes) {
+  toggleClass(elm, classes, false);
+}
+
+// node_modules/@splidejs/splide/src/js/constants/project.ts
+var PROJECT_CODE = "splide";
+
+// node_modules/@splidejs/splide/src/js/utils/error/error/error.ts
+function error(message) {
+  console.error(`[${PROJECT_CODE}] ${message}`);
+}
+
+// node_modules/@splidejs/splide/src/js/utils/math/math/math.ts
+var { min, max, floor, ceil, abs } = Math;
+
+// node_modules/@splidejs/splide/src/js/utils/math/clamp/clamp.ts
+function clamp(number, x, y) {
+  const minimum = min(x, y);
+  const maximum = max(x, y);
+  return min(max(minimum, number), maximum);
+}
+var DEFAULT_EVENT_PRIORITY = 10;
+function isArray2(subject) {
+  return Array.isArray(subject);
+}
+function toArray2(value) {
+  return isArray2(value) ? value : [value];
+}
+function forEach2(values, iteratee) {
+  toArray2(values).forEach(iteratee);
+}
+function includes2(array, value) {
+  return array.indexOf(value) > -1;
+}
+function push2(array, items) {
+  array.push(...toArray2(items));
+  return array;
+}
+var arrayProto2 = Array.prototype;
+function slice2(arrayLike, start, end) {
+  return arrayProto2.slice.call(arrayLike, start, end);
+}
+function forOwn2(object, iteratee, right) {
   if (object) {
     let keys = Object.keys(object);
     keys = right ? keys.reverse() : keys;
@@ -46,7 +258,7 @@ function EventBus() {
   function on(events, callback, key, priority = DEFAULT_EVENT_PRIORITY) {
     forEachEvent(events, (event, namespace) => {
       handlers[event] = handlers[event] || [];
-      push(handlers[event], {
+      push2(handlers[event], {
         _event: event,
         _callback: callback,
         _namespace: namespace,
@@ -64,20 +276,20 @@ function EventBus() {
     });
   }
   function offBy(key) {
-    forOwn(handlers, (eventHandlers, event) => {
+    forOwn2(handlers, (eventHandlers, event) => {
       off(event, key);
     });
   }
   function emit(event) {
     (handlers[event] || []).forEach((handler) => {
-      handler._callback.apply(handler, slice(arguments, 1));
+      handler._callback.apply(handler, slice2(arguments, 1));
     });
   }
   function destroy() {
     handlers = {};
   }
   function forEachEvent(events, iteratee) {
-    toArray(events).join(" ").split(" ").forEach((eventNS) => {
+    toArray2(events).join(" ").split(" ").forEach((eventNS) => {
       const fragments = eventNS.split(".");
       iteratee(fragments[0], fragments[1]);
     });
@@ -125,7 +337,7 @@ function EventInterface(Splide22) {
     });
   }
   function forEachEvent(targets, events, iteratee) {
-    forEach(targets, (target) => {
+    forEach2(targets, (target) => {
       if (target) {
         events.split(" ").forEach(iteratee.bind(null, target));
       }
@@ -151,223 +363,9 @@ function State(initialState) {
     state = value;
   }
   function is(states) {
-    return includes(toArray(states), state);
+    return includes2(toArray2(states), state);
   }
   return { set, is };
-}
-
-// node_modules/@splidejs/splide/src/js/utils/type/type.ts
-function isObject2(subject) {
-  return !isNull2(subject) && typeof subject === "object";
-}
-function isArray2(subject) {
-  return Array.isArray(subject);
-}
-function isFunction2(subject) {
-  return typeof subject === "function";
-}
-function isString2(subject) {
-  return typeof subject === "string";
-}
-function isUndefined2(subject) {
-  return typeof subject === "undefined";
-}
-function isNull2(subject) {
-  return subject === null;
-}
-function isHTMLElement2(subject) {
-  return subject instanceof HTMLElement;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/array/toArray/toArray.ts
-function toArray2(value) {
-  return isArray2(value) ? value : [value];
-}
-
-// node_modules/@splidejs/splide/src/js/utils/array/forEach/forEach.ts
-function forEach2(values, iteratee) {
-  toArray2(values).forEach(iteratee);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/array/index.ts
-var arrayProto2 = Array.prototype;
-
-// node_modules/@splidejs/splide/src/js/utils/arrayLike/slice/slice.ts
-function slice2(arrayLike, start, end) {
-  return arrayProto2.slice.call(arrayLike, start, end);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/arrayLike/find/find.ts
-function find2(arrayLike, predicate) {
-  return slice2(arrayLike).filter(predicate)[0];
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/toggleClass/toggleClass.ts
-function toggleClass2(elm, classes, add) {
-  if (elm) {
-    forEach2(classes, (name) => {
-      if (name) {
-        elm.classList[add ? "add" : "remove"](name);
-      }
-    });
-  }
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/addClass/addClass.ts
-function addClass2(elm, classes) {
-  toggleClass2(elm, isString2(classes) ? classes.split(" ") : classes, true);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/append/append.ts
-function append2(parent, children3) {
-  forEach2(children3, parent.appendChild.bind(parent));
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/matches/matches.ts
-function matches2(elm, selector) {
-  return isHTMLElement2(elm) && (elm["msMatchesSelector"] || elm.matches).call(elm, selector);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/children/children.ts
-function children2(parent, selector) {
-  return parent ? slice2(parent.children).filter((child3) => matches2(child3, selector)) : [];
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/child/child.ts
-function child2(parent, selector) {
-  return selector ? children2(parent, selector)[0] : parent.firstElementChild;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/object/forOwn/forOwn.ts
-function forOwn2(object, iteratee, right) {
-  if (object) {
-    let keys = Object.keys(object);
-    keys = right ? keys.reverse() : keys;
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (key !== "__proto__") {
-        if (iteratee(object[key], key) === false) {
-          break;
-        }
-      }
-    }
-  }
-  return object;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/object/assign/assign.ts
-function assign2(object) {
-  slice2(arguments, 1).forEach((source) => {
-    forOwn2(source, (value, key) => {
-      object[key] = source[key];
-    });
-  });
-  return object;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/object/merge/merge.ts
-function merge2(object, source) {
-  forOwn2(source, (value, key) => {
-    if (isArray2(value)) {
-      object[key] = value.slice();
-    } else if (isObject2(value)) {
-      object[key] = merge2(isObject2(object[key]) ? object[key] : {}, value);
-    } else {
-      object[key] = value;
-    }
-  });
-  return object;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/removeAttribute/removeAttribute.ts
-function removeAttribute2(elm, attrs) {
-  if (elm) {
-    forEach2(attrs, (attr) => {
-      elm.removeAttribute(attr);
-    });
-  }
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/setAttribute/setAttribute.ts
-function setAttribute2(elm, attrs, value) {
-  if (isObject2(attrs)) {
-    forOwn2(attrs, (value2, name) => {
-      setAttribute2(elm, name, value2);
-    });
-  } else {
-    isNull2(value) ? removeAttribute2(elm, attrs) : elm.setAttribute(attrs, String(value));
-  }
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/create/create.ts
-function create2(tag, attrs, parent) {
-  const elm = document.createElement(tag);
-  if (attrs) {
-    isString2(attrs) ? addClass2(elm, attrs) : setAttribute2(elm, attrs);
-  }
-  parent && append2(parent, elm);
-  return elm;
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/style/style.ts
-function style2(elm, prop, value) {
-  if (isUndefined2(value)) {
-    return getComputedStyle(elm)[prop];
-  }
-  if (!isNull2(value)) {
-    const { style: style3 } = elm;
-    value = `${value}`;
-    if (style3[prop] !== value) {
-      style3[prop] = value;
-    }
-  }
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/display/display.ts
-function display2(elm, display3) {
-  style2(elm, "display", display3);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/getAttribute/getAttribute.ts
-function getAttribute2(elm, attr) {
-  return elm.getAttribute(attr);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/remove/remove.ts
-function remove2(nodes) {
-  forEach2(nodes, (node) => {
-    if (node && node.parentNode) {
-      node.parentNode.removeChild(node);
-    }
-  });
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/queryAll/queryAll.ts
-function queryAll2(parent, selector) {
-  return slice2(parent.querySelectorAll(selector));
-}
-
-// node_modules/@splidejs/splide/src/js/utils/dom/removeClass/removeClass.ts
-function removeClass2(elm, classes) {
-  toggleClass2(elm, classes, false);
-}
-
-// node_modules/@splidejs/splide/src/js/constants/project.ts
-var PROJECT_CODE2 = "splide";
-
-// node_modules/@splidejs/splide/src/js/utils/error/error/error.ts
-function error(message) {
-  console.error(`[${PROJECT_CODE2}] ${message}`);
-}
-
-// node_modules/@splidejs/splide/src/js/utils/math/math/math.ts
-var { min: min2, max: max2, floor: floor2, ceil: ceil2, abs: abs2 } = Math;
-
-// node_modules/@splidejs/splide/src/js/utils/math/clamp/clamp.ts
-function clamp2(number, x, y) {
-  const minimum = min2(x, y);
-  const maximum = max2(x, y);
-  return min2(max2(minimum, number), maximum);
 }
 
 // src/js/constants/classes.ts
@@ -505,12 +503,12 @@ var HTMLVideoPlayer = class extends AbstractVideoPlayer {
   }
   createPlayer(videoId) {
     const { options, options: { playerOptions = {} } } = this;
-    const player = create2("video", { src: videoId }, this.target);
+    const player = create("video", { src: videoId }, this.target);
     const on = player.addEventListener.bind(player);
-    assign2(player, {
+    assign(player, {
       controls: !options.hideControls,
       loop: options.loop,
-      volume: clamp2(options.volume, 0, 1),
+      volume: clamp(options.volume, 0, 1),
       muted: options.mute
     }, playerOptions.htmlVideo || {});
     on("play", this.onPlay);
@@ -1787,7 +1785,7 @@ var VimeoPlayer = class extends AbstractVideoPlayer {
   createPlayer(videoId) {
     const { options, options: { playerOptions = {} } } = this;
     const vimeoOptions = videoId.indexOf("http") === 0 ? { url: videoId } : { id: +videoId };
-    const player = new player_es_default(this.target, assign2(vimeoOptions, {
+    const player = new player_es_default(this.target, assign(vimeoOptions, {
       controls: !options.hideControls,
       loop: options.loop,
       muted: options.mute
@@ -1797,7 +1795,7 @@ var VimeoPlayer = class extends AbstractVideoPlayer {
     player.on("ended", this.onEnded);
     player.ready().then(this.onPlayerReady, this.onError);
     if (!player.getMuted()) {
-      player.setVolume(clamp2(options.volume, 0, 1));
+      player.setVolume(clamp(options.volume, 0, 1));
     }
     return player;
   }
@@ -1817,20 +1815,20 @@ var VimeoPlayer = class extends AbstractVideoPlayer {
 var YOUTUBE_API_SRC = "//www.youtube.com/player_api";
 var YouTubeIframeAPILoader = class {
   load(callback) {
-    if (window.YT && isFunction2(window.YT.Player)) {
+    if (window.YT && isFunction(window.YT.Player)) {
       return callback();
     }
     this.attachCallback(callback);
     if (this.shouldLoad()) {
-      create2("script", { src: `${location.protocol}${YOUTUBE_API_SRC}` }, document.head);
+      create("script", { src: `${location.protocol}${YOUTUBE_API_SRC}` }, document.head);
     }
   }
   shouldLoad() {
-    return !queryAll2(document, "script").some((script) => script.src.replace(/^https?:/, "") === YOUTUBE_API_SRC);
+    return !queryAll(document, "script").some((script) => script.src.replace(/^https?:/, "") === YOUTUBE_API_SRC);
   }
   attachCallback(callback) {
     let oldCallback;
-    if (!isUndefined2(window.onYouTubeIframeAPIReady)) {
+    if (!isUndefined(window.onYouTubeIframeAPIReady)) {
       oldCallback = window.onYouTubeIframeAPIReady;
     }
     window.onYouTubeIframeAPIReady = () => {
@@ -1862,7 +1860,7 @@ var YouTubePlayer = class extends AbstractVideoPlayer {
     const { options, options: { playerOptions = {} } } = this;
     return new YT.Player(this.target, {
       videoId,
-      playerVars: assign2({
+      playerVars: assign({
         controls: options.hideControls ? 0 : 1,
         iv_load_policy: 3,
         loop: options.loop ? 1 : 0,
@@ -1880,7 +1878,7 @@ var YouTubePlayer = class extends AbstractVideoPlayer {
   }
   onPlayerReady() {
     super.onPlayerReady();
-    this.player.setVolume(clamp2(this.options.volume, 0, 1) * 100);
+    this.player.setVolume(clamp(this.options.volume, 0, 1) * 100);
   }
   onPlayerStateChange(e) {
     const { PLAYING: PLAYING2, PAUSED, ENDED } = YT.PlayerState;
@@ -1907,11 +1905,11 @@ var YouTubePlayer = class extends AbstractVideoPlayer {
   }
   parseUrl(url) {
     const [, search] = url.split(/[#?]/);
-    const query3 = find2(search.split("&"), (query4) => query4.indexOf("v=") === 0);
+    const query3 = find(search.split("&"), (query4) => query4.indexOf("v=") === 0);
     return query3 && query3.replace("v=", "");
   }
 };
-var CLASS_SLIDE2 = `${PROJECT_CODE2}__slide`;
+var CLASS_SLIDE2 = `${PROJECT_CODE}__slide`;
 var CLASS_CONTAINER2 = `${CLASS_SLIDE2}__container`;
 
 // src/js/constants/i18n.ts
@@ -1931,16 +1929,16 @@ var PlayerUI = class {
     this.listen();
   }
   init() {
-    const container = child2(this.slide, `.${CLASS_CONTAINER2}`);
+    const container = child(this.slide, `.${CLASS_CONTAINER2}`);
     this.parent = container || this.slide;
     this.modifier = `${container ? CLASS_CONTAINER2 : CLASS_SLIDE2}--has-video`;
-    addClass2(this.parent, this.modifier);
+    addClass(this.parent, this.modifier);
   }
   create() {
-    this.video = create2("div", CLASS_VIDEO, this.parent);
-    this.wrapper = create2("div", CLASS_VIDEO_WRAPPER, this.video);
-    this.placeholder = create2("div", null, this.wrapper);
-    this.playButton = create2("button", {
+    this.video = create("div", CLASS_VIDEO, this.parent);
+    this.wrapper = create("div", CLASS_VIDEO_WRAPPER, this.video);
+    this.placeholder = create("div", null, this.wrapper);
+    this.playButton = create("button", {
       class: CLASS_VIDEO_PLAY_BUTTON,
       type: "button",
       "aria-label": this.Splide.options.i18n.playVideo || I18N2.playVideo
@@ -1952,10 +1950,10 @@ var PlayerUI = class {
     });
   }
   toggleButton(show) {
-    display2(this.playButton, show ? "" : "none");
+    display(this.playButton, show ? "" : "none");
   }
   toggleWrapper(show) {
-    display2(this.wrapper, show ? "" : "none");
+    display(this.wrapper, show ? "" : "none");
   }
   getPlaceholder() {
     return this.placeholder;
@@ -1980,8 +1978,8 @@ var PlayerUI = class {
     this.event.on(events, callback);
   }
   destroy() {
-    removeClass2(this.parent, this.modifier);
-    remove2(this.video);
+    removeClass(this.parent, this.modifier);
+    remove(this.video);
     this.event.destroy();
   }
 };
@@ -1997,7 +1995,7 @@ var Player2 = class {
     this.Splide = Splide4;
     this.slide = slide;
     this.event = EventInterface(Splide4);
-    this.options = merge2(merge2({}, DEFAULTS2), this.Splide.options.video);
+    this.options = merge(merge({}, DEFAULTS2), this.Splide.options.video);
     this.createPlayer(slide);
     if (this.player) {
       this.listen();
@@ -2005,7 +2003,7 @@ var Player2 = class {
   }
   createPlayer(slide) {
     VIDEO_PLAYER_MAP.forEach(([attr, Constructor]) => {
-      const id = getAttribute2(slide, attr);
+      const id = getAttribute(slide, attr);
       if (id) {
         this.ui = new PlayerUI(this.Splide, slide);
         this.player = new Constructor(this.ui.getPlaceholder(), id, this.options);
@@ -2062,7 +2060,7 @@ var Player2 = class {
     }
   }
   togglePlaying(add) {
-    toggleClass2(this.Splide.root, CLASS_PLAYING, add);
+    toggleClass(this.Splide.root, CLASS_PLAYING, add);
   }
   play() {
     if (this.player && !this.disabled) {
@@ -2083,37 +2081,44 @@ var Player2 = class {
   }
   disable(disabled) {
     this.disabled = disabled;
-    toggleClass2(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
+    toggleClass(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
   }
 };
 
 // src/js/extensions/Video/Video.ts
 function Video(Splide4, Components) {
-  const players = [];
+  const players = {};
   function mount() {
     Components.Slides.forEach((Slide2) => {
-      players.push(new Player2(Splide4, Slide2.slide));
+      players[Slide2.index] = new Player2(Splide4, Slide2.slide);
     });
     Splide4.refresh();
   }
   function destroy() {
-    players.forEach((player) => {
+    forOwn(players, (player) => {
       player.destroy();
     });
   }
+  function play(index = Splide4.index) {
+    const player = players[index];
+    if (player) {
+      player.play();
+    }
+  }
   function pause() {
-    players.forEach((player) => {
+    forOwn(players, (player) => {
       player.pause();
     });
   }
   function disable(disabled) {
-    players.forEach((player) => {
+    forOwn(players, (player) => {
       player.disable(disabled);
     });
   }
   return {
     mount,
     destroy,
+    play,
     pause,
     disable
   };

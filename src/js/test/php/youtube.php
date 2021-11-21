@@ -21,7 +21,7 @@
 				gap    : '1rem',
         cover  : true,
         video: {
-          // mute    : true,
+          mute    : true,
           // loop    : true,
           // autoplay: true,
         },
@@ -40,6 +40,10 @@
       splide.on( 'video:ended', () => {
         console.log( 'ended' );
       } );
+
+      setTimeout( () => {
+        splide.Components.Video.play( 1 );
+      }, 4000 );
 		} );
 	</script>
 
