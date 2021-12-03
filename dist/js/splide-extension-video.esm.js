@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.6.2
+ * Version  : 0.6.3
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
@@ -2125,7 +2125,7 @@ function Video(Splide4, Components) {
 }
 /*!
  * Splide.js
- * Version  : 3.6.8
+ * Version  : 3.6.9
  * License  : MIT
  * Copyright: 2021 Naotoshi Fujita
  */
