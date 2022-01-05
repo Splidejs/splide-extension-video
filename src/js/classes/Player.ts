@@ -1,5 +1,7 @@
 import {
   EVENT_DRAG,
+  EVENT_DRAGGING,
+  EVENT_DRAGGED,
   EVENT_MOUNTED,
   EVENT_MOVE,
   EVENT_MOVED,
@@ -125,8 +127,16 @@ export class Player {
     player.on( 'paused', this.onPaused.bind( this ) );
     player.on( 'ended', this.onEnded.bind( this ) );
 
-    event.on( [ EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL ], this.pause.bind( this ) );
+    event.on( [ EVENT_MOVE, EVENT_SCROLL ], this.pause.bind( this ) );
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
+
+    event.on( EVENT_DRAG, () => {
+      event.off( EVENT_DRAGGING );
+      event.on( EVENT_DRAGGING, () => {
+        this.pause();
+        event.off( EVENT_DRAGGING );
+      } );
+    } );
 
     if ( this.options.autoplay ) {
       event.on( [ EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED ], this.onAutoplayRequested.bind( this ) );

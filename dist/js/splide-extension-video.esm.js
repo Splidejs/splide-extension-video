@@ -1,8 +1,8 @@
 /*!
  * Splide.js
- * Version  : 0.6.3
+ * Version  : 0.6.4
  * License  : MIT
- * Copyright: 2021 Naotoshi Fujita
+ * Copyright: 2022 Naotoshi Fujita
  */
 // node_modules/@splidejs/splide/src/js/utils/type/type.ts
 function isObject(subject) {
@@ -306,6 +306,7 @@ var EVENT_MOUNTED = "mounted";
 var EVENT_MOVE = "move";
 var EVENT_MOVED = "moved";
 var EVENT_DRAG = "drag";
+var EVENT_DRAGGING = "dragging";
 var EVENT_SCROLL = "scroll";
 var EVENT_SCROLLED = "scrolled";
 var EVENT_DESTROY = "destroy";
@@ -2019,8 +2020,15 @@ var Player2 = class {
     player.on("pause", this.onPause.bind(this));
     player.on("paused", this.onPaused.bind(this));
     player.on("ended", this.onEnded.bind(this));
-    event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
+    event.on([EVENT_MOVE, EVENT_SCROLL], this.pause.bind(this));
     event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
+    event.on(EVENT_DRAG, () => {
+      event.off(EVENT_DRAGGING);
+      event.on(EVENT_DRAGGING, () => {
+        this.pause();
+        event.off(EVENT_DRAGGING);
+      });
+    });
     if (this.options.autoplay) {
       event.on([EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED], this.onAutoplayRequested.bind(this));
     }

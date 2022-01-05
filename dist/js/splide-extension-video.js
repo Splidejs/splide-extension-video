@@ -6,9 +6,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.6.3
+ * Version  : 0.6.4
  * License  : MIT
- * Copyright: 2021 Naotoshi Fujita
+ * Copyright: 2022 Naotoshi Fujita
  */
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) : factory();
@@ -360,6 +360,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var EVENT_MOVE = "move";
   var EVENT_MOVED = "moved";
   var EVENT_DRAG = "drag";
+  var EVENT_DRAGGING = "dragging";
   var EVENT_SCROLL = "scroll";
   var EVENT_SCROLLED = "scrolled";
   var EVENT_DESTROY = "destroy";
@@ -2473,6 +2474,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto7.listen = function listen() {
+      var _this13 = this;
+
       var player = this.player,
           event = this.event;
       this.ui.on("click", this.onClick.bind(this));
@@ -2481,8 +2484,16 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on("pause", this.onPause.bind(this));
       player.on("paused", this.onPaused.bind(this));
       player.on("ended", this.onEnded.bind(this));
-      event.on([EVENT_MOVE, EVENT_DRAG, EVENT_SCROLL], this.pause.bind(this));
+      event.on([EVENT_MOVE, EVENT_SCROLL], this.pause.bind(this));
       event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
+      event.on(EVENT_DRAG, function () {
+        event.off(EVENT_DRAGGING);
+        event.on(EVENT_DRAGGING, function () {
+          _this13.pause();
+
+          event.off(EVENT_DRAGGING);
+        });
+      });
 
       if (this.options.autoplay) {
         event.on([EVENT_MOUNTED, EVENT_MOVED, EVENT_SCROLLED], this.onAutoplayRequested.bind(this));
