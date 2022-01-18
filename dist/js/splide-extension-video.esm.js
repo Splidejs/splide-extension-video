@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.6.5
+ * Version  : 0.6.6
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -2133,9 +2133,9 @@ function Video(Splide4, Components) {
 }
 /*!
  * Splide.js
- * Version  : 3.6.9
+ * Version  : 3.6.10
  * License  : MIT
- * Copyright: 2021 Naotoshi Fujita
+ * Copyright: 2022 Naotoshi Fujita
  */
 /*!
  * weakmap-polyfill v2.0.1 - ECMAScript6 WeakMap polyfill
