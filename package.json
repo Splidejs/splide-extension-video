@@ -1,11 +1,12 @@
 {
   "name": "@splidejs/splide-extension-video",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "The Splide extension for embedding videos.",
   "author": "Naotoshi Fujita",
   "license": "MIT",
   "main": "dist/js/splide-extension-video.cjs.js",
   "module": "dist/js/splide-extension-video.esm.js",
+  "browser": "dist/js/splide-extension-video.min.js",
   "types": "dist/types/index.d.ts",
   "keywords": [
     "splide",
