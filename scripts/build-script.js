@@ -1,5 +1,5 @@
 const rollup   = require( 'rollup' ).rollup;
-const esbuild  = require( 'rollup-plugin-esbuild' );
+const esbuild  = require( 'rollup-plugin-esbuild' ).default;
 const babel    = require( '@rollup/plugin-babel' );
 const resolve  = require( '@rollup/plugin-node-resolve' ).nodeResolve;
 const path     = require( 'path' );

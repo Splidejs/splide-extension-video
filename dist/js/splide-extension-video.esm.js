@@ -612,8 +612,16 @@ function createCommonjsModule(fn, module) {
     return;
   }
   var hasOwnProperty = Object.prototype.hasOwnProperty;
+  var hasDefine = Object.defineProperty && function() {
+    try {
+      return Object.defineProperty({}, "x", {
+        value: 1
+      }).x === 1;
+    } catch (e) {
+    }
+  }();
   var defineProperty = function(object, name, value) {
-    if (Object.defineProperty) {
+    if (hasDefine) {
       Object.defineProperty(object, name, {
         configurable: true,
         writable: true,
@@ -697,7 +705,7 @@ function createCommonjsModule(fn, module) {
   function isObject3(x) {
     return Object(x) === x;
   }
-})(typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof commonjsGlobal !== "undefined" ? commonjsGlobal : commonjsGlobal);
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof commonjsGlobal !== "undefined" ? commonjsGlobal : commonjsGlobal);
 var npo_src = createCommonjsModule(function(module) {
   (function UMD(name, context, definition) {
     context[name] = context[name] || definition();
@@ -963,7 +971,7 @@ var npo_src = createCommonjsModule(function(module) {
     return Promise2;
   });
 });
-var callbackMap = new WeakMap();
+var callbackMap = /* @__PURE__ */ new WeakMap();
 function storeCallback(player, name, callback) {
   var playerCallbacks = callbackMap.get(player.element) || {};
   if (!(name in playerCallbacks)) {
@@ -1278,8 +1286,8 @@ function initializeScreenfull() {
   });
   return screenfull2;
 }
-var playerMap = new WeakMap();
-var readyMap = new WeakMap();
+var playerMap = /* @__PURE__ */ new WeakMap();
+var readyMap = /* @__PURE__ */ new WeakMap();
 var screenfull = {};
 var Player = /* @__PURE__ */ function() {
   function Player3(element) {
@@ -1362,7 +1370,7 @@ var Player = /* @__PURE__ */ function() {
       var exitFullscreen = function exitFullscreen2() {
         return screenfull.exit();
       };
-      screenfull.on("fullscreenchange", function() {
+      this.fullscreenchangeHandler = function() {
         if (screenfull.isFullscreen) {
           storeCallback(_this, "event:exitFullscreen", exitFullscreen);
         } else {
@@ -1371,7 +1379,8 @@ var Player = /* @__PURE__ */ function() {
         _this.ready().then(function() {
           postMessage(_this, "fullscreenchange", screenfull.isFullscreen);
         });
-      });
+      };
+      screenfull.on("fullscreenchange", this.fullscreenchangeHandler);
     }
     return this;
   }
@@ -1584,6 +1593,9 @@ var Player = /* @__PURE__ */ function() {
           }
         }
         _this5._window.removeEventListener("message", _this5._onMessage);
+        if (screenfull.isEnabled) {
+          screenfull.off("fullscreenchange", _this5.fullscreenchangeHandler);
+        }
         resolve();
       });
     }
@@ -2138,12 +2150,12 @@ function Video(Splide4, Components) {
  * Copyright: 2022 Naotoshi Fujita
  */
 /*!
- * weakmap-polyfill v2.0.1 - ECMAScript6 WeakMap polyfill
+ * weakmap-polyfill v2.0.4 - ECMAScript6 WeakMap polyfill
  * https://github.com/polygonplanet/weakmap-polyfill
- * Copyright (c) 2015-2020 Polygon Planet <polygon.planet.aqua@gmail.com>
+ * Copyright (c) 2015-2021 polygonplanet <polygon.planet.aqua@gmail.com>
  * @license MIT
  */
-/*! @vimeo/player v2.16.0 | (c) 2021 Vimeo | MIT License | https://github.com/vimeo/player.js */
+/*! @vimeo/player v2.16.2 | (c) 2021 Vimeo | MIT License | https://github.com/vimeo/player.js */
 /*! Native Promise Only
     v0.8.1 (c) Kyle Simpson
     MIT License: http://getify.mit-license.org
