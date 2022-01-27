@@ -1,1 +1,1 @@
-export { Video } from './extensions';
+export { Video, VideoComponent } from './extensions';
