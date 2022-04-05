@@ -21,7 +21,7 @@
 				gap    : '1rem',
         cover  : true,
         video: {
-          mute    : true,
+          // mute    : true,
           // loop    : true,
           // autoplay: true,
         },

@@ -1,4 +1,4 @@
-import { EventBusCallback } from '@splidejs/splide';
+import { AnyFunction } from '@splidejs/splide';
 import { VideoPlayerInterface } from '../types/general';
 import { VideoOptions } from '../types/options';
 /**
@@ -26,7 +26,7 @@ export declare abstract class AbstractVideoPlayer<T> implements VideoPlayerInter
     /**
      * The EventBus object.
      */
-    protected event: import("@splidejs/splide").EventBusObject;
+    protected event: import("@splidejs/splide").EventInterfaceObject;
     /**
      * The player instance.
      */
@@ -61,7 +61,7 @@ export declare abstract class AbstractVideoPlayer<T> implements VideoPlayerInter
      * @param events   - An event or events to attach a handler to.
      * @param callback - A callback function.
      */
-    on(events: string | string[], callback: EventBusCallback): void;
+    on(events: string | string[], callback: AnyFunction): void;
     /**
      * Requests to play the video.
      */

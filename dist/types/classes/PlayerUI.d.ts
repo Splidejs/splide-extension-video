@@ -1,4 +1,4 @@
-import { EventBusCallback, Splide } from '@splidejs/splide';
+import { AnyFunction, Splide } from '@splidejs/splide';
 /**
  * The class for the UI of the video player.
  *
@@ -103,7 +103,7 @@ export declare class PlayerUI {
      * @param events   - An event or events.
      * @param callback - A callback function.
      */
-    on(events: string | string[], callback: EventBusCallback): void;
+    on(events: string | string[], callback: AnyFunction): void;
     /**
      * Destroys the instance.
      */

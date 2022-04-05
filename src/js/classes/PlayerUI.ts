@@ -1,7 +1,6 @@
-import { EventBus, EventBusCallback, Splide } from '@splidejs/splide';
-import { CLASS_CONTAINER, CLASS_SLIDE } from '@splidejs/splide/src/js/constants/classes';
+import { AnyFunction, CLASS_CONTAINER, CLASS_SLIDE, EventInterface, Splide } from '@splidejs/splide';
 import { I18N } from '../constants/i18n';
-import { create, display, remove, removeClass, child, addClass } from '@splidejs/splide/src/js/utils';
+import { addClass, child, create, display, remove, removeClass } from '@splidejs/splide/src/js/utils';
 import { CLASS_VIDEO, CLASS_VIDEO_PLAY_BUTTON, CLASS_VIDEO_WRAPPER } from '../constants/classes';
 
 
@@ -34,7 +33,7 @@ export class PlayerUI {
   /**
    * The EventBus object.
    */
-  private readonly event = EventBus();
+  private readonly event = EventInterface();
 
   /**
    * Indicates whether the UI is disabled or not.
@@ -179,7 +178,7 @@ export class PlayerUI {
    * @param events   - An event or events.
    * @param callback - A callback function.
    */
-  on( events: string | string[], callback: EventBusCallback ): void {
+  on( events: string | string[], callback: AnyFunction ): void {
     this.event.on( events, callback );
   }
 

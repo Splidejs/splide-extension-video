@@ -1,1 +1,2 @@
-export { Video, VideoComponent } from './extensions';
+export { Video } from './extensions';
+export type { VideoComponent } from './extensions';

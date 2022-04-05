@@ -1,4 +1,4 @@
-import { EventBus, EventBusCallback, State } from '@splidejs/splide';
+import { AnyFunction, EventInterface, State } from '@splidejs/splide';
 import { error } from '@splidejs/splide/src/js/utils';
 import {
   ERROR,
@@ -44,7 +44,7 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
   /**
    * The EventBus object.
    */
-  protected event = EventBus();
+  protected event = EventInterface();
 
   /**
    * The player instance.
@@ -95,7 +95,7 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
    * @param events   - An event or events to attach a handler to.
    * @param callback - A callback function.
    */
-  on( events: string | string[], callback: EventBusCallback ): void {
+  on( events: string | string[], callback: AnyFunction ): void {
     this.event.on( events, callback );
   }
 
