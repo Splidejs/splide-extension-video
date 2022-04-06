@@ -10,11 +10,17 @@ import {
   EventInterfaceObject,
   Splide,
 } from '@splidejs/splide';
-import { getAttribute, merge, toggleClass } from '@splidejs/splide/src/js/utils';
-import { CLASS_PLAYING, CLASS_VIDEO_DISABLED } from '../constants/classes';
+import { addClass, getAttribute, merge, toggleClass } from '@splidejs/splide/src/js/utils';
+import { CLASS_ERROR, CLASS_PLAYING, CLASS_VIDEO_DISABLED } from '../constants/classes';
 import { HTML_VIDEO__DATA_ATTRIBUTE, VIMEO_DATA_ATTRIBUTE, YOUTUBE_DATA_ATTRIBUTE } from '../constants/data-attributes';
 import { DEFAULTS } from '../constants/defaults';
-import { EVENT_VIDEO_CLICK, EVENT_VIDEO_ENDED, EVENT_VIDEO_PAUSE, EVENT_VIDEO_PLAY } from '../constants/events';
+import {
+  EVENT_VIDEO_CLICK,
+  EVENT_VIDEO_ENDED,
+  EVENT_VIDEO_ERROR,
+  EVENT_VIDEO_PAUSE,
+  EVENT_VIDEO_PLAY,
+} from '../constants/events';
 import { HTMLVideoPlayer } from '../players/html/HTMLVideoPlayer';
 import { VimeoPlayer } from '../players/vimeo/VimeoPlayer';
 import { YouTubePlayer } from '../players/youtube/YouTubePlayer';
@@ -125,6 +131,7 @@ export class Player {
     player.on( 'pause', this.onPause.bind( this ) );
     player.on( 'paused', this.onPaused.bind( this ) );
     player.on( 'ended', this.onEnded.bind( this ) );
+    player.on( 'error', this.onError.bind( this ) );
 
     event.on( [ EVENT_MOVE, EVENT_SCROLL ], this.pause.bind( this ) );
     event.on( EVENT_VIDEO_CLICK, this.onVideoClick.bind( this ) );
@@ -146,7 +153,7 @@ export class Player {
    * Called when the slide element is clicked.
    */
   private onClick(): void {
-    this.play();
+    this.isPaused() ? this.play() : this.pause();
     this.event.emit( EVENT_VIDEO_CLICK, this );
   }
 
@@ -199,6 +206,15 @@ export class Player {
   private onEnded(): void {
     this.togglePlaying( false );
     this.event.emit( EVENT_VIDEO_ENDED, this );
+  }
+
+  /**
+   * Called when an error occurs.
+   */
+  private onError(): void {
+    addClass( this.slide, CLASS_ERROR );
+    this.ui.show();
+    this.event.emit( EVENT_VIDEO_ERROR, this );
   }
 
   /**
@@ -257,5 +273,14 @@ export class Player {
   disable( disabled: boolean ): void {
     this.disabled = disabled;
     toggleClass( this.Splide.root, CLASS_VIDEO_DISABLED, disabled );
+  }
+
+  /**
+   * Checks if the video is paused or not.
+   *
+   * @return `true` if the video is paused.
+   */
+  isPaused(): boolean {
+    return this.player.isPaused();
   }
 }

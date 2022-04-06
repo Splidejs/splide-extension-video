@@ -31,6 +31,10 @@ export declare class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElemen
      */
     protected pauseVideo(): void;
     /**
+     * Called when an error occurs.
+     */
+    protected onError(): void;
+    /**
      * Destroys the player.
      */
     destroy(): void;

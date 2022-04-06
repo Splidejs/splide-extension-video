@@ -83,6 +83,10 @@ export declare class Player {
      */
     private onEnded;
     /**
+     * Called when an error occurs.
+     */
+    private onError;
+    /**
      * Called when the autoplay option is `true` and the slider should start the video.
      */
     private onAutoplayRequested;
@@ -108,5 +112,11 @@ export declare class Player {
      * Disables the play/pause control.
      */
     disable(disabled: boolean): void;
+    /**
+     * Checks if the video is paused or not.
+     *
+     * @return `true` if the video is paused.
+     */
+    isPaused(): boolean;
 }
 //# sourceMappingURL=../../../src/js/classes/Player.d.ts.map

@@ -1,4 +1,4 @@
-import { create, clamp, assign } from '@splidejs/splide/src/js/utils';
+import { assign, clamp, create } from '@splidejs/splide/src/js/utils';
 import { AbstractVideoPlayer } from '../../classes/AbstractVideoPlayer';
 import { IDLE, INITIALIZED, PLAY_REQUEST_ABORTED } from '../../constants/states';
 import { VideoOptions } from '../../types/options';
@@ -54,11 +54,8 @@ export class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElement> {
    * Starts the video.
    */
   protected playVideo(): void {
-    this.player.play().catch( () => {
-      if ( this.state.is( PLAY_REQUEST_ABORTED ) ) {
-        this.state.set( IDLE );
-      }
-    } );
+    const promise = this.player.play();
+    promise && promise.catch( this.onError.bind( this ) );
   }
 
   /**
@@ -66,6 +63,17 @@ export class HTMLVideoPlayer extends AbstractVideoPlayer<HTMLVideoElement> {
    */
   protected pauseVideo(): void {
     this.player.pause();
+  }
+
+  /**
+   * Called when an error occurs.
+   */
+  protected onError(): void {
+    if ( this.state.is( PLAY_REQUEST_ABORTED ) ) {
+      this.state.set( IDLE );
+    } else {
+      super.onError();
+    }
   }
 
   /**

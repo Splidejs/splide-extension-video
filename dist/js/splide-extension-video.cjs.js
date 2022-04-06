@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.7.0
+ * Version  : 0.7.1
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -386,6 +386,7 @@ const CLASS_VIDEO = "splide__video";
 const CLASS_VIDEO_WRAPPER = `${CLASS_VIDEO}__wrapper`;
 const CLASS_VIDEO_PLAY_BUTTON = `${CLASS_VIDEO}__play`;
 const CLASS_PLAYING = "is-playing";
+const CLASS_ERROR = "is-error";
 const CLASS_VIDEO_DISABLED = "is-video-disabled";
 
 const YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
@@ -402,6 +403,7 @@ const DEFAULTS = {
 const EVENT_VIDEO_PLAY = "video:play";
 const EVENT_VIDEO_PAUSE = "video:pause";
 const EVENT_VIDEO_ENDED = "video:ended";
+const EVENT_VIDEO_ERROR = "video:error";
 const EVENT_VIDEO_CLICK = "video:click";
 
 const NOT_INITIALIZED = 1;
@@ -469,6 +471,9 @@ class AbstractVideoPlayer {
       this.state.set(IDLE);
     }
   }
+  isPaused() {
+    return !this.state.is(PLAYING);
+  }
   destroy() {
     this.event.destroy();
   }
@@ -500,6 +505,7 @@ class AbstractVideoPlayer {
   }
   onError() {
     this.state.set(ERROR);
+    this.event.emit("error");
   }
 }
 
@@ -526,14 +532,18 @@ class HTMLVideoPlayer extends AbstractVideoPlayer {
     return player;
   }
   playVideo() {
-    this.player.play().catch(() => {
-      if (this.state.is(PLAY_REQUEST_ABORTED)) {
-        this.state.set(IDLE);
-      }
-    });
+    const promise = this.player.play();
+    promise && promise.catch(this.onError.bind(this));
   }
   pauseVideo() {
     this.player.pause();
+  }
+  onError() {
+    if (this.state.is(PLAY_REQUEST_ABORTED)) {
+      this.state.set(IDLE);
+    } else {
+      super.onError();
+    }
   }
   destroy() {
     super.destroy();
@@ -3290,6 +3300,7 @@ class Player {
     player.on("pause", this.onPause.bind(this));
     player.on("paused", this.onPaused.bind(this));
     player.on("ended", this.onEnded.bind(this));
+    player.on("error", this.onError.bind(this));
     event.on([EVENT_MOVE, EVENT_SCROLL], this.pause.bind(this));
     event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
     event.on(EVENT_DRAG, () => {
@@ -3304,7 +3315,7 @@ class Player {
     }
   }
   onClick() {
-    this.play();
+    this.isPaused() ? this.play() : this.pause();
     this.event.emit(EVENT_VIDEO_CLICK, this);
   }
   onVideoClick(player) {
@@ -3330,6 +3341,11 @@ class Player {
   onEnded() {
     this.togglePlaying(false);
     this.event.emit(EVENT_VIDEO_ENDED, this);
+  }
+  onError() {
+    addClass(this.slide, CLASS_ERROR);
+    this.ui.show();
+    this.event.emit(EVENT_VIDEO_ERROR, this);
   }
   onAutoplayRequested() {
     const activeSlide = this.Splide.Components.Slides.getAt(this.Splide.index);
@@ -3360,6 +3376,9 @@ class Player {
   disable(disabled) {
     this.disabled = disabled;
     toggleClass(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
+  }
+  isPaused() {
+    return this.player.isPaused();
   }
 }
 

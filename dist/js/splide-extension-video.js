@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /*!
  * Splide.js
- * Version  : 0.7.0
+ * Version  : 0.7.1
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -409,6 +409,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
   var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play";
   var CLASS_PLAYING = "is-playing";
+  var CLASS_ERROR = "is-error";
   var CLASS_VIDEO_DISABLED = "is-video-disabled";
   var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
   var VIMEO_DATA_ATTRIBUTE = "data-splide-vimeo";
@@ -422,6 +423,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
   var EVENT_VIDEO_PLAY = "video:play";
   var EVENT_VIDEO_PAUSE = "video:pause";
   var EVENT_VIDEO_ENDED = "video:ended";
+  var EVENT_VIDEO_ERROR = "video:error";
   var EVENT_VIDEO_CLICK = "video:click";
   var NOT_INITIALIZED = 1;
   var INITIALIZING = 2;
@@ -505,6 +507,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       }
     };
 
+    _proto.isPaused = function isPaused() {
+      return !this.state.is(PLAYING);
+    };
+
     _proto.destroy = function destroy() {
       this.event.destroy();
     };
@@ -543,6 +549,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     _proto.onError = function onError() {
       this.state.set(ERROR);
+      this.event.emit("error");
     };
 
     return AbstractVideoPlayer;
@@ -592,17 +599,20 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto2.playVideo = function playVideo() {
-      var _this7 = this;
-
-      this.player.play()["catch"](function () {
-        if (_this7.state.is(PLAY_REQUEST_ABORTED)) {
-          _this7.state.set(IDLE);
-        }
-      });
+      var promise = this.player.play();
+      promise && promise["catch"](this.onError.bind(this));
     };
 
     _proto2.pauseVideo = function pauseVideo() {
       this.player.pause();
+    };
+
+    _proto2.onError = function onError() {
+      if (this.state.is(PLAY_REQUEST_ABORTED)) {
+        this.state.set(IDLE);
+      } else {
+        _AbstractVideoPlayer.prototype.onError.call(this);
+      }
     };
 
     _proto2.destroy = function destroy() {
@@ -3148,17 +3158,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     _inheritsLoose(VimeoPlayer, _AbstractVideoPlayer2);
 
     function VimeoPlayer(target, videoId, options) {
-      var _this8;
+      var _this7;
 
       if (options === void 0) {
         options = {};
       }
 
-      _this8 = _AbstractVideoPlayer2.call(this, target, videoId, options) || this;
+      _this7 = _AbstractVideoPlayer2.call(this, target, videoId, options) || this;
 
-      _this8.state.set(INITIALIZED);
+      _this7.state.set(INITIALIZED);
 
-      return _this8;
+      return _this7;
     }
 
     var _proto3 = VimeoPlayer.prototype;
@@ -3190,11 +3200,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto3.playVideo = function playVideo() {
-      var _this9 = this;
+      var _this8 = this;
 
       this.player.play()["catch"](function () {
-        if (_this9.state.is(PLAY_REQUEST_ABORTED)) {
-          _this9.state.set(IDLE);
+        if (_this8.state.is(PLAY_REQUEST_ABORTED)) {
+          _this8.state.set(IDLE);
         }
       });
     };
@@ -3253,22 +3263,22 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     _inheritsLoose(YouTubePlayer, _AbstractVideoPlayer3);
 
     function YouTubePlayer(target, videoId, options) {
-      var _this10;
+      var _this9;
 
       if (options === void 0) {
         options = {};
       }
 
-      _this10 = _AbstractVideoPlayer3.call(this, target, videoId, options) || this;
-      _this10.videoId = _this10.parseVideoId(videoId);
+      _this9 = _AbstractVideoPlayer3.call(this, target, videoId, options) || this;
+      _this9.videoId = _this9.parseVideoId(videoId);
 
-      if (_this10.videoId) {
-        _this10.state.set(INITIALIZING);
+      if (_this9.videoId) {
+        _this9.state.set(INITIALIZING);
 
-        new YouTubeIframeAPILoader().load(_this10.onAPIReady.bind(_assertThisInitialized(_this10)));
+        new YouTubeIframeAPILoader().load(_this9.onAPIReady.bind(_assertThisInitialized(_this9)));
       }
 
-      return _this10;
+      return _this9;
     }
 
     var _proto5 = YouTubePlayer.prototype;
@@ -3394,10 +3404,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto6.listen = function listen() {
-      var _this11 = this;
+      var _this10 = this;
 
       this.parent.addEventListener("click", function () {
-        _this11.event.emit("click");
+        _this10.event.emit("click");
       });
     };
 
@@ -3465,7 +3475,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     var _proto7 = Player.prototype;
 
     _proto7.createPlayer = function createPlayer(slide) {
-      var _this12 = this;
+      var _this11 = this;
 
       VIDEO_PLAYER_MAP.forEach(function (_ref2) {
         var attr = _ref2[0],
@@ -3473,16 +3483,16 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         var id = getAttribute(slide, attr);
 
         if (id) {
-          _this12.ui = new PlayerUI(_this12.Splide, slide);
-          _this12.player = new Constructor(_this12.ui.getPlaceholder(), id, _this12.options);
+          _this11.ui = new PlayerUI(_this11.Splide, slide);
+          _this11.player = new Constructor(_this11.ui.getPlaceholder(), id, _this11.options);
 
-          _this12.ui.disable(_this12.options.disableOverlayUI);
+          _this11.ui.disable(_this11.options.disableOverlayUI);
         }
       });
     };
 
     _proto7.listen = function listen() {
-      var _this13 = this;
+      var _this12 = this;
 
       var player = this.player,
           event = this.event;
@@ -3492,12 +3502,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       player.on("pause", this.onPause.bind(this));
       player.on("paused", this.onPaused.bind(this));
       player.on("ended", this.onEnded.bind(this));
+      player.on("error", this.onError.bind(this));
       event.on([EVENT_MOVE, EVENT_SCROLL], this.pause.bind(this));
       event.on(EVENT_VIDEO_CLICK, this.onVideoClick.bind(this));
       event.on(EVENT_DRAG, function () {
         event.off(EVENT_DRAGGING);
         event.on(EVENT_DRAGGING, function () {
-          _this13.pause();
+          _this12.pause();
 
           event.off(EVENT_DRAGGING);
         });
@@ -3509,7 +3520,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     };
 
     _proto7.onClick = function onClick() {
-      this.play();
+      this.isPaused() ? this.play() : this.pause();
       this.event.emit(EVENT_VIDEO_CLICK, this);
     };
 
@@ -3541,6 +3552,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     _proto7.onEnded = function onEnded() {
       this.togglePlaying(false);
       this.event.emit(EVENT_VIDEO_ENDED, this);
+    };
+
+    _proto7.onError = function onError() {
+      addClass(this.slide, CLASS_ERROR);
+      this.ui.show();
+      this.event.emit(EVENT_VIDEO_ERROR, this);
     };
 
     _proto7.onAutoplayRequested = function onAutoplayRequested() {
@@ -3579,6 +3596,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     _proto7.disable = function disable(disabled) {
       this.disabled = disabled;
       toggleClass(this.Splide.root, CLASS_VIDEO_DISABLED, disabled);
+    };
+
+    _proto7.isPaused = function isPaused() {
+      return this.player.isPaused();
     };
 
     return Player;

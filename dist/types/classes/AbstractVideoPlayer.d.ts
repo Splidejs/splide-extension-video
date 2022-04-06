@@ -71,6 +71,12 @@ export declare abstract class AbstractVideoPlayer<T> implements VideoPlayerInter
      */
     pause(): void;
     /**
+     * Checks if the video is paused or not.
+     *
+     * @return `true` if the video is paused.
+     */
+    isPaused(): boolean;
+    /**
      * Destroys the instance.
      */
     destroy(): void;

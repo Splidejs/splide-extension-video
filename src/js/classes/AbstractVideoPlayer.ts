@@ -158,6 +158,15 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
   }
 
   /**
+   * Checks if the video is paused or not.
+   *
+   * @return `true` if the video is paused.
+   */
+  isPaused(): boolean {
+    return ! this.state.is( PLAYING );
+  }
+
+  /**
    * Destroys the instance.
    */
   destroy(): void {
@@ -215,5 +224,6 @@ export abstract class AbstractVideoPlayer<T> implements VideoPlayerInterface {
    */
   protected onError(): void {
     this.state.set( ERROR );
+    this.event.emit( 'error' );
   }
 }

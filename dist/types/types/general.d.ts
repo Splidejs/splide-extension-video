@@ -1,4 +1,4 @@
-import { EventBusCallback } from '@splidejs/splide';
+import { AnyFunction } from '@splidejs/splide';
 import { VideoOptions } from './options';
 /**
  * Determines members that must be implemented for the video player.
@@ -8,7 +8,8 @@ import { VideoOptions } from './options';
 export interface VideoPlayerInterface {
     play(): void;
     pause(): void;
-    on(events: string | string[], callback: EventBusCallback): void;
+    isPaused(): boolean;
+    on(events: string | string[], callback: AnyFunction): void;
     destroy(): void;
 }
 /**
