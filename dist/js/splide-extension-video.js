@@ -2,7 +2,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 /*!
  * Splide.js
@@ -125,7 +125,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         if (isArray$1(value)) {
           object[key] = value.slice();
         } else if (isObject(value)) {
-          object[key] = merge(isObject(object[key]) ? object[key] : {}, value);
+          object[key] = merge({}, isObject(object[key]) ? object[key] : {}, value);
         } else {
           object[key] = value;
         }
@@ -628,7 +628,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     return HTMLVideoPlayer;
   }(AbstractVideoPlayer);
-  /*! @vimeo/player v2.16.4 | (c) 2022 Vimeo | MIT License | https://github.com/vimeo/player.js */
+  /*! @vimeo/player v2.17.1 | (c) 2022 Vimeo | MIT License | https://github.com/vimeo/player.js */
 
 
   function _classCallCheck(instance, Constructor) {
@@ -717,6 +717,18 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     return /^(https?:)?\/\/((player|www)\.)?vimeo\.com(?=$|\/)/.test(url);
   }
   /**
+   * Check to see if the URL is for a Vimeo embed.
+   *
+   * @param {string} url The url string.
+   * @return {boolean}
+   */
+
+
+  function isVimeoEmbed(url) {
+    var expr = /^https:\/\/player\.vimeo\.com\/video\/\d+/;
+    return expr.test(url);
+  }
+  /**
    * Get the Vimeo URL from an element.
    * The element must have either a data-vimeo-id or data-vimeo-url attribute.
    *
@@ -765,9 +777,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     }, fn(module, module.exports), module.exports;
   }
   /*!
-   * weakmap-polyfill v2.0.1 - ECMAScript6 WeakMap polyfill
+   * weakmap-polyfill v2.0.4 - ECMAScript6 WeakMap polyfill
    * https://github.com/polygonplanet/weakmap-polyfill
-   * Copyright (c) 2015-2020 Polygon Planet <polygon.planet.aqua@gmail.com>
+   * Copyright (c) 2015-2021 polygonplanet <polygon.planet.aqua@gmail.com>
    * @license MIT
    */
 
@@ -779,8 +791,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
     var hasOwnProperty = Object.prototype.hasOwnProperty;
 
+    var hasDefine = Object.defineProperty && function () {
+      try {
+        // Avoid IE8's broken Object.defineProperty
+        return Object.defineProperty({}, 'x', {
+          value: 1
+        }).x === 1;
+      } catch (e) {}
+    }();
+
     var defineProperty = function defineProperty(object, name, value) {
-      if (Object.defineProperty) {
+      if (hasDefine) {
         Object.defineProperty(object, name, {
           configurable: true,
           writable: true,
@@ -895,7 +916,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     function isObject(x) {
       return Object(x) === x;
     }
-  })(typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : typeof commonjsGlobal !== 'undefined' ? commonjsGlobal : commonjsGlobal);
+  })(typeof globalThis !== 'undefined' ? globalThis : typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : typeof commonjsGlobal !== 'undefined' ? commonjsGlobal : commonjsGlobal);
 
   var npo_src = createCommonjsModule(function (module) {
     /*! Native Promise Only
@@ -1356,6 +1377,111 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     callbackMap["delete"](oldElement);
   }
   /**
+   * @module lib/postmessage
+   */
+
+  /**
+   * Parse a message received from postMessage.
+   *
+   * @param {*} data The data received from postMessage.
+   * @return {object}
+   */
+
+
+  function parseMessageData(data) {
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (error) {
+        // If the message cannot be parsed, throw the error as a warning
+        console.warn(error);
+        return {};
+      }
+    }
+
+    return data;
+  }
+  /**
+   * Post a message to the specified target.
+   *
+   * @param {Player} player The player object to use.
+   * @param {string} method The API method to call.
+   * @param {object} params The parameters to send to the player.
+   * @return {void}
+   */
+
+
+  function postMessage(player, method, params) {
+    if (!player.element.contentWindow || !player.element.contentWindow.postMessage) {
+      return;
+    }
+
+    var message = {
+      method: method
+    };
+
+    if (params !== undefined) {
+      message.value = params;
+    } // IE 8 and 9 do not support passing messages, so stringify them
+
+
+    var ieVersion = parseFloat(navigator.userAgent.toLowerCase().replace(/^.*msie (\d+).*$/, '$1'));
+
+    if (ieVersion >= 8 && ieVersion < 10) {
+      message = JSON.stringify(message);
+    }
+
+    player.element.contentWindow.postMessage(message, player.origin);
+  }
+  /**
+   * Parse the data received from a message event.
+   *
+   * @param {Player} player The player that received the message.
+   * @param {(Object|string)} data The message data. Strings will be parsed into JSON.
+   * @return {void}
+   */
+
+
+  function processData(player, data) {
+    data = parseMessageData(data);
+    var callbacks = [];
+    var param;
+
+    if (data.event) {
+      if (data.event === 'error') {
+        var promises = getCallbacks(player, data.data.method);
+        promises.forEach(function (promise) {
+          var error = new Error(data.data.message);
+          error.name = data.data.name;
+          promise.reject(error);
+          removeCallback(player, data.data.method, promise);
+        });
+      }
+
+      callbacks = getCallbacks(player, "event:".concat(data.event));
+      param = data.data;
+    } else if (data.method) {
+      var callback = shiftCallbacks(player, data.method);
+
+      if (callback) {
+        callbacks.push(callback);
+        param = data.value;
+      }
+    }
+
+    callbacks.forEach(function (callback) {
+      try {
+        if (typeof callback === 'function') {
+          callback.call(player, param);
+          return;
+        }
+
+        callback.resolve(param);
+      } catch (e) {// empty
+      }
+    });
+  }
+  /**
    * @module lib/embed
    */
 
@@ -1551,109 +1677,48 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     window.addEventListener('message', onMessage);
   }
   /**
-   * @module lib/postmessage
-   */
-
-  /**
-   * Parse a message received from postMessage.
+   * Add chapters to existing metadata for Google SEO
    *
-   * @param {*} data The data received from postMessage.
-   * @return {object}
-   */
-
-
-  function parseMessageData(data) {
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (error) {
-        // If the message cannot be parsed, throw the error as a warning
-        console.warn(error);
-        return {};
-      }
-    }
-
-    return data;
-  }
-  /**
-   * Post a message to the specified target.
-   *
-   * @param {Player} player The player object to use.
-   * @param {string} method The API method to call.
-   * @param {object} params The parameters to send to the player.
+   * @param {HTMLElement} [parent=document] The parent element.
    * @return {void}
    */
 
 
-  function postMessage(player, method, params) {
-    if (!player.element.contentWindow || !player.element.contentWindow.postMessage) {
+  function initAppendVideoMetadata() {
+    var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document; //  Prevent execution if users include the player.js script multiple times.
+
+    if (window.VimeoSeoMetadataAppended) {
       return;
     }
 
-    var message = {
-      method: method
+    window.VimeoSeoMetadataAppended = true;
+
+    var onMessage = function onMessage(event) {
+      if (!isVimeoUrl(event.origin)) {
+        return;
+      }
+
+      var data = parseMessageData(event.data);
+
+      if (!data || data.event !== 'ready') {
+        return;
+      }
+
+      var iframes = parent.querySelectorAll('iframe');
+
+      for (var i = 0; i < iframes.length; i++) {
+        var iframe = iframes[i]; // Initiate appendVideoMetadata if iframe is a Vimeo embed
+
+        var isValidMessageSource = iframe.contentWindow === event.source;
+
+        if (isVimeoEmbed(iframe.src) && isValidMessageSource) {
+          var player = new Player$1(iframe);
+          player.callMethod('appendVideoMetadata', window.location.href);
+        }
+      }
     };
 
-    if (params !== undefined) {
-      message.value = params;
-    } // IE 8 and 9 do not support passing messages, so stringify them
-
-
-    var ieVersion = parseFloat(navigator.userAgent.toLowerCase().replace(/^.*msie (\d+).*$/, '$1'));
-
-    if (ieVersion >= 8 && ieVersion < 10) {
-      message = JSON.stringify(message);
-    }
-
-    player.element.contentWindow.postMessage(message, player.origin);
-  }
-  /**
-   * Parse the data received from a message event.
-   *
-   * @param {Player} player The player that received the message.
-   * @param {(Object|string)} data The message data. Strings will be parsed into JSON.
-   * @return {void}
-   */
-
-
-  function processData(player, data) {
-    data = parseMessageData(data);
-    var callbacks = [];
-    var param;
-
-    if (data.event) {
-      if (data.event === 'error') {
-        var promises = getCallbacks(player, data.data.method);
-        promises.forEach(function (promise) {
-          var error = new Error(data.data.message);
-          error.name = data.data.name;
-          promise.reject(error);
-          removeCallback(player, data.data.method, promise);
-        });
-      }
-
-      callbacks = getCallbacks(player, "event:".concat(data.event));
-      param = data.data;
-    } else if (data.method) {
-      var callback = shiftCallbacks(player, data.method);
-
-      if (callback) {
-        callbacks.push(callback);
-        param = data.value;
-      }
-    }
-
-    callbacks.forEach(function (callback) {
-      try {
-        if (typeof callback === 'function') {
-          callback.call(player, param);
-          return;
-        }
-
-        callback.resolve(param);
-      } catch (e) {// empty
-      }
-    });
+    window.addEventListener('message', onMessage);
   }
   /* MIT License
    Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
@@ -3152,6 +3217,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     screenfull = initializeScreenfull();
     initializeEmbeds();
     resizeEmbeds();
+    initAppendVideoMetadata();
   }
 
   var VimeoPlayer = /*#__PURE__*/function (_AbstractVideoPlayer2) {

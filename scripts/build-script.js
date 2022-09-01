@@ -15,13 +15,13 @@ function buildScript( compress ) {
     input: './src/js/build/default.ts',
     plugins: [
       resolve(),
-      esbuild( { minify: false, experimentalBundling: true } ),
+      esbuild( { minify: false } ),
       babel.getBabelOutputPlugin( {
         configFile: path.resolve( __dirname, '../.babelrc' ),
         allowAllFormats: true,
       } ),
       compress ? minify() : false,
-    ]
+    ],
   } ).then( bundle => {
     return bundle.write( {
       banner,
@@ -33,7 +33,7 @@ function buildScript( compress ) {
   } );
 }
 
-Promise.all( [ buildScript(), buildScript( true ) ] ).catch( e => console.error( e ) );
+Promise.all( [ buildScript(), buildScript( true ) ] ).catch( console.error );
 
 exports.buildJs  = () => buildScript();
 exports.buildMin = () => buildScript( true );
