@@ -1,7 +1,7 @@
 import { AnyFunction, CLASS_CONTAINER, CLASS_SLIDE, EventInterface, Splide } from '@splidejs/splide';
 import { I18N } from '../constants/i18n';
 import { addClass, child, create, display, remove, removeClass } from '@splidejs/splide/src/js/utils';
-import { CLASS_VIDEO, CLASS_VIDEO_PLAY_BUTTON, CLASS_VIDEO_WRAPPER } from '../constants/classes';
+import { CLASS_VIDEO, CLASS_VIDEO_PLAY_BUTTON, CLASS_VIDEO_WRAPPER, MODIFIER_HAS_VIDEO } from '../constants/classes';
 
 
 /**
@@ -23,12 +23,12 @@ export class PlayerUI {
   /**
    * The parent element of the video, which may be the slide or the container element.
    */
-  private parent: HTMLElement;
+  private readonly parent: HTMLElement;
 
   /**
-   * Keeps the modifier class name.
+   * Holds the container element if available.
    */
-  private modifier: string;
+  private readonly container: HTMLElement | undefined;
 
   /**
    * The EventBus object.
@@ -70,8 +70,10 @@ export class PlayerUI {
    * @param slide  - A slide element where the player is mounted.
    */
   constructor( Splide: Splide, slide: HTMLElement ) {
-    this.Splide = Splide;
-    this.slide  = slide;
+    this.Splide    = Splide;
+    this.slide     = slide;
+    this.container = child( this.slide, `.${ CLASS_CONTAINER }` );
+    this.parent    = this.container || this.slide;
 
     this.init();
     this.create();
@@ -83,12 +85,8 @@ export class PlayerUI {
    * Initializes the instance.
    */
   private init(): void {
-    const container = child( this.slide, `.${ CLASS_CONTAINER }` );
-
-    this.parent   = container || this.slide;
-    this.modifier = `${ container ? CLASS_CONTAINER : CLASS_SLIDE }--has-video`;
-
-    addClass( this.parent, this.modifier );
+    addClass( this.slide, `${ CLASS_SLIDE }${ MODIFIER_HAS_VIDEO }` );
+    addClass( this.container, `${ CLASS_CONTAINER }${ MODIFIER_HAS_VIDEO }` );
   }
 
   /**
@@ -188,7 +186,8 @@ export class PlayerUI {
    * Destroys the instance.
    */
   destroy(): void {
-    removeClass( this.parent, this.modifier );
+    removeClass( this.slide, `${ CLASS_SLIDE }${ MODIFIER_HAS_VIDEO }` );
+    removeClass( this.container, `${ CLASS_CONTAINER }${ MODIFIER_HAS_VIDEO }` );
     remove( this.video );
     this.event.destroy();
   }

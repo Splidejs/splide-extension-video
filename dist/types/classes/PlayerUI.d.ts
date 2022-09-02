@@ -16,11 +16,11 @@ export declare class PlayerUI {
     /**
      * The parent element of the video, which may be the slide or the container element.
      */
-    private parent;
+    private readonly parent;
     /**
-     * Keeps the modifier class name.
+     * Holds the container element if available.
      */
-    private modifier;
+    private readonly container;
     /**
      * The EventBus object.
      */
@@ -61,6 +61,7 @@ export declare class PlayerUI {
     private init;
     /**
      * Creates wrapper, placeholder and button elements.
+     * Make sure that the button element must be rendered before the wrapper for the proper focus order.
      */
     private create;
     /**

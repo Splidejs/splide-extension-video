@@ -4,4 +4,6 @@ export const CLASS_VIDEO_PLAY_BUTTON = `${ CLASS_VIDEO }__play`;
 export const CLASS_PLAYING           = 'is-playing';
 export const CLASS_ERROR             = 'is-error';
 export const CLASS_VIDEO_DISABLED    = 'is-video-disabled';
+export const MODIFIER_HAS_VIDEO      = '--has-video';
+
 

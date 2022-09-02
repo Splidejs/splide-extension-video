@@ -1,7 +1,8 @@
-import { BaseComponent, Components, Splide } from '@splidejs/splide';
-import { forOwn } from '@splidejs/splide/src/js/utils';
+import { BaseComponent, CLASS_SLIDE, Components, EventInterface, Splide } from '@splidejs/splide';
+import { forOwn, hasClass } from '@splidejs/splide/src/js/utils';
 import { Player } from '../../classes/Player';
 import { VideoOptions } from '../../types/options';
+import { MODIFIER_HAS_VIDEO } from "../../constants/classes";
 
 
 /**
@@ -39,6 +40,9 @@ export interface VideoComponent extends BaseComponent {
  * @return A Video component object.
  */
 export function Video( Splide: Splide, Components: Components ): VideoComponent {
+  const { on } = EventInterface( Splide );
+  const { Slides } = Components;
+
   /**
    * Stores Player instances.
    */
@@ -46,13 +50,27 @@ export function Video( Splide: Splide, Components: Components ): VideoComponent 
 
   /**
    * Called when the extension is mounted.
+   * When detecting the refresh event, creates players for non-initialized slides.
    */
   function mount(): void {
-    Components.Slides.forEach( Slide => {
-      players[ Slide.index ] = new Player( Splide, Slide.slide );
+    create();
+    on( 'refresh', create );
+  }
+
+  /**
+   * Creates players for slides that have not been initialized.
+   * Needs to call `update()` for attributes related with accessibility.
+   */
+  function create(): void {
+    Slides.forEach( Slide => {
+      const { slide } = Slide;
+
+      if ( ! hasClass( slide, `${ CLASS_SLIDE }${ MODIFIER_HAS_VIDEO }` ) ) {
+        players[ Slide.index ] = new Player( Splide, slide );
+      }
     } );
 
-    Splide.refresh();
+    Slides.update();
   }
 
   /**

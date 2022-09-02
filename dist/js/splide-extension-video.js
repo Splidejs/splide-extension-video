@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 
 /*!
  * Splide.js
- * Version  : 0.7.2
+ * Version  : 0.7.3
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -15,12 +15,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 })(function () {
   'use strict';
 
-  function slice$1(arrayLike, start, end) {
-    return Array.prototype.slice.call(arrayLike, start, end);
+  function empty(array) {
+    array.length = 0;
   }
 
-  function find(arrayLike, predicate) {
-    return slice$1(arrayLike).filter(predicate)[0];
+  function slice$1(arrayLike, start, end) {
+    return Array.prototype.slice.call(arrayLike, start, end);
   }
 
   function apply$1(func) {
@@ -31,22 +31,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     return typeof subject === type;
   }
 
-  function isObject(subject) {
-    return !isNull(subject) && typeOf$1("object", subject);
-  }
-
   var isArray$1 = Array.isArray;
-  var isFunction = apply$1(typeOf$1, "function");
-  var isString = apply$1(typeOf$1, "string");
-  var isUndefined = apply$1(typeOf$1, "undefined");
-
-  function isNull(subject) {
-    return subject === null;
-  }
-
-  function isHTMLElement(subject) {
-    return subject instanceof HTMLElement;
-  }
+  apply$1(typeOf$1, "function");
+  apply$1(typeOf$1, "string");
+  apply$1(typeOf$1, "undefined");
 
   function toArray$1(value) {
     return isArray$1(value) ? value : [value];
@@ -56,37 +44,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     toArray$1(values).forEach(iteratee);
   }
 
-  function toggleClass(elm, classes, add) {
-    if (elm) {
-      forEach$1(classes, function (name) {
-        if (name) {
-          elm.classList[add ? "add" : "remove"](name);
-        }
-      });
-    }
-  }
-
-  function addClass(elm, classes) {
-    toggleClass(elm, isString(classes) ? classes.split(" ") : classes, true);
-  }
-
-  function append(parent, children) {
-    forEach$1(children, parent.appendChild.bind(parent));
-  }
-
-  function matches(elm, selector) {
-    return isHTMLElement(elm) && (elm["msMatchesSelector"] || elm.matches).call(elm, selector);
-  }
-
-  function children(parent, selector) {
-    var children2 = parent ? slice$1(parent.children) : [];
-    return selector ? children2.filter(function (child) {
-      return matches(child, selector);
-    }) : children2;
-  }
-
-  function child(parent, selector) {
-    return selector ? children(parent, selector)[0] : parent.firstElementChild;
+  function includes(array, value) {
+    return array.indexOf(value) > -1;
   }
 
   var ownKeys$1 = Object.keys;
@@ -119,168 +78,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     return object;
   }
 
-  function merge(object) {
-    slice$1(arguments, 1).forEach(function (source) {
-      forOwn$1(source, function (value, key) {
-        if (isArray$1(value)) {
-          object[key] = value.slice();
-        } else if (isObject(value)) {
-          object[key] = merge({}, isObject(object[key]) ? object[key] : {}, value);
-        } else {
-          object[key] = value;
-        }
-      });
-    });
-    return object;
-  }
-
-  function removeAttribute(elms, attrs) {
-    forEach$1(elms, function (elm) {
-      forEach$1(attrs, function (attr) {
-        elm && elm.removeAttribute(attr);
-      });
-    });
-  }
-
-  function setAttribute(elms, attrs, value) {
-    if (isObject(attrs)) {
-      forOwn$1(attrs, function (value2, name) {
-        setAttribute(elms, name, value2);
-      });
-    } else {
-      forEach$1(elms, function (elm) {
-        isNull(value) || value === "" ? removeAttribute(elm, attrs) : elm.setAttribute(attrs, String(value));
-      });
-    }
-  }
-
-  function _create(tag, attrs, parent) {
-    var elm = document.createElement(tag);
-
-    if (attrs) {
-      isString(attrs) ? addClass(elm, attrs) : setAttribute(elm, attrs);
-    }
-
-    parent && append(parent, elm);
-    return elm;
-  }
-
-  function style(elm, prop, value) {
-    if (isUndefined(value)) {
-      return getComputedStyle(elm)[prop];
-    }
-
-    if (!isNull(value)) {
-      elm.style[prop] = "" + value;
-    }
-  }
-
-  function display(elm, display2) {
-    style(elm, "display", display2);
-  }
-
-  function getAttribute(elm, attr) {
-    return elm.getAttribute(attr);
-  }
-
-  function remove(nodes) {
-    forEach$1(nodes, function (node) {
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
-    });
-  }
-
-  function queryAll(parent, selector) {
-    return selector ? slice$1(parent.querySelectorAll(selector)) : [];
-  }
-
-  function removeClass(elm, classes) {
-    toggleClass(elm, classes, false);
-  }
-
   var PROJECT_CODE$1 = "splide";
-
-  function error(message) {
-    console.error("[" + PROJECT_CODE$1 + "] " + message);
-  }
-
-  var min = Math.min,
-      max = Math.max,
-      floor = Math.floor,
-      ceil = Math.ceil,
-      abs = Math.abs;
-
-  function clamp(number, x, y) {
-    var minimum = min(x, y);
-    var maximum = max(x, y);
-    return min(max(minimum, number), maximum);
-  }
-
-  function empty(array) {
-    array.length = 0;
-  }
-
-  function slice(arrayLike, start, end) {
-    return Array.prototype.slice.call(arrayLike, start, end);
-  }
-
-  function apply(func) {
-    return func.bind.apply(func, [null].concat(slice(arguments, 1)));
-  }
-
-  function typeOf(type, subject) {
-    return typeof subject === type;
-  }
-
-  var isArray = Array.isArray;
-  apply(typeOf, "function");
-  apply(typeOf, "string");
-  apply(typeOf, "undefined");
-
-  function toArray(value) {
-    return isArray(value) ? value : [value];
-  }
-
-  function forEach(values, iteratee) {
-    toArray(values).forEach(iteratee);
-  }
-
-  function includes(array, value) {
-    return array.indexOf(value) > -1;
-  }
-
-  var ownKeys = Object.keys;
-
-  function forOwn(object, iteratee, right) {
-    if (object) {
-      var keys = ownKeys(object);
-      keys = right ? keys.reverse() : keys;
-
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-
-        if (key !== "__proto__") {
-          if (iteratee(object[key], key) === false) {
-            break;
-          }
-        }
-      }
-    }
-
-    return object;
-  }
-
-  function assign(object) {
-    slice(arguments, 1).forEach(function (source) {
-      forOwn(source, function (value, key) {
-        object[key] = source[key];
-      });
-    });
-    return object;
-  }
-
-  var PROJECT_CODE = "splide";
 
   function EventBinder() {
     var listeners = [];
@@ -326,8 +124,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     }
 
     function forEachEvent(targets, events, iteratee) {
-      forEach(targets, function (target) {
-        target && forEach(events, function (events2) {
+      forEach$1(targets, function (target) {
+        target && forEach$1(events, function (events2) {
           events2.split(" ").forEach(function (eventNS) {
             var fragment = eventNS.split(".");
             iteratee(target, fragment[0], fragment[1]);
@@ -365,23 +163,23 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     var binder = EventBinder();
 
     function on(events, callback) {
-      binder.bind(bus, toArray(events).join(" "), function (e) {
-        callback.apply(callback, isArray(e.detail) ? e.detail : []);
+      binder.bind(bus, toArray$1(events).join(" "), function (e) {
+        callback.apply(callback, isArray$1(e.detail) ? e.detail : []);
       });
     }
 
     function emit(event) {
-      binder.dispatch(bus, event, slice(arguments, 1));
+      binder.dispatch(bus, event, slice$1(arguments, 1));
     }
 
     if (Splide2) {
       Splide2.event.on(EVENT_DESTROY, binder.destroy);
     }
 
-    return assign(binder, {
+    return assign$1(binder, {
       bus: bus,
       on: on,
-      off: apply(binder.unbind, bus),
+      off: apply$1(binder.unbind, bus),
       emit: emit
     });
   }
@@ -394,7 +192,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     }
 
     function is(states) {
-      return includes(toArray(states), state);
+      return includes(toArray$1(states), state);
     }
 
     return {
@@ -403,14 +201,222 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     };
   }
 
-  var CLASS_SLIDE = PROJECT_CODE + "__slide";
+  var CLASS_SLIDE = PROJECT_CODE$1 + "__slide";
   var CLASS_CONTAINER = CLASS_SLIDE + "__container";
+
+  function slice(arrayLike, start, end) {
+    return Array.prototype.slice.call(arrayLike, start, end);
+  }
+
+  function find(arrayLike, predicate) {
+    return slice(arrayLike).filter(predicate)[0];
+  }
+
+  function apply(func) {
+    return func.bind.apply(func, [null].concat(slice(arguments, 1)));
+  }
+
+  function typeOf(type, subject) {
+    return typeof subject === type;
+  }
+
+  function isObject(subject) {
+    return !isNull(subject) && typeOf("object", subject);
+  }
+
+  var isArray = Array.isArray;
+  var isFunction = apply(typeOf, "function");
+  var isString = apply(typeOf, "string");
+  var isUndefined = apply(typeOf, "undefined");
+
+  function isNull(subject) {
+    return subject === null;
+  }
+
+  function isHTMLElement(subject) {
+    return subject instanceof HTMLElement;
+  }
+
+  function toArray(value) {
+    return isArray(value) ? value : [value];
+  }
+
+  function forEach(values, iteratee) {
+    toArray(values).forEach(iteratee);
+  }
+
+  function toggleClass(elm, classes, add) {
+    if (elm) {
+      forEach(classes, function (name) {
+        if (name) {
+          elm.classList[add ? "add" : "remove"](name);
+        }
+      });
+    }
+  }
+
+  function addClass(elm, classes) {
+    toggleClass(elm, isString(classes) ? classes.split(" ") : classes, true);
+  }
+
+  function append(parent, children) {
+    forEach(children, parent.appendChild.bind(parent));
+  }
+
+  function matches(elm, selector) {
+    return isHTMLElement(elm) && (elm["msMatchesSelector"] || elm.matches).call(elm, selector);
+  }
+
+  function children(parent, selector) {
+    var children2 = parent ? slice(parent.children) : [];
+    return selector ? children2.filter(function (child) {
+      return matches(child, selector);
+    }) : children2;
+  }
+
+  function child(parent, selector) {
+    return selector ? children(parent, selector)[0] : parent.firstElementChild;
+  }
+
+  var ownKeys = Object.keys;
+
+  function forOwn(object, iteratee, right) {
+    if (object) {
+      var keys = ownKeys(object);
+      keys = right ? keys.reverse() : keys;
+
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+
+        if (key !== "__proto__") {
+          if (iteratee(object[key], key) === false) {
+            break;
+          }
+        }
+      }
+    }
+
+    return object;
+  }
+
+  function assign(object) {
+    slice(arguments, 1).forEach(function (source) {
+      forOwn(source, function (value, key) {
+        object[key] = source[key];
+      });
+    });
+    return object;
+  }
+
+  function merge(object) {
+    slice(arguments, 1).forEach(function (source) {
+      forOwn(source, function (value, key) {
+        if (isArray(value)) {
+          object[key] = value.slice();
+        } else if (isObject(value)) {
+          object[key] = merge({}, isObject(object[key]) ? object[key] : {}, value);
+        } else {
+          object[key] = value;
+        }
+      });
+    });
+    return object;
+  }
+
+  function removeAttribute(elms, attrs) {
+    forEach(elms, function (elm) {
+      forEach(attrs, function (attr) {
+        elm && elm.removeAttribute(attr);
+      });
+    });
+  }
+
+  function setAttribute(elms, attrs, value) {
+    if (isObject(attrs)) {
+      forOwn(attrs, function (value2, name) {
+        setAttribute(elms, name, value2);
+      });
+    } else {
+      forEach(elms, function (elm) {
+        isNull(value) || value === "" ? removeAttribute(elm, attrs) : elm.setAttribute(attrs, String(value));
+      });
+    }
+  }
+
+  function _create(tag, attrs, parent) {
+    var elm = document.createElement(tag);
+
+    if (attrs) {
+      isString(attrs) ? addClass(elm, attrs) : setAttribute(elm, attrs);
+    }
+
+    parent && append(parent, elm);
+    return elm;
+  }
+
+  function style(elm, prop, value) {
+    if (isUndefined(value)) {
+      return getComputedStyle(elm)[prop];
+    }
+
+    if (!isNull(value)) {
+      elm.style[prop] = "" + value;
+    }
+  }
+
+  function display(elm, display2) {
+    style(elm, "display", display2);
+  }
+
+  function getAttribute(elm, attr) {
+    return elm.getAttribute(attr);
+  }
+
+  function hasClass(elm, className) {
+    return elm && elm.classList.contains(className);
+  }
+
+  function remove(nodes) {
+    forEach(nodes, function (node) {
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    });
+  }
+
+  function queryAll(parent, selector) {
+    return selector ? slice(parent.querySelectorAll(selector)) : [];
+  }
+
+  function removeClass(elm, classes) {
+    toggleClass(elm, classes, false);
+  }
+
+  var PROJECT_CODE = "splide";
+
+  function error(message) {
+    console.error("[" + PROJECT_CODE + "] " + message);
+  }
+
+  var min = Math.min,
+      max = Math.max,
+      floor = Math.floor,
+      ceil = Math.ceil,
+      abs = Math.abs;
+
+  function clamp(number, x, y) {
+    var minimum = min(x, y);
+    var maximum = max(x, y);
+    return min(max(minimum, number), maximum);
+  }
+
   var CLASS_VIDEO = "splide__video";
   var CLASS_VIDEO_WRAPPER = CLASS_VIDEO + "__wrapper";
   var CLASS_VIDEO_PLAY_BUTTON = CLASS_VIDEO + "__play";
   var CLASS_PLAYING = "is-playing";
   var CLASS_ERROR = "is-error";
   var CLASS_VIDEO_DISABLED = "is-video-disabled";
+  var MODIFIER_HAS_VIDEO = "--has-video";
   var YOUTUBE_DATA_ATTRIBUTE = "data-splide-youtube";
   var VIMEO_DATA_ATTRIBUTE = "data-splide-vimeo";
   var HTML_VIDEO__DATA_ATTRIBUTE = "data-splide-html-video";
@@ -584,7 +590,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
       }, this.target);
 
       var on = player.addEventListener.bind(player);
-      assign$1(player, {
+      assign(player, {
         controls: !options.hideControls,
         loop: options.loop,
         volume: clamp(options.volume, 0, 1),
@@ -3248,7 +3254,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
       } : {
         id: +videoId
       };
-      var player = new Player$1(this.target, assign$1(vimeoOptions, {
+      var player = new Player$1(this.target, assign(vimeoOptions, {
         controls: !options.hideControls,
         loop: options.loop,
         muted: options.mute
@@ -3365,7 +3371,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
           playerOptions = _this$options$playerO3 === void 0 ? {} : _this$options$playerO3;
       return new YT.Player(this.target, {
         videoId: videoId,
-        playerVars: assign$1({
+        playerVars: assign({
           controls: options.hideControls ? 0 : 1,
           iv_load_policy: 3,
           loop: options.loop ? 1 : 0,
@@ -3443,6 +3449,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
       this.event = EventInterface();
       this.Splide = Splide2;
       this.slide = slide;
+      this.container = child(this.slide, "." + CLASS_CONTAINER);
+      this.parent = this.container || this.slide;
       this.init();
       this.create();
       this.show();
@@ -3452,10 +3460,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     var _proto6 = PlayerUI.prototype;
 
     _proto6.init = function init() {
-      var container = child(this.slide, "." + CLASS_CONTAINER);
-      this.parent = container || this.slide;
-      this.modifier = (container ? CLASS_CONTAINER : CLASS_SLIDE) + "--has-video";
-      addClass(this.parent, this.modifier);
+      addClass(this.slide, "" + CLASS_SLIDE + MODIFIER_HAS_VIDEO);
+      addClass(this.container, "" + CLASS_CONTAINER + MODIFIER_HAS_VIDEO);
     };
 
     _proto6.create = function create() {
@@ -3515,7 +3521,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     };
 
     _proto6.destroy = function destroy() {
-      removeClass(this.parent, this.modifier);
+      removeClass(this.slide, "" + CLASS_SLIDE + MODIFIER_HAS_VIDEO);
+      removeClass(this.container, "" + CLASS_CONTAINER + MODIFIER_HAS_VIDEO);
       remove(this.video);
       this.event.destroy();
     };
@@ -3672,17 +3679,30 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
   }();
 
   function Video(Splide2, Components2) {
+    var _EventInterface = EventInterface(Splide2),
+        on = _EventInterface.on;
+
+    var Slides = Components2.Slides;
     var players = {};
 
     function mount() {
-      Components2.Slides.forEach(function (Slide) {
-        players[Slide.index] = new Player(Splide2, Slide.slide);
+      create();
+      on("refresh", create);
+    }
+
+    function create() {
+      Slides.forEach(function (Slide) {
+        var slide = Slide.slide;
+
+        if (!hasClass(slide, "" + CLASS_SLIDE + MODIFIER_HAS_VIDEO)) {
+          players[Slide.index] = new Player(Splide2, slide);
+        }
       });
-      Splide2.refresh();
+      Slides.update();
     }
 
     function destroy() {
-      forOwn$1(players, function (player) {
+      forOwn(players, function (player) {
         player.destroy();
       });
     }
@@ -3700,13 +3720,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
     }
 
     function pause() {
-      forOwn$1(players, function (player) {
+      forOwn(players, function (player) {
         player.pause();
       });
     }
 
     function disable(disabled) {
-      forOwn$1(players, function (player) {
+      forOwn(players, function (player) {
         player.disable(disabled);
       });
     }
