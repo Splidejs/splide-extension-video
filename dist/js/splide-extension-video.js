@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 
 /*!
  * Splide.js
- * Version  : 0.7.1
+ * Version  : 0.7.2
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -3460,13 +3460,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 
     _proto6.create = function create() {
       this.video = _create("div", CLASS_VIDEO, this.parent);
-      this.wrapper = _create("div", CLASS_VIDEO_WRAPPER, this.video);
-      this.placeholder = _create("div", null, this.wrapper);
       this.playButton = _create("button", {
         "class": CLASS_VIDEO_PLAY_BUTTON,
         type: "button",
         "aria-label": this.Splide.options.i18n.playVideo || I18N.playVideo
       }, this.video);
+      this.wrapper = _create("div", CLASS_VIDEO_WRAPPER, this.video);
+      this.placeholder = _create("div", null, this.wrapper);
     };
 
     _proto6.listen = function listen() {

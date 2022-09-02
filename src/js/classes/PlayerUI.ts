@@ -93,17 +93,19 @@ export class PlayerUI {
 
   /**
    * Creates wrapper, placeholder and button elements.
+   * Make sure that the button element must be rendered before the wrapper for the proper focus order.
    */
   private create(): void {
-    this.video       = create( 'div', CLASS_VIDEO, this.parent );
-    this.wrapper     = create( 'div', CLASS_VIDEO_WRAPPER, this.video );
-    this.placeholder = create( 'div', null, this.wrapper );
+    this.video = create( 'div', CLASS_VIDEO, this.parent );
 
     this.playButton = create( 'button', {
       class       : CLASS_VIDEO_PLAY_BUTTON,
       type        : 'button',
       'aria-label': this.Splide.options.i18n.playVideo || I18N.playVideo,
     }, this.video );
+
+    this.wrapper     = create( 'div', CLASS_VIDEO_WRAPPER, this.video );
+    this.placeholder = create( 'div', null, this.wrapper );
   }
 
   /**
