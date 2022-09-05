@@ -42,7 +42,7 @@
       } );
 
       setTimeout( () => {
-        splide.Components.Video.play( 1 );
+        // splide.Components.Video.play( 1 );
       }, 4000 );
 		} );
 	</script>

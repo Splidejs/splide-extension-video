@@ -6,7 +6,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
 
 /*!
  * Splide.js
- * Version  : 0.7.3
+ * Version  : 0.8.0
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -3371,6 +3371,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Objec
           playerOptions = _this$options$playerO3 === void 0 ? {} : _this$options$playerO3;
       return new YT.Player(this.target, {
         videoId: videoId,
+        host: options.host,
         playerVars: assign({
           controls: options.hideControls ? 0 : 1,
           iv_load_policy: 3,

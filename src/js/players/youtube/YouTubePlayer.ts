@@ -58,6 +58,7 @@ export class YouTubePlayer extends AbstractVideoPlayer<YT.Player> {
 
     return new YT.Player( this.target, {
       videoId,
+      host: options.host,
       playerVars: assign( {
         controls      : options.hideControls ? 0 : 1,
         iv_load_policy: 3, // eslint-disable-line camelcase

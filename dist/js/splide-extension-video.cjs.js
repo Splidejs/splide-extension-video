@@ -1,6 +1,6 @@
 /*!
  * Splide.js
- * Version  : 0.7.3
+ * Version  : 0.8.0
  * License  : MIT
  * Copyright: 2022 Naotoshi Fujita
  */
@@ -3216,6 +3216,7 @@ class YouTubePlayer extends AbstractVideoPlayer {
     const { options, options: { playerOptions = {} } } = this;
     return new YT.Player(this.target, {
       videoId,
+      host: options.host,
       playerVars: assign({
         controls: options.hideControls ? 0 : 1,
         iv_load_policy: 3,

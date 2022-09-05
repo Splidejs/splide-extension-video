@@ -38,6 +38,12 @@ export interface VideoOptions {
   volume?: number;
 
   /**
+   * Changes the `host` option for YouTube.
+   * Nothing happens for other providers.
+   */
+  host?: string;
+
+  /**
    * Overwrites player options.
    */
   playerOptions?: {
